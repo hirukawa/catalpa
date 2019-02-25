@@ -1,0 +1,38 @@
+.root {
+	-fx-font-family: "Meiryo";
+	-fx-font-size: 12px;
+}
+
+#blocker {
+	-fx-background-color: rgba(255, 255, 255, 0.5);
+}
+
+FontIcon {
+	-fx-icon-size: 17;
+	-fx-icon-color: #97bf13;
+}
+
+
+/*
+ * modena
+ */
+.text-input {
+	-fx-prompt-text-fill: #666;
+}
+
+.text-input.flat-border-right {
+    -fx-background-insets: 0 0 0 0, 1 0 1 1;
+    -fx-background-radius: 3 0 0 3, 2 0 0 2;
+}
+.text-input.flat-border-right:focused {
+    -fx-background-insets: -0.2, 1, -1.4, 3;
+    -fx-background-radius: 3 0 0 3, 2 0 0 2, 4 0 0 4, 0 0 0 0;
+}
+.button.flat-border-left {
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-background-radius: 0 3 3 0, 0 3 3 0, 0 2 2 0, 0 1 1 0;
+}
+.button.flat-border-left:focused {
+	-fx-background-insets: -0.2, 1, 2, -1.4, 2.6;
+	-fx-background-radius: 0 3 3 0, 0 2 2 0, 0 1 1 0, 0 4 4 0, 0 1 1 0;
+}

@@ -1,0 +1,386 @@
+package net.osdn.catalpa.addon.blog;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.Map.Entry;
+import java.util.stream.Stream;
+
+import com.esotericsoftware.yamlbeans.YamlReader;
+
+import freemarker.core.ParseException;
+import freemarker.template.MalformedTemplateNameException;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateNotFoundException;
+import net.osdn.catalpa.AddOn;
+import net.osdn.catalpa.CatalpaException;
+import net.osdn.catalpa.Context;
+import net.osdn.catalpa.Util;
+import net.osdn.catalpa.handler.TemplateHandler;
+import net.osdn.util.io.AutoDetectReader;
+
+public class BlogAddOn implements AddOn {
+	private static final Pattern CATEGORY_ID_PATTERN = Pattern.compile("(.+)\\((\\w*)\\)$");
+	private static final String THUMBNAIL_FILENAME = "thumbnail.png";
+	
+	private int recent_posts_size = 10;
+	private int posts_per_page = 5;
+	
+	@Override
+	public boolean isApplicable(String type) {
+		return type != null && type.equals("blog");
+	}
+	
+	@Override
+	public void prepare(Path inputPath, Path outputPath, Map<String, Object> options, Context context) throws IOException {
+		System.out.println("#prepare");
+		
+		//default template
+		context.getSystemDataModel().put("template", "post.ftl");
+		
+		Factory factory = createFactory(inputPath, outputPath);
+		
+		List<Category> categories = factory.getCategories();
+		categories.sort(Comparator.comparing(Category::getDate).thenComparing(c -> c.getPosts().size()).reversed());
+
+		List<Post> posts = factory.getPosts();
+		posts.sort(Comparator.comparing(Post::getDate).reversed());
+		for(int i = 0; i < Math.min(recent_posts_size, posts.size()); i++) {
+			Post post = posts.get(i);
+			if(Files.exists(post.getPath().getParent().resolve(THUMBNAIL_FILENAME))) {
+				Path thumbnail = inputPath.relativize(post.getPath().getParent()).resolve(THUMBNAIL_FILENAME);
+				post.setThumbnail(thumbnail.toString().replace('\\', '/'));
+			}
+		}
+
+		context.getSystemDataModel().put("_CATEGORIES", categories);
+		context.getSystemDataModel().put("_POSTS", posts);
+		context.getSystemDataModel().put("_PAGER", new Pager(inputPath, outputPath, posts));
+	}
+
+	@Override
+	public void execute(Path inputPath, Path outputPath, Map<String, Object> options, Context context) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
+		System.out.println("#execute");
+
+		Map<String, Object> dataModel = context.getDataModel();
+		
+		
+		{ // create page html
+			@SuppressWarnings("unchecked")
+			List<Post> posts = (List<Post>)dataModel.get("_POSTS");
+			
+			Template pageTemplate = context.getFreeMarker().getTemplate("page.ftl");
+			int pages = (posts.size() - 1) / posts_per_page + 1;
+			int page = pages;
+			int fromIndex = 0;
+			int toIndex;
+			while(fromIndex < posts.size()) {
+				toIndex = Math.min(fromIndex + posts_per_page, posts.size());
+				dataModel.put("_POSTS", posts.subList(fromIndex, toIndex));
+				dataModel.put("_PAGER", new Pager(
+					new Link("前のページ", getPageUrl(page, page - 1, pages)),
+					new Link("次のページ", getPageUrl(page, page + 1, pages))
+				));
+
+				String baseUrl = "";
+				Path path;
+				if(page == pages) {
+					path = context.getOutputPath().resolve("index.html");
+				} else {
+					baseUrl = "../";
+					path = context.getOutputPath().resolve("page").resolve(page + ".html");
+					Files.createDirectories(path.getParent());
+				}
+				for(int i = fromIndex; i < toIndex; i++) {
+					Post post = posts.get(i);
+					String relativePath = inputPath.relativize(post.getPath().getParent()).toString();
+					String relativeUrlPrefix = baseUrl + relativePath.replace('\\', '/');
+					if(relativeUrlPrefix.length() > 0) {
+						relativeUrlPrefix += '/';
+					}
+					post.setRelativeUrlPrefix(relativeUrlPrefix);
+				}
+				dataModel.put("baseurl", baseUrl);
+				
+				try(Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+					pageTemplate.process(dataModel, writer);
+				}
+				
+				// next page
+				page--;
+				fromIndex = toIndex;
+			}
+			/*
+			for(int i = 0; i < Math.min(recent_posts_size, posts.size()); i++) {
+				Post post = posts.get(i);
+				createThumbnail(post);
+			}
+			*/
+		}
+		
+		{ // create category html
+			@SuppressWarnings("unchecked")
+			List<Category> categories = (List<Category>)dataModel.get("_CATEGORIES");
+
+			Template categoryTemplate = context.getFreeMarker().getTemplate("category.ftl");
+			for(Category category : categories) {
+				Files.createDirectories(context.getOutputPath().resolve("category").resolve(category.getId()));
+
+				int pages = (category.getPosts().size() - 1) / posts_per_page + 1;
+				int page = pages;
+				int fromIndex = 0;
+				int toIndex;
+				while(fromIndex < category.getPosts().size()) {
+					toIndex = Math.min(fromIndex + posts_per_page, category.getPosts().size());
+					dataModel.put("_POSTS", category.getPosts().subList(fromIndex, toIndex));
+					dataModel.put("_PAGER", new Pager(
+						new Link("前のページ", getCategoryPageUrl(page - 1, pages)),
+						new Link("次のページ", getCategoryPageUrl(page + 1, pages))
+					));
+					
+					String baseUrl = "../../";
+					for(int i = fromIndex; i < toIndex; i++) {
+						Post post = category.getPosts().get(i);
+						String relativePath = inputPath.relativize(post.getPath().getParent()).toString();
+						String relativeUrlPrefix = baseUrl + relativePath.replace('\\', '/');
+						if(relativeUrlPrefix.length() > 0) {
+							relativeUrlPrefix += '/';
+						}
+						post.setRelativeUrlPrefix(relativeUrlPrefix);
+					}
+					dataModel.put("baseurl", baseUrl);
+					
+					Path path;
+					if(page == pages) {
+						path = context.getOutputPath().resolve("category").resolve(category.getId()).resolve("index.html");
+					} else {
+						path = context.getOutputPath().resolve("category").resolve(category.getId()).resolve(page + ".html");
+					}
+					try(Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+						categoryTemplate.process(dataModel, writer);
+					}
+					
+					// next page
+					page--;
+					fromIndex = toIndex;
+				}
+			}
+		}
+	}
+	
+	protected String getPageUrl(int from, int to, int pages) {
+		if(to < 1 || to > pages) {
+			return null;
+		}
+		
+		if(to == pages) {
+			return "../index.html";
+		} else if(from == pages) {
+			return "page/" + to + ".html";
+		} else {
+			return to + ".html";
+		}
+	}
+	
+	protected String getCategoryPageUrl(int to, int pages) {
+		if(to < 1 || to > pages) {
+			return null;
+		}
+		
+		if(to == pages) {
+			return "index.html";
+		} else {
+			return to + ".html";
+		}
+	}
+	
+	/*
+	protected void createThumbnail(Post post) {
+		
+		System.out.println("createThumbnail: post.path=" + post.getPath());
+	}
+	*/
+
+	protected Factory createFactory(Path inputPath, Path outputPath) throws IOException {
+		Factory factory = new Factory(inputPath);
+		List<Path> list = new ArrayList<Path>();
+		try(Stream<Path> stream = Files.walk(inputPath)) {
+			stream
+			.filter(path -> Post.isApplicable(path))
+			.forEach(list::add);
+		}
+		for(Path path : list) {
+			factory.getPostBy(path);
+		}
+		for(Category category : factory.getCategories()) {
+			if(category.getId() == null) {
+				category.setId(category.getName().toLowerCase());
+			}
+			category.getPosts().sort(Comparator.comparing(Post::getDate).reversed());
+		}
+		
+		return factory;
+	}
+	
+	/* package private */ static class Factory {
+
+		private Path inputPath;
+		private Map<String, Category> categories = new HashMap<String, Category>();
+		private Map<Path, Post> posts = new HashMap<Path, Post>();
+
+		public Factory(Path inputPath) {
+			this.inputPath = inputPath;
+		}
+		
+		public List<Category> getCategories() {
+			return new ArrayList<Category>(categories.values());
+		}
+		
+		public List<Post> getPosts() {
+			return new ArrayList<Post>(posts.values());
+		}
+		
+		public Category getCategoryBy(String text) {
+			String id = null;
+			String name = text;
+			
+			Matcher m = CATEGORY_ID_PATTERN.matcher(text);
+			if(m.matches()) {
+				name = m.group(1);
+				id = m.group(2);
+			}
+			
+			Category category = categories.get(name);
+			if(category == null) {
+				category = new Category(name);
+				categories.put(name, category);
+			}
+			if(category.getId() == null && id != null && !id.isEmpty()) {
+				category.setId(id);
+			}
+			
+			return category;
+		}
+		
+		public Post getPostBy(Path path) throws IOException {
+			Post post = posts.get(path);
+			if(post == null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				List<String> lines = AutoDetectReader.readAllLines(path);
+				
+				Iterator<String> iterator = lines.iterator();
+				while(iterator.hasNext()) {
+					if(iterator.next().trim().length() > 0) {
+						break;
+					}
+					iterator.remove();
+				}
+				
+				// YAML front matter
+				if(('^' + lines.get(0)).trim().equals("^---")) {
+					for(int i = 1; i < lines.size(); i++) {
+						if(('^' + lines.get(i)).trim().equals("^---")) {
+							StringBuilder sb = new StringBuilder();
+							for(int j = 1; j < i; j++) {
+								sb.append(lines.get(j));
+								sb.append("\r\n");
+							}
+							while(i >= 0) {
+								lines.remove(i--);
+							}
+							Object obj = new YamlReader(sb.toString()).read();
+							if(obj instanceof Map) {
+								@SuppressWarnings("unchecked")
+								Map<String, Object> m = (Map<String, Object>)obj;
+								for(Entry<String, Object> entry : m.entrySet()) {
+									map.put(entry.getKey(), entry.getValue());
+								}
+							}
+						}
+					}
+				}
+				
+				// Blocks
+				LinkedHashMap<String, String> blocks = new LinkedHashMap<String, String>();
+				String blockName = null;
+				StringBuilder blockBody = new StringBuilder();
+				for(String line : lines) {
+					String s = ('^' + line).trim();
+					if(s.length() > 6 && s.startsWith("^#--") && s.endsWith("--")) {
+						if(blockBody.length() > 0) {
+							blocks.put(blockName, blockBody.toString());
+						}
+						blockName = s.substring(4, s.length() - 2);
+						blockBody.setLength(0);
+					} else if(blockBody.length() > 0 || line.trim().length() > 0) {
+						blockBody.append(line);
+						blockBody.append("\r\n");
+					}
+				}
+				if(blockBody.length() > 0) {
+					blocks.put(blockName, blockBody.toString());
+				}
+				if(blocks.containsKey(null) && !blocks.containsKey("content")) {
+					blocks.put("content", blocks.remove(null));
+				}
+				String leading = blocks.get("content");
+				
+				//
+				if(map.get("date") != null && map.get("title") != null && leading != null) {
+					LocalDate date;
+					try {
+						date  = LocalDate.parse(map.get("date").toString());
+					} catch(DateTimeParseException e) {
+						throw new CatalpaException(path.toString(), "date", e);
+					}
+					String title = map.get("title").toString();
+
+					Set<Category> categories = new LinkedHashSet<Category>(); 
+					Object c = map.get("categories");
+					if(c == null) {
+						c = map.get("category");
+					}
+					if(c instanceof List) {
+						for(Object e : (List<?>)c) {
+							if(e != null) {
+								Category category = getCategoryBy(e.toString());
+								if(category != null) {
+									categories.add(category);
+								}
+							}
+						}
+					} else if(c != null) {
+						Category category = getCategoryBy(c.toString());
+						if(category != null) {
+							categories.add(category);
+						}
+					}
+					
+					String url = inputPath.relativize(Util.replaceFileExtension(path, TemplateHandler.APPLICABLE_EXTENSIONS, ".html")).toString().replace('\\', '/');
+					post = new Post(path, url, date, title, categories, leading);
+					for(Category category : categories) {
+						category.add(post);
+					}
+					posts.put(path, post);
+				}
+			}
+			return post;
+		}
+	}
+}
