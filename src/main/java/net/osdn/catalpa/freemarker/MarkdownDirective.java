@@ -9,6 +9,7 @@ import java.util.Map;
 import com.vladsch.flexmark.Extension;
 import com.vladsch.flexmark.ext.attributes.AttributesExtension;
 import com.vladsch.flexmark.ext.definition.DefinitionExtension;
+import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
 import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.ext.typographic.TypographicExtension;
@@ -66,6 +67,7 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 				AttributesExtension.create(),
 				DefinitionExtension.create(),
 				WikiLinkExtension.create(),
+				StrikethroughExtension.create(),
 				TaskListExtension.create(),
 				TablesExtension.create(),
 				TypographicExtension.create(),
