@@ -9,7 +9,7 @@
 
 #lblShowCheatSheet {
 	-fx-padding: 0 0 0 0;
-	-fx-text-fill: #0096c9;
+	-fx-text-fill: #2573b8;
 	-fx-graphic-text-gap: 0;
 	-fx-content-display: right;
 }
@@ -18,7 +18,7 @@
 }
 #menuShowCheatSheet FontIcon {
 	-fx-icon-size: 21;
-	-fx-icon-color: #0096c9;
+	-fx-icon-color: #2573b8;
 }
 #menuShowCheatSheet:hover FontIcon {
 	-fx-icon-color: #F2F2F2;
