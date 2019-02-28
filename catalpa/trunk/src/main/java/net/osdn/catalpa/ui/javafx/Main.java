@@ -233,13 +233,17 @@ public class Main extends Application implements Initializable {
 			updateRecentFile(path);
 		}
 		
-		if(path != null && Files.isDirectory(path)) {
-			tfInputPath.setText(path.toAbsolutePath().toString());
-			inputPath.setValue(path);
-			if(uploadConfigFactory != null) {
-				uploadConfig.setValue(uploadConfigFactory.create(path));
+		if(path != null) {
+			if(Files.isDirectory(path)) {
+				tfInputPath.setText(path.toAbsolutePath().toString());
+				inputPath.setValue(path);
+				if(uploadConfigFactory != null) {
+					uploadConfig.setValue(uploadConfigFactory.create(path));
+				}
+				update(path);
+			} else {
+				toast.show(Toast.RED, "Not Found", path.toString(), Toast.SHORT);
 			}
-			update(path);
 		}
 	}
 	
@@ -371,10 +375,10 @@ public class Main extends Application implements Initializable {
 		List<String> recentFiles = new LinkedList<String>();
 		
 		String s = preferences.get("recentFiles", null);
-		if(s != null) {
+		if(s != null && !s.isEmpty()) {
 			String absPath = path != null ? path.toAbsolutePath().toString() : null;
 			for(String p : s.split("\\|")) {
-				if(!recentFiles.contains(p) && !p.equalsIgnoreCase(absPath)) {
+				if(!p.isEmpty() && !recentFiles.contains(p) && !p.equalsIgnoreCase(absPath)) {
 					recentFiles.add(p);
 					if(recentFiles.size() >= MAX_RECENT_FILES) {
 						break;

@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Stream;
 
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
@@ -186,21 +187,23 @@ public class Catalpa {
 				context.load(config);
 			}
 			FileTime lastModifiedTime = null;
-			for(Iterator<Path> it = Files.list(context.getInputPath()).iterator(); it.hasNext();) {
-				Path child = it.next();
-				if(child.getFileName().toString().equalsIgnoreCase(CONFIG_FILENAME)) {
-					continue;
-				}
-				Context subContext = context.clone();
-				subContext.setInputPath(context.getInputPath().resolve(child.getFileName()));
-				subContext.setOutputPath(context.getOutputPath().resolve(child.getFileName()));
-				retrieve(subContext);
-				Path out = subContext.getOutputPath();
-				if(out != null && Files.exists(out)) {
-					if(!Files.isDirectory(out) || out.toFile().listFiles(f->f.isFile()).length > 0) {
-						FileTime ft = Files.getLastModifiedTime(out);
-						if(lastModifiedTime == null || ft.compareTo(lastModifiedTime) > 0) {
-							lastModifiedTime = ft;
+			try(Stream<Path> stream = Files.list(context.getInputPath())) {
+				for(Iterator<Path> it = stream.iterator(); it.hasNext();) {
+					Path child = it.next();
+					if(child.getFileName().toString().equalsIgnoreCase(CONFIG_FILENAME)) {
+						continue;
+					}
+					Context subContext = context.clone();
+					subContext.setInputPath(context.getInputPath().resolve(child.getFileName()));
+					subContext.setOutputPath(context.getOutputPath().resolve(child.getFileName()));
+					retrieve(subContext);
+					Path out = subContext.getOutputPath();
+					if(out != null && Files.exists(out)) {
+						if(!Files.isDirectory(out) || out.toFile().listFiles(f->f.isFile()).length > 0) {
+							FileTime ft = Files.getLastModifiedTime(out);
+							if(lastModifiedTime == null || ft.compareTo(lastModifiedTime) > 0) {
+								lastModifiedTime = ft;
+							}
 						}
 					}
 				}
