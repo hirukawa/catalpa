@@ -16,33 +16,50 @@
 
 	<BorderPane>
 		<top>
-			<MenuBar fx:id="menuBar">
-				<menus>
-					<Menu fx:id="menuFile" text="ファイル">
-						<items>
-							<MenuItem fx:id="menuFileOpen"
-								text="フォルダーを開く"
-								mnemonicParsing="false"
-								accelerator="Shortcut+O"
-								onAction="#menuFileOpen_onAction">
-								<graphic><FontIcon iconLiteral="mdi-folder" /></graphic>
-							</MenuItem>
-							<MenuItem fx:id="menuFileSaveAs"
-								text="名前を付けて保存..."
-								mnemonicParsing="false"
-								accelerator="Shortcut+S"
-								onAction="#menuFileSaveAs_onAction">
-								<graphic><FontIcon iconLiteral="mdi-content-save" /></graphic>
-							</MenuItem>
-							<SeparatorMenuItem  />
-							<MenuItem fx:id="menuFileExit"
-								text="終了"
-								mnemonicParsing="false"
-								onAction="#menuFileExit_onAction"/>
-						</items>
-					</Menu>
-				</menus>
-			</MenuBar>
+			<HBox>
+				<MenuBar fx:id="menuBar">
+					<menus>
+						<Menu fx:id="menuFile" text="ファイル">
+							<items>
+								<MenuItem fx:id="menuFileOpen"
+									text="フォルダーを開く"
+									mnemonicParsing="false"
+									accelerator="Shortcut+O"
+									onAction="#menuFileOpen_onAction">
+									<graphic><FontIcon iconLiteral="mdi-folder"/></graphic>
+								</MenuItem>
+								<MenuItem fx:id="menuFileSaveAs"
+									text="名前を付けて保存..."
+									mnemonicParsing="false"
+									accelerator="Shortcut+S"
+									onAction="#menuFileSaveAs_onAction">
+									<graphic><FontIcon iconLiteral="mdi-content-save"/></graphic>
+								</MenuItem>
+								<SeparatorMenuItem  />
+								<MenuItem fx:id="menuFileExit"
+									text="終了"
+									mnemonicParsing="false"
+									onAction="#menuFileExit_onAction"/>
+							</items>
+						</Menu>
+					</menus>
+				</MenuBar>
+				<Region styleClass="menu-bar" HBox.hgrow="ALWAYS"/>
+				<MenuBar>
+					<padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
+					<menus>
+						<Menu fx:id="menuShowCheatSheet">
+							<graphic>
+								<Label fx:id="lblShowCheatSheet"
+									text=" "
+									onMouseClicked="#lblShowCheatSheet_onMouseClicked">
+									<graphic><FontIcon iconLiteral="mdi-markdown"/></graphic>
+								</Label>
+							</graphic>
+						</Menu>
+					</menus>
+				</MenuBar>
+			</HBox>
 		</top>
 		<center>
 			<VBox fx:id="body">
@@ -57,7 +74,7 @@
 						styleClass="flat-border-left"
 						text="開く..."
 						onAction="#btnOpen_onAction">
-						<graphic><FontIcon iconLiteral="mdi-folder" /></graphic>
+						<graphic><FontIcon iconLiteral="mdi-folder"/></graphic>
 					</Button>
 				</HBox>
 				<HBox alignment="CENTER" spacing="10">
@@ -67,7 +84,7 @@
 						HBox.hgrow="ALWAYS" maxWidth="$MAX_INT"
 						disable="true"
 						onAction="#btnReload_onAction">
-						<graphic><FontIcon iconLiteral="mdi-refresh" /></graphic>
+						<graphic><FontIcon iconLiteral="mdi-refresh"/></graphic>
 					</Button>
 					<CheckBox fx:id="cbAutoReload"
 						disable="true"
@@ -83,21 +100,21 @@
 						disable="true"
 						HBox.hgrow="ALWAYS" maxWidth="$MAX_INT"
 						onAction="#btnOpenBrowser_onAction">
-						<graphic><FontIcon iconLiteral="mdi-earth" /></graphic>
+						<graphic><FontIcon iconLiteral="mdi-earth"/></graphic>
 					</Button>
 					<Button fx:id="btnSaveAs"
 						text="名前を付けて保存..."
 						disable="true"
 						HBox.hgrow="ALWAYS" maxWidth="$MAX_INT"
 						onAction="#btnSaveAs_onAction">
-						<graphic><FontIcon iconLiteral="mdi-content-save" /></graphic>
+						<graphic><FontIcon iconLiteral="mdi-content-save"/></graphic>
 					</Button>
 					<Button fx:id="btnUpload"
 						text="アップロード"
 						disable="true"
 						HBox.hgrow="ALWAYS" maxWidth="$MAX_INT"
 						onAction="#btnUpload_onAction">
-						<graphic><FontIcon iconLiteral="mdi-cloud-upload" /></graphic>
+						<graphic><FontIcon iconLiteral="mdi-cloud-upload"/></graphic>
 					</Button>
 				</HBox>
 			</VBox>

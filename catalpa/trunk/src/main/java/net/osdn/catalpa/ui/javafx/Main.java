@@ -43,20 +43,25 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -68,6 +73,8 @@ import net.osdn.catalpa.upload.UploadConfig;
 import net.osdn.catalpa.upload.UploadConfigFactory;
 
 public class Main extends Application implements Initializable {
+	private static final String MARKDOWN_CHEAT_SHEET_URL = "https://catalpa.osdn.jp/markdown.html";
+	
 	private static AtomicInteger count = new AtomicInteger(0);
 	private static CountDownLatch latch = new CountDownLatch(1);
 	private static Main instance;
@@ -326,6 +333,15 @@ public class Main extends Application implements Initializable {
 		}
 	}
 	
+	protected void showCheatSheet() throws IOException, URISyntaxException {
+		if (Desktop.isDesktopSupported()) {
+			Desktop desktop = Desktop.getDesktop();
+			if(desktop.isSupported(Desktop.Action.BROWSE)) {
+				desktop.browse(new URI(MARKDOWN_CHEAT_SHEET_URL));
+			}
+		}
+	}
+	
 	protected void saveAs(Path inputPath) {
 		DirectoryChooser dc = new DirectoryChooser();
 		dc.setTitle("名前を付けて保存");
@@ -482,6 +498,8 @@ public class Main extends Application implements Initializable {
 	@FXML Menu      menuFile;
 	@FXML MenuItem  menuFileOpen;
 	@FXML MenuItem  menuFileSaveAs;
+	@FXML Menu      menuShowCheatSheet;
+	@FXML Label     lblShowCheatSheet;
 	@FXML Node      body;
 	@FXML TextField tfInputPath;
 	@FXML Button    btnOpen;
@@ -530,6 +548,16 @@ public class Main extends Application implements Initializable {
 		
 		menuBar.disableProperty().bind(busy);
 		menuFileSaveAs.disableProperty().bind(Bindings.isNull(inputPath));
+		
+		Tooltip tooltip = new Tooltip("Markdown早見表をブラウザーで表示します。");
+		tooltip.setFont(Font.font("Meiryo", 12.0));
+		tooltip.setShowDelay(Duration.millis(100));
+		tooltip.setOnShowing(event-> {
+			Bounds bounds = lblShowCheatSheet.localToScreen(lblShowCheatSheet.getBoundsInLocal());
+			tooltip.setX(bounds.getMinX() - tooltip.getWidth() - 5.0);
+			tooltip.setY(bounds.getMinY());
+	    });
+		lblShowCheatSheet.setTooltip(tooltip);
 		
 		body.disableProperty().bind(busy);
 		body.disabledProperty().addListener((observable, oldValue, newValue)-> {
@@ -627,5 +655,14 @@ public class Main extends Application implements Initializable {
 	@FXML
 	void btnUpload_onAction(ActionEvent event) {
 		upload(inputPath.getValue());
+	}
+	
+	@FXML
+	void lblShowCheatSheet_onMouseClicked(MouseEvent event) {
+		try {
+			showCheatSheet();
+		} catch (IOException | URISyntaxException e) {
+			showException(e);
+		}
 	}
 }

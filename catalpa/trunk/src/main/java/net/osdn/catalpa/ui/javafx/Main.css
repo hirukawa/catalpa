@@ -7,11 +7,27 @@
 	-fx-background-color: rgba(255, 255, 255, 0.5);
 }
 
+#lblShowCheatSheet {
+	-fx-padding: 0 0 0 0;
+	-fx-text-fill: #0096c9;
+	-fx-graphic-text-gap: 0;
+	-fx-content-display: right;
+}
+#menuShowCheatSheet:hover Label {
+	-fx-text-fill: #F2F2F2;
+}
+#menuShowCheatSheet FontIcon {
+	-fx-icon-size: 21;
+	-fx-icon-color: #0096c9;
+}
+#menuShowCheatSheet:hover FontIcon {
+	-fx-icon-color: #F2F2F2;
+}
+
 FontIcon {
 	-fx-icon-size: 17;
 	-fx-icon-color: #97bf13;
 }
-
 
 /*
  * modena
