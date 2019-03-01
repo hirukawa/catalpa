@@ -39,6 +39,8 @@ public class BlogAddOn implements AddOn {
 	private static final Pattern CATEGORY_ID_PATTERN = Pattern.compile("(.+)\\((\\w*)\\)$");
 	private static final String THUMBNAIL_FILENAME = "thumbnail.png";
 	
+	private Factory factory;
+	private Map<String, Object> blogDataModel = new HashMap<String, Object>();
 	private int recent_posts_size = 10;
 	private int posts_per_page = 5;
 	
@@ -46,15 +48,17 @@ public class BlogAddOn implements AddOn {
 	public boolean isApplicable(String type) {
 		return type != null && type.equals("blog");
 	}
-	
+
+	/** 各ファイルを処理する前に呼ばれます。
+	 * inputPathは入力フォルダー、outputPathは出力フォルダーです。
+	 * 
+	 */
 	@Override
 	public void prepare(Path inputPath, Path outputPath, Map<String, Object> options, Context context) throws IOException {
-		System.out.println("#prepare");
-		
 		//default template
 		context.getSystemDataModel().put("template", "post.ftl");
 		
-		Factory factory = createFactory(inputPath, outputPath);
+		factory = createFactory(inputPath, outputPath);
 		
 		List<Category> categories = factory.getCategories();
 		categories.sort(Comparator.comparing(Category::getDate).thenComparing(c -> c.getPosts().size()).reversed());
@@ -69,21 +73,41 @@ public class BlogAddOn implements AddOn {
 			}
 		}
 
-		context.getSystemDataModel().put("_CATEGORIES", categories);
-		context.getSystemDataModel().put("_POSTS", posts);
-		context.getSystemDataModel().put("_PAGER", new Pager(inputPath, outputPath, posts));
+		blogDataModel.put("categories", categories);
+		blogDataModel.put("posts", posts);
+		blogDataModel.put("pager", new Pager(inputPath, outputPath, posts));
+		context.getSystemDataModel().put("blog", blogDataModel);
 	}
 
+	/** 各ファイルごとに呼ばれます。
+	 * @throws IOException 
+	 * @throws TemplateException 
+	 * 
+	 */
 	@Override
-	public void execute(Path inputPath, Path outputPath, Map<String, Object> options, Context context) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
-		System.out.println("#execute");
-
-		Map<String, Object> dataModel = context.getDataModel();
+	public void execute(Context context) throws IOException, TemplateException {
+		if(!factory.containsPost(context.getInputPath())) {
+			return;
+		}
 		
+		Post post = factory.getPostBy(context.getInputPath());
+		/*
+		Template template = new Template(null, post.getLeading() + "\n" + post.getMore(), context.getFreeMarker());
+		StringWriter content = new StringWriter();
+		template.process(context.getDataModel(), content);
+		post.setContent(content.toString());
+		System.out.println("!" + content.toString());
+		*/
+		blogDataModel.put("post", post);
+	}
+	
+	@Override
+	public void postExecute(Path inputPath, Path outputPath, Map<String, Object> options, Context context) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
+		Map<String, Object> dataModel = context.getDataModel();
 		
 		{ // create page html
 			@SuppressWarnings("unchecked")
-			List<Post> posts = (List<Post>)dataModel.get("_POSTS");
+			List<Post> posts = (List<Post>)blogDataModel.get("posts");
 			
 			Template pageTemplate = context.getFreeMarker().getTemplate("page.ftl");
 			int pages = (posts.size() - 1) / posts_per_page + 1;
@@ -92,8 +116,10 @@ public class BlogAddOn implements AddOn {
 			int toIndex;
 			while(fromIndex < posts.size()) {
 				toIndex = Math.min(fromIndex + posts_per_page, posts.size());
-				dataModel.put("_POSTS", posts.subList(fromIndex, toIndex));
-				dataModel.put("_PAGER", new Pager(
+				Map<String, Object> pageModel = new HashMap<String, Object>();
+				pageModel.put("posts", posts.subList(fromIndex, toIndex));
+				blogDataModel.put("page", pageModel);
+				blogDataModel.put("pager", new Pager(
 					new Link("前のページ", getPageUrl(page, page - 1, pages)),
 					new Link("次のページ", getPageUrl(page, page + 1, pages))
 				));
@@ -136,11 +162,12 @@ public class BlogAddOn implements AddOn {
 		
 		{ // create category html
 			@SuppressWarnings("unchecked")
-			List<Category> categories = (List<Category>)dataModel.get("_CATEGORIES");
+			List<Category> categories = (List<Category>)blogDataModel.get("categories");
 
 			Template categoryTemplate = context.getFreeMarker().getTemplate("category.ftl");
 			for(Category category : categories) {
 				Files.createDirectories(context.getOutputPath().resolve("category").resolve(category.getId()));
+				blogDataModel.put("category", category);
 
 				int pages = (category.getPosts().size() - 1) / posts_per_page + 1;
 				int page = pages;
@@ -148,8 +175,10 @@ public class BlogAddOn implements AddOn {
 				int toIndex;
 				while(fromIndex < category.getPosts().size()) {
 					toIndex = Math.min(fromIndex + posts_per_page, category.getPosts().size());
-					dataModel.put("_POSTS", category.getPosts().subList(fromIndex, toIndex));
-					dataModel.put("_PAGER", new Pager(
+					Map<String, Object> pageModel = new HashMap<String, Object>();
+					pageModel.put("posts", category.getPosts().subList(fromIndex, toIndex));
+					blogDataModel.put("page", pageModel);
+					blogDataModel.put("pager", new Pager(
 						new Link("前のページ", getCategoryPageUrl(page - 1, pages)),
 						new Link("次のページ", getCategoryPageUrl(page + 1, pages))
 					));
@@ -256,6 +285,16 @@ public class BlogAddOn implements AddOn {
 			return new ArrayList<Post>(posts.values());
 		}
 		
+		public boolean containsCategory(String text) {
+			String name = text;
+			
+			Matcher m = CATEGORY_ID_PATTERN.matcher(text);
+			if(m.matches()) {
+				name = m.group(1);
+			}
+			return categories.containsKey(name);
+		}
+		
 		public Category getCategoryBy(String text) {
 			String id = null;
 			String name = text;
@@ -276,6 +315,10 @@ public class BlogAddOn implements AddOn {
 			}
 			
 			return category;
+		}
+		
+		public boolean containsPost(Path path) {
+			return posts.containsKey(path);
 		}
 		
 		public Post getPostBy(Path path) throws IOException {
@@ -340,6 +383,7 @@ public class BlogAddOn implements AddOn {
 					blocks.put("content", blocks.remove(null));
 				}
 				String leading = blocks.get("content");
+				String more = blocks.get("more");
 				
 				//
 				if(map.get("date") != null && map.get("title") != null && leading != null) {
@@ -373,7 +417,7 @@ public class BlogAddOn implements AddOn {
 					}
 					
 					String url = inputPath.relativize(Util.replaceFileExtension(path, TemplateHandler.APPLICABLE_EXTENSIONS, ".html")).toString().replace('\\', '/');
-					post = new Post(path, url, date, title, categories, leading);
+					post = new Post(path, url, date, title, categories, leading, more);
 					for(Category category : categories) {
 						category.add(post);
 					}
