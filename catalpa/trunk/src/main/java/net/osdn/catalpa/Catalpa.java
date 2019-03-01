@@ -7,11 +7,14 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Stream;
 
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
@@ -48,8 +50,8 @@ public class Catalpa {
 
 	public static void main(String[] args) throws Exception {
 	
-		Path inputPath = Paths.get("sample/input");
-		Path outputPath = Paths.get("sample/output");
+		Path inputPath = Paths.get("samples/blog");
+		Path outputPath = Paths.get("samples/output");
 		Catalpa catalpa = new Catalpa(inputPath);
 		long s = System.currentTimeMillis();
 		catalpa.process(outputPath);
@@ -79,6 +81,9 @@ public class Catalpa {
 		"templates",
 		CONFIG_FILENAME
 	});
+	private List<String> copyOnlyDirectoryNames = Arrays.asList(new String[] {
+		"lib"
+	});
 	private List<String> excludePrefixes = Arrays.asList(new String[] {
 		"_"
 	});
@@ -86,6 +91,7 @@ public class Catalpa {
 		".ppk"	
 	});
 	
+	private AddOn addon;
 	private Configuration freeMarker;
 	private List<SitemapItem> sitemap = new ArrayList<SitemapItem>();
 	
@@ -159,7 +165,7 @@ public class Catalpa {
 			Map<String, Object> config = context.load(filename);
 			type = config.get("type") != null ? config.get("type").toString() : null;
 		}
-		AddOn addon = getApplicableAddOn(type);
+		addon = getApplicableAddOn(type);
 		if(addon != null) {
 			addon.prepare(inputPath, outputPath, options, context);
 		}
@@ -171,12 +177,16 @@ public class Catalpa {
 		createSitemap(context);
 		
 		if(addon != null) {
-			addon.execute(inputPath, outputPath, options, context);
+			addon.postExecute(inputPath, outputPath, options, context);
 		}
 	}
 	
 	protected void retrieve(Context context) throws Exception {
 		if(isExclude(context.getInputPath())) {
+			return;
+		}
+		if(isCopyOnlyDirectory(context.getInputPath())) {
+			copyRecursively(context.getInputPath(), context.getOutputPath());
 			return;
 		}
 
@@ -187,23 +197,21 @@ public class Catalpa {
 				context.load(config);
 			}
 			FileTime lastModifiedTime = null;
-			try(Stream<Path> stream = Files.list(context.getInputPath())) {
-				for(Iterator<Path> it = stream.iterator(); it.hasNext();) {
-					Path child = it.next();
-					if(child.getFileName().toString().equalsIgnoreCase(CONFIG_FILENAME)) {
-						continue;
-					}
-					Context subContext = context.clone();
-					subContext.setInputPath(context.getInputPath().resolve(child.getFileName()));
-					subContext.setOutputPath(context.getOutputPath().resolve(child.getFileName()));
-					retrieve(subContext);
-					Path out = subContext.getOutputPath();
-					if(out != null && Files.exists(out)) {
-						if(!Files.isDirectory(out) || out.toFile().listFiles(f->f.isFile()).length > 0) {
-							FileTime ft = Files.getLastModifiedTime(out);
-							if(lastModifiedTime == null || ft.compareTo(lastModifiedTime) > 0) {
-								lastModifiedTime = ft;
-							}
+			for(Iterator<Path> it = Files.list(context.getInputPath()).iterator(); it.hasNext();) {
+				Path child = it.next();
+				if(child.getFileName().toString().equalsIgnoreCase(CONFIG_FILENAME)) {
+					continue;
+				}
+				Context subContext = context.clone();
+				subContext.setInputPath(context.getInputPath().resolve(child.getFileName()));
+				subContext.setOutputPath(context.getOutputPath().resolve(child.getFileName()));
+				retrieve(subContext);
+				Path out = subContext.getOutputPath();
+				if(out != null && Files.exists(out)) {
+					if(!Files.isDirectory(out) || out.toFile().listFiles(f->f.isFile()).length > 0) {
+						FileTime ft = Files.getLastModifiedTime(out);
+						if(lastModifiedTime == null || ft.compareTo(lastModifiedTime) > 0) {
+							lastModifiedTime = ft;
 						}
 					}
 				}
@@ -218,6 +226,9 @@ public class Catalpa {
 				FileTime lastModifiedTime = Files.getLastModifiedTime(path);
 				if(context.getLastModifiedTime() == null || lastModifiedTime.compareTo(context.getLastModifiedTime()) > 0) {
 					context.setLastModifiedTime(lastModifiedTime);
+				}
+				if(addon != null) {
+					addon.execute(context);
 				}
 				List<Handler> handlers = getApplicableHandlers(path);
 				if(handlers.size() > 0) {
@@ -274,6 +285,37 @@ public class Catalpa {
 			}
 		}
 		return false;
+	}
+	
+	protected boolean isCopyOnlyDirectory(Path path) {
+		if(Files.isDirectory(path)) {
+			String name = path.getFileName().toString().toLowerCase();
+			for(String n : copyOnlyDirectoryNames) {
+				if(name.equals(n)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	protected void copyRecursively(Path src, Path dst) throws IOException {
+		Files.walkFileTree(src, new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+				Path relativePath = src.relativize(dir);
+				Files.createDirectories(dst.resolve(relativePath));
+				return FileVisitResult.CONTINUE;
+			}
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				Path relativePath = src.relativize(file);
+				Files.copy(file, dst.resolve(relativePath),
+						StandardCopyOption.REPLACE_EXISTING,
+						StandardCopyOption.COPY_ATTRIBUTES);
+				return FileVisitResult.CONTINUE;
+			}
+		});
 	}
 	
 	protected SitemapItem createSitemapItem(Context context) throws IOException {

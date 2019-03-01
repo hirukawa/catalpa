@@ -87,7 +87,7 @@ public class Pager {
 					Path fromPath = rootOutputPath.relativize(outputPath);
 					Path toPath = rootInputPath.relativize(Util.replaceFileExtension(previous.getPath(), TemplateHandler.APPLICABLE_EXTENSIONS, ".html"));
 					String url = fromPath.getParent().relativize(toPath.getParent()).resolve(toPath.getFileName()).toString().replace('\\', '/');
-					Link link = new Link(previous.getTitle(), url);
+					Link link = new Link(previous.getDate(), previous.getTitle(), url);
 					return link;
 				}
 			}
@@ -127,7 +127,7 @@ public class Pager {
 					Path fromPath = rootOutputPath.relativize(outputPath);
 					Path toPath = rootInputPath.relativize(Util.replaceFileExtension(next.getPath(), TemplateHandler.APPLICABLE_EXTENSIONS, ".html"));
 					String url = fromPath.getParent().relativize(toPath.getParent()).resolve(toPath.getFileName()).toString().replace('\\', '/');
-					Link link = new Link(next.getTitle(), url);
+					Link link = new Link(next.getDate(), next.getTitle(), url);
 					return link;
 				}
 			}

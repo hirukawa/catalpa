@@ -7,6 +7,7 @@ public interface AddOn {
 
 	public boolean isApplicable(String type) throws Exception;
 	public void prepare(Path inputPath, Path outputPath, Map<String, Object> options, Context context) throws Exception;
-	public void execute(Path inputPath, Path outputPath, Map<String, Object> options, Context context) throws Exception;
+	public void execute(Context context) throws Exception;
+	public void postExecute(Path inputPath, Path outputPath, Map<String, Object> options, Context context) throws Exception;
 
 }
