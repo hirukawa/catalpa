@@ -3,7 +3,6 @@ package net.osdn.catalpa.ui.javafx;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,14 +13,6 @@ import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.NanoHTTPD.Response.IStatus;
 
 public class HttpServer extends NanoHTTPD {
-	
-	public static void main(String[] args) throws Exception {
-		HttpServer server = new HttpServer(4000);
-		server.setDocumentRoot(Paths.get("C:\\Users\\hiruk\\AppData\\Local\\Temp\\catalpa\\htdocs"));
-		server.start();
-		
-		Thread.sleep(120 * 1000);
-	}
 	
 	static {
 		Logger.getLogger(NanoHTTPD.class.getName()).setLevel(Level.OFF);
