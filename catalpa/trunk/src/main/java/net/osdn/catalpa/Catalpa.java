@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
@@ -48,6 +47,7 @@ import net.osdn.util.io.AutoDetectReader;
 
 public class Catalpa {
 
+	/*
 	public static void main(String[] args) throws Exception {
 	
 		Path inputPath = Paths.get("samples/blog");
@@ -58,6 +58,7 @@ public class Catalpa {
 		long e = System.currentTimeMillis();
 		System.out.println("time=" + (e - s) + "ms");
 	}
+	*/
 	
 	public static final String CONFIG_FILENAME = "config.yml";
 	

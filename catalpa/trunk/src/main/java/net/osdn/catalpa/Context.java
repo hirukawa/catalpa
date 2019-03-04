@@ -99,6 +99,10 @@ public class Context {
 		dataModel = null;
 	}
 	
+	public void invalidateDataModel() {
+		dataModel = null;
+	}
+	
 	public Map<String, Object> getDataModel() throws IOException {
 		if(dataModel == null) {
 			Map<String, Object> dm = new HashMap<String, Object>();

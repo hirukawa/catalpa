@@ -1,6 +1,7 @@
 package net.osdn.catalpa.addon.blog;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -8,6 +9,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,6 +40,16 @@ import net.osdn.util.io.AutoDetectReader;
 public class BlogAddOn implements AddOn {
 	private static final Pattern CATEGORY_ID_PATTERN = Pattern.compile("(.+)\\((\\w*)\\)$");
 	private static final String THUMBNAIL_FILENAME = "thumbnail.png";
+	
+	private static String DEFAULT_THUMBNAIL_DATA_URI = null;
+	
+	static {
+	    try(InputStream in = BlogAddOn.class.getClassLoader().getResourceAsStream("img/blog-default-thumbnail.png")) {
+			DEFAULT_THUMBNAIL_DATA_URI = "data:image/png;base64," + Base64.getEncoder().encodeToString(in.readAllBytes());
+		} catch(Exception e) {
+			System.err.println("NotFound: img/blog-default-thumbnail.png");
+		}
+	}
 	
 	private Factory factory;
 	private Map<String, Object> blogDataModel = new HashMap<String, Object>();
@@ -70,13 +82,20 @@ public class BlogAddOn implements AddOn {
 			if(Files.exists(post.getPath().getParent().resolve(THUMBNAIL_FILENAME))) {
 				Path thumbnail = inputPath.relativize(post.getPath().getParent()).resolve(THUMBNAIL_FILENAME);
 				post.setThumbnail(thumbnail.toString().replace('\\', '/'));
+			} else if(DEFAULT_THUMBNAIL_DATA_URI != null) {
+				post.setThumbnail(DEFAULT_THUMBNAIL_DATA_URI);
 			}
 		}
 
+		Object obj = context.getDataModel().get("title");
+		if(obj instanceof String) {
+			blogDataModel.put("title", obj);
+		}
 		blogDataModel.put("categories", categories);
 		blogDataModel.put("posts", posts);
 		blogDataModel.put("pager", new Pager(inputPath, outputPath, posts));
 		context.getSystemDataModel().put("blog", blogDataModel);
+		context.invalidateDataModel();
 	}
 
 	/** 各ファイルごとに呼ばれます。

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.util.AbstractMap;
 import java.util.Map;
@@ -101,33 +100,5 @@ public class TemplateHandler implements Handler {
 			}
 		}
 		return new AbstractMap.SimpleEntry<Template, FileTime>(template, lastModifiedTime);
-	}
-	
-	public static void main(String[] args) {
-		
-		Path relativeInputPath = Paths.get("dirA/index.html");
-		Path relativeOutputPath = Paths.get("dirA/sub/index.html");
-		
-		Path inDir = relativeInputPath.getParent();
-		if(inDir == null) {
-			inDir = Paths.get("");
-		}
-		Path outDir = relativeOutputPath.getParent();
-		if(outDir == null) {
-			outDir = Paths.get("");
-		}
-		
-		while(inDir.toString().length() > 0 && outDir.toString().length() > 0 && inDir.getName(0).equals(outDir.getName(0))) {
-			System.out.println(">>" + outDir.getName(0));
-			inDir = inDir.relativize(inDir.getName(0));
-			outDir = outDir.relativize(outDir.getName(0));
-			System.out.println("!inDir=" + inDir);
-			System.out.println("!outDir=" + outDir);
-		}
-		System.out.println("#inDir=" + inDir);
-		System.out.println("#outDir=" + outDir);
-		
-		
-		
 	}
 }
