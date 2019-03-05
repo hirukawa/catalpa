@@ -13,20 +13,16 @@ public class Post {
 	private String         title;
 	private Set<Category>  categories;
 	private String         leading;
-	private String         more;
-	private String         content;
 	private String         relativeUrlPrefix;
 	private String         thumbnail;
 	
-	protected Post(Path path, String url, LocalDate date, String title, Set<Category> categories, String leading, String more) {
+	protected Post(Path path, String url, LocalDate date, String title, Set<Category> categories, String leading) {
 		this.path = path;
 		this.url = url;
 		this.date = date;
 		this.title = title;
 		this.categories = categories;
-		this.leading = leading != null ? leading : "";
-		this.more = more != null ? more : "";
-		this.content = this.leading + "\n" + this.more;
+		this.leading = leading;
 	}
 	
 	public Path getPath() {
@@ -51,18 +47,6 @@ public class Post {
 	
 	public String getLeading() {
 		return leading;
-	}
-	
-	public String getMore() {
-		return more;
-	}
-	
-	public void setContent(String content) {
-		this.content = content;
-	}
-	
-	public String getContent() {
-		return content;
 	}
 	
 	public void setRelativeUrlPrefix(String relativeUrlPrefix) {

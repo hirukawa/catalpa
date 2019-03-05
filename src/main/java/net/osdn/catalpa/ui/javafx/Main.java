@@ -240,6 +240,7 @@ public class Main extends Application implements Initializable {
 				if(uploadConfigFactory != null) {
 					uploadConfig.setValue(uploadConfigFactory.create(path));
 				}
+				createTemporaryDirectory("preview-htdocs", true);
 				update(path);
 			} else {
 				toast.show(Toast.RED, "Not Found", path.toString(), Toast.SHORT);
@@ -253,7 +254,7 @@ public class Main extends Application implements Initializable {
 		previewOutputPath.setValue(null);
 		executorService.submit(() -> {
 			try {
-				Path outputPath = createTemporaryDirectory("preview-htdocs", true);
+				Path outputPath = createTemporaryDirectory("preview-htdocs", false);
 				Catalpa catalpa = new Catalpa(inputPath);
 				Map<String, Object> options = new HashMap<String, Object>();
 				options.put("_PREVIEW", true);

@@ -38,6 +38,7 @@ import net.osdn.catalpa.handler.TemplateHandler;
 import net.osdn.util.io.AutoDetectReader;
 
 public class BlogAddOn implements AddOn {
+	private static Pattern LEADING_SEPARATOR = Pattern.compile("(<!--+\\s*more\\s*-+->)", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 	private static final Pattern CATEGORY_ID_PATTERN = Pattern.compile("(.+)\\((\\w*)\\)$");
 	private static final String THUMBNAIL_FILENAME = "thumbnail.png";
 	
@@ -53,7 +54,6 @@ public class BlogAddOn implements AddOn {
 	
 	private Factory factory;
 	private Map<String, Object> blogDataModel = new HashMap<String, Object>();
-	private int recent_posts_size = 10;
 	private int posts_per_page = 5;
 	
 	@Override
@@ -77,7 +77,7 @@ public class BlogAddOn implements AddOn {
 
 		List<Post> posts = factory.getPosts();
 		posts.sort(Comparator.comparing(Post::getDate).reversed());
-		for(int i = 0; i < Math.min(recent_posts_size, posts.size()); i++) {
+		for(int i = 0; i < posts.size(); i++) {
 			Post post = posts.get(i);
 			if(Files.exists(post.getPath().getParent().resolve(THUMBNAIL_FILENAME))) {
 				Path thumbnail = inputPath.relativize(post.getPath().getParent()).resolve(THUMBNAIL_FILENAME);
@@ -110,6 +110,7 @@ public class BlogAddOn implements AddOn {
 		}
 		
 		Post post = factory.getPostBy(context.getInputPath());
+		
 		/*
 		Template template = new Template(null, post.getLeading() + "\n" + post.getMore(), context.getFreeMarker());
 		StringWriter content = new StringWriter();
@@ -117,6 +118,7 @@ public class BlogAddOn implements AddOn {
 		post.setContent(content.toString());
 		System.out.println("!" + content.toString());
 		*/
+
 		blogDataModel.put("post", post);
 	}
 	
@@ -171,12 +173,6 @@ public class BlogAddOn implements AddOn {
 				page--;
 				fromIndex = toIndex;
 			}
-			/*
-			for(int i = 0; i < Math.min(recent_posts_size, posts.size()); i++) {
-				Post post = posts.get(i);
-				createThumbnail(post);
-			}
-			*/
 		}
 		
 		{ // create category html
@@ -258,13 +254,6 @@ public class BlogAddOn implements AddOn {
 		}
 	}
 	
-	/*
-	protected void createThumbnail(Post post) {
-		
-		System.out.println("createThumbnail: post.path=" + post.getPath());
-	}
-	*/
-
 	protected Factory createFactory(Path inputPath, Path outputPath) throws IOException {
 		Factory factory = new Factory(inputPath);
 		List<Path> list = new ArrayList<Path>();
@@ -401,11 +390,10 @@ public class BlogAddOn implements AddOn {
 				if(blocks.containsKey(null) && !blocks.containsKey("content")) {
 					blocks.put("content", blocks.remove(null));
 				}
-				String leading = blocks.get("content");
-				String more = blocks.get("more");
+				String content = blocks.get("content");
 				
 				//
-				if(map.get("date") != null && map.get("title") != null && leading != null) {
+				if(map.get("date") != null && map.get("title") != null && content != null) {
 					LocalDate date;
 					try {
 						date  = LocalDate.parse(map.get("date").toString());
@@ -436,7 +424,12 @@ public class BlogAddOn implements AddOn {
 					}
 					
 					String url = inputPath.relativize(Util.replaceFileExtension(path, TemplateHandler.APPLICABLE_EXTENSIONS, ".html")).toString().replace('\\', '/');
-					post = new Post(path, url, date, title, categories, leading, more);
+					String leading = content;
+					Matcher m = LEADING_SEPARATOR.matcher(content);
+					if(m.find()) {
+						leading = content.substring(0, m.start(1));
+					}
+					post = new Post(path, url, date, title, categories, leading);
 					for(Category category : categories) {
 						category.add(post);
 					}
