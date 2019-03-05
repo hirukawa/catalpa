@@ -18,7 +18,7 @@ public class RelativeLinkResolver implements LinkResolver {
 	public ResolvedLink resolveLink(Node node, LinkResolverContext context, ResolvedLink link) {
 		String url = link.getUrl();
 		if(url.length() > 0) {
-			if(url.charAt(0) == '/' || url.indexOf(":/") != -1) {
+			if(url.charAt(0) == '/' || url.indexOf(":/") != -1 || url.startsWith("data:")) {
 				return link.withStatus(LinkStatus.VALID).withUrl(url);
 			} else {
 				return link.withStatus(LinkStatus.VALID).withUrl(relativeUrlPrefix + url);

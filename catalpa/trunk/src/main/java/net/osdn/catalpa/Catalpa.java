@@ -243,7 +243,8 @@ public class Catalpa {
 				}
 				if(context.getOutputPath() != null) {
 					if(reader == null) {
-						Files.copy(context.getInputPath(), context.getOutputPath(), StandardCopyOption.REPLACE_EXISTING);
+						copyFileIfModified(context.getInputPath(), context.getOutputPath());
+						return;
 					} else {
 						List<String> lines = Util.readAllLines(reader);
 						Files.write(context.getOutputPath(), lines, StandardCharsets.UTF_8);
@@ -311,12 +312,21 @@ public class Catalpa {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 				Path relativePath = src.relativize(file);
-				Files.copy(file, dst.resolve(relativePath),
-						StandardCopyOption.REPLACE_EXISTING,
-						StandardCopyOption.COPY_ATTRIBUTES);
+				copyFileIfModified(file, dst.resolve(relativePath));
 				return FileVisitResult.CONTINUE;
 			}
 		});
+	}
+	
+	protected void copyFileIfModified(Path src, Path dst) throws IOException {
+		if(Files.exists(dst)
+				&& Files.getLastModifiedTime(src).equals(Files.getLastModifiedTime(dst))
+				&& Files.size(src) == Files.size(dst)) {
+			return;
+		}
+		Files.copy(src, dst,
+				StandardCopyOption.REPLACE_EXISTING,
+				StandardCopyOption.COPY_ATTRIBUTES);
 	}
 	
 	protected SitemapItem createSitemapItem(Context context) throws IOException {
