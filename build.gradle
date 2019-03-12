@@ -1,8 +1,7 @@
 apply plugin: 'eclipse'
 apply plugin: 'java'
 
-archivesBaseName = 'catalpa'
-version = '0.1.5'
+version = '0.1.6'
 
 def defaultEncoding = 'UTF-8'
 tasks.withType(AbstractCompile).each { it.options.encoding = defaultEncoding }
@@ -14,12 +13,7 @@ javadoc {
 	options.memberLevel = JavadocMemberLevel.PUBLIC
 }
 
-tasks.withType(JavaCompile) {
-	options.compilerArgs << "-parameters"
-}
-
 repositories {
-	mavenCentral()
 	jcenter()
 }
 
@@ -52,19 +46,17 @@ dependencies {
 defaultTasks 'clean', 'build', 'exewrap'
 
 jar {
-	archiveName = "${archivesBaseName}.jar"
 	manifest {
 		attributes "Specification-Version": "${version}"
 		attributes "Main-Class": "net.osdn.catalpa.ui.javafx.Main"
 		attributes "Splashscreen-Image": "img/splash.gif"
-		//attributes "Class-Path": configurations.compile.collect { relativePath(it) }.join(' ')
+		attributes "Class-Path": configurations.runtime.collect { "lib/$it.name" }.join(' ')
 	}
 	from('src/main/java') {
 		include '**/*.fxml'
 		include '**/*.css'
 	}
 	exclude('img/*.psd', 'ico/**', 'psd/**')
-	
 }
 
 task copyLibraries(type: Copy) {
@@ -86,9 +78,9 @@ task exewrap(type: Exec, dependsOn: 'jar') {
 		"-a", "-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:+UseSerialGC -XX:CICompilerCount=1 -Xverify:none -Xms128m",
 		"-L", "lib",
 		"-e", "SHARED",
-		"-j", "${libsDir}/${jar.archiveName}",
+		"-j", "${jar.archiveFile.get()}",
 		"-i", "src/main/resources/ico/app.ico",
-		"-o", "${buildDir}/package/${archivesBaseName}.exe",
+		"-o", "${buildDir}/package/${jar.baseName}.exe",
 		"-d", "Catalpa",
 		"-p", "Catalpa",
 		"-c", "(C) 2019 HIRUKAWA Ryo",
@@ -100,7 +92,7 @@ task createJavaRuntime(type: Exec, dependsOn: ['jar', 'copyLibraries']) {
 	setGroup("build")
 	setDescription("Create Java Runtime.")
 	workingDir "${buildDir}/package/"
-	commandLine 'cmd', '/c', 'CreateJRE.bat', "${libsDir}\\${jar.archiveName}", "lib"
+	commandLine 'cmd', '/c', 'CreateJRE.bat', "${jar.archiveFile.get()}", "lib"
 }
 
 task initializeProjectFiles {

@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -21,7 +24,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Map.Entry;
-import java.util.stream.Stream;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
 
@@ -31,6 +33,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateNotFoundException;
 import net.osdn.catalpa.AddOn;
+import net.osdn.catalpa.Catalpa;
 import net.osdn.catalpa.CatalpaException;
 import net.osdn.catalpa.Context;
 import net.osdn.catalpa.Util;
@@ -52,9 +55,15 @@ public class BlogAddOn implements AddOn {
 		}
 	}
 	
+	private Catalpa catalpa;
 	private Factory factory;
 	private Map<String, Object> blogDataModel = new HashMap<String, Object>();
-	private int posts_per_page = 5;
+	private int paginate = 10;
+	
+	@Override
+	public void setCatalpa(Catalpa catalpa) {
+		this.catalpa = catalpa;
+	}
 	
 	@Override
 	public boolean isApplicable(String type) {
@@ -66,7 +75,22 @@ public class BlogAddOn implements AddOn {
 	 * 
 	 */
 	@Override
-	public void prepare(Path inputPath, Path outputPath, Map<String, Object> options, Context context) throws IOException {
+	public void prepare(Path inputPath, Path outputPath, Map<String, Object> config, Map<String, Object> options, Context context) throws IOException {
+		Object obj;
+
+		//config
+		obj = config.get("paginate");
+		if(obj != null) {
+			try {
+				int i = Integer.parseInt(obj.toString().trim());
+				if(i >= 1) {
+					paginate = i;
+				}
+			} catch(NumberFormatException e) {
+				throw new NumberFormatException("paginate: " + e.getMessage());
+			}
+		}
+		
 		//default template
 		context.getSystemDataModel().put("template", "post.ftl");
 		
@@ -87,7 +111,7 @@ public class BlogAddOn implements AddOn {
 			}
 		}
 
-		Object obj = context.getDataModel().get("title");
+		obj = context.getDataModel().get("title");
 		if(obj instanceof String) {
 			blogDataModel.put("title", obj);
 		}
@@ -106,11 +130,14 @@ public class BlogAddOn implements AddOn {
 	@Override
 	public void execute(Context context) throws IOException, TemplateException {
 		if(!factory.containsPost(context.getInputPath())) {
+			if(Post.isApplicable(context.getInputPath())) {
+				context.setOutputPath(null);
+			}
 			return;
 		}
 		
 		Post post = factory.getPostBy(context.getInputPath());
-		
+
 		/*
 		Template template = new Template(null, post.getLeading() + "\n" + post.getMore(), context.getFreeMarker());
 		StringWriter content = new StringWriter();
@@ -131,12 +158,12 @@ public class BlogAddOn implements AddOn {
 			List<Post> posts = (List<Post>)blogDataModel.get("posts");
 			
 			Template pageTemplate = context.getFreeMarker().getTemplate("page.ftl");
-			int pages = (posts.size() - 1) / posts_per_page + 1;
+			int pages = (posts.size() - 1) / paginate + 1;
 			int page = pages;
 			int fromIndex = 0;
 			int toIndex;
 			while(fromIndex < posts.size()) {
-				toIndex = Math.min(fromIndex + posts_per_page, posts.size());
+				toIndex = Math.min(fromIndex + paginate, posts.size());
 				Map<String, Object> pageModel = new HashMap<String, Object>();
 				pageModel.put("posts", posts.subList(fromIndex, toIndex));
 				blogDataModel.put("page", pageModel);
@@ -184,12 +211,12 @@ public class BlogAddOn implements AddOn {
 				Files.createDirectories(context.getOutputPath().resolve("category").resolve(category.getId()));
 				blogDataModel.put("category", category);
 
-				int pages = (category.getPosts().size() - 1) / posts_per_page + 1;
+				int pages = (category.getPosts().size() - 1) / paginate + 1;
 				int page = pages;
 				int fromIndex = 0;
 				int toIndex;
 				while(fromIndex < category.getPosts().size()) {
-					toIndex = Math.min(fromIndex + posts_per_page, category.getPosts().size());
+					toIndex = Math.min(fromIndex + paginate, category.getPosts().size());
 					Map<String, Object> pageModel = new HashMap<String, Object>();
 					pageModel.put("posts", category.getPosts().subList(fromIndex, toIndex));
 					blogDataModel.put("page", pageModel);
@@ -257,11 +284,23 @@ public class BlogAddOn implements AddOn {
 	protected Factory createFactory(Path inputPath, Path outputPath) throws IOException {
 		Factory factory = new Factory(inputPath);
 		List<Path> list = new ArrayList<Path>();
-		try(Stream<Path> stream = Files.walk(inputPath)) {
-			stream
-			.filter(path -> Post.isApplicable(path))
-			.forEach(list::add);
-		}
+
+		Files.walkFileTree(inputPath, new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+				if(catalpa.isExclude(dir) || catalpa.isCopyOnlyDirectory(dir)) {
+					return FileVisitResult.SKIP_SUBTREE;
+				}
+				return FileVisitResult.CONTINUE;
+			}
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				if(Post.isApplicable(file)) {
+					list.add(file);
+				}
+				return FileVisitResult.CONTINUE;
+			}
+		});
 		for(Path path : list) {
 			factory.getPostBy(path);
 		}
@@ -344,7 +383,7 @@ public class BlogAddOn implements AddOn {
 				}
 				
 				// YAML front matter
-				if(('^' + lines.get(0)).trim().equals("^---")) {
+				if(lines.size() > 0 && ('^' + lines.get(0)).trim().equals("^---")) {
 					for(int i = 1; i < lines.size(); i++) {
 						if(('^' + lines.get(i)).trim().equals("^---")) {
 							StringBuilder sb = new StringBuilder();
