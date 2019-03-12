@@ -69,10 +69,6 @@ public class Catalpa {
 		new LessHandler()
 	);
 	
-	private static final List<AddOn> DEFAULT_ADDONS = Arrays.asList(
-		new BlogAddOn()
-	);
-		
 	private Path inputPath;
 	private List<Handler> handlers = new ArrayList<Handler>();
 	private List<AddOn> addons = new ArrayList<AddOn>();
@@ -97,7 +93,7 @@ public class Catalpa {
 	private List<SitemapItem> sitemap = new ArrayList<SitemapItem>();
 	
 	public Catalpa(Path inputPath) {
-		this(inputPath, DEFAULT_HANDLERS, DEFAULT_ADDONS);
+		this(inputPath, DEFAULT_HANDLERS, Arrays.asList(new BlogAddOn()));
 	}
 	
 	public Catalpa(Path inputPath, Collection<Handler> handlers, Collection<AddOn> addons) {
@@ -160,15 +156,17 @@ public class Catalpa {
 			}
 		}
 
+		Map<String, Object> config = null;
 		String type = null;
 		Path filename = inputPath.resolve(Catalpa.CONFIG_FILENAME);
 		if(Files.exists(filename) && !Files.isDirectory(filename)) {
-			Map<String, Object> config = context.load(filename);
+			config = context.load(filename);
 			type = config.get("type") != null ? config.get("type").toString() : null;
+			addon = getApplicableAddOn(type);
 		}
-		addon = getApplicableAddOn(type);
 		if(addon != null) {
-			addon.prepare(inputPath, outputPath, options, context);
+			addon.setCatalpa(this);
+			addon.prepare(inputPath, outputPath, config, options, context);
 		}
 		
 		context.setFreeMarker(freeMarker);
@@ -232,7 +230,7 @@ public class Catalpa {
 					addon.execute(context);
 				}
 				List<Handler> handlers = getApplicableHandlers(path);
-				if(handlers.size() > 0) {
+				if(context.getOutputPath() != null && handlers.size() > 0) {
 					reader = new AutoDetectReader(path);
 					for(Handler handler : handlers) {
 						Writer writer = new StringWriter();
@@ -266,7 +264,7 @@ public class Catalpa {
 		}
 	}
 	
-	protected boolean isExclude(Path path) {
+	public boolean isExclude(Path path) {
 		if(!Files.exists(path)) {
 			return true;
 		}
@@ -289,7 +287,7 @@ public class Catalpa {
 		return false;
 	}
 	
-	protected boolean isCopyOnlyDirectory(Path path) {
+	public boolean isCopyOnlyDirectory(Path path) {
 		if(Files.isDirectory(path)) {
 			String name = path.getFileName().toString().toLowerCase();
 			for(String n : copyOnlyDirectoryNames) {
