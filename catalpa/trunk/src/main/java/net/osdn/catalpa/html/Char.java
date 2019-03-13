@@ -34,6 +34,7 @@ public class Char implements Token {
 	private CharClass characterClass;
 	private boolean isLatin;
 	private boolean isWhitespace;
+	private boolean isEndOfSentence;
 	
 	private Char previousChar;
 	private Char nextChar;
@@ -142,6 +143,18 @@ public class Char implements Token {
 		return isWhitespace;
 	}
 	
+	public boolean isDividingPunctuationMark() {
+		return (value == '!') || (value == '?') || (DIVIDING_PUNCTUATION_MARKS.indexOf(value) != -1);
+	}
+	
+	public void setEndOfSentence(boolean b) {
+		this.isEndOfSentence = b;
+	}
+	
+	public boolean isEndOfSentence() {
+		return this.isEndOfSentence;
+	}
+	
 	protected void setPreviousChar(Char previousChar) {
 		this.previousChar = previousChar;
 	}
@@ -168,6 +181,13 @@ public class Char implements Token {
 	
 	@Override
 	public String getHtml() {
+		if(isEndOfSentence) {
+			if(value == '!' || value == '?') {
+				letterSpacing = 1.0;
+			} else if(DIVIDING_PUNCTUATION_MARKS.indexOf(value) != -1) {
+				letterSpacing = 0.75;
+			}
+		}
 		if(characterClass == CharClass.EMPTY) {
 			return "";
 		} else if(characterClass == CharClass.CRLF) {
