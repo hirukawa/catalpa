@@ -207,7 +207,12 @@ public class JapaneseTextLayouter {
 					if(nextChar == null || nextChar.isWhitespace()) {
 						continue;
 					}
-					if((previousChar.getCharClass() == CharClass.LATIN_WORD_CHARACTER && nextChar.isLatin() == false)
+					if(previousChar.isDividingPunctuationMark() && currentChar.isNewLine()) {
+						previousChar.setEndOfSentence(true);
+						iterator.remove();
+						previousChar.setNextChar(nextChar);
+						nextChar.setPreviousChar(previousChar);
+					} else if((previousChar.getCharClass() == CharClass.LATIN_WORD_CHARACTER && nextChar.isLatin() == false)
 							|| (previousChar.isLatin() == false && nextChar.getCharClass() == CharClass.LATIN_WORD_CHARACTER)) {
 						iterator.remove();
 						previousChar.setNextChar(nextChar);
