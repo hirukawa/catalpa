@@ -20,6 +20,7 @@ import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.options.MutableDataSet;
 
 import freemarker.core.Environment;
+import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
@@ -37,6 +38,7 @@ import net.osdn.catalpa.html.JapaneseTextLayouter;
 public class MarkdownDirective implements TemplateDirectiveModel {
 	
 	private static final String PARAM_RELATIVE_URL_PREFIX = "relative_url_prefix";
+	private static final String PARAM_REPLACE_BACKSLASH_TO_YENSIGN = "replace_backslash_to_yensign";
 	
 	private Parser parser;
 	private HtmlRenderer renderer;
@@ -89,6 +91,7 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 	public void execute(Environment env, @SuppressWarnings("rawtypes") Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
 		// Processing the parameters
 		String relativeUrlPrefix = null;
+		boolean isReplaceBackslashToYensign = false;
 		
 		@SuppressWarnings("unchecked")
 		Iterator<Map.Entry<String, TemplateModel>> it = params.entrySet().iterator();
@@ -99,6 +102,11 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 					throw new TemplateModelException("The \"" + PARAM_RELATIVE_URL_PREFIX + "\" parameter must be a string.");
 				}
 				relativeUrlPrefix = ((TemplateScalarModel)param.getValue()).getAsString();
+			} else if(param.getKey().equals(PARAM_REPLACE_BACKSLASH_TO_YENSIGN)) {
+				if(!(param.getValue() instanceof TemplateBooleanModel)) {
+					throw new TemplateModelException("The \"" + PARAM_REPLACE_BACKSLASH_TO_YENSIGN + "\" parameter must be a boolean.");
+				}
+				isReplaceBackslashToYensign = ((TemplateBooleanModel)param.getValue()).getAsBoolean();
 			}
 		}
 
@@ -114,7 +122,7 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 		body.render(input);
 		Document document = parser.parse(input.toString());
 		String output = renderer.withOptions(options).render(document);
-		String japaneseTextLayouted = JapaneseTextLayouter.layout(output);
+		String japaneseTextLayouted = JapaneseTextLayouter.layout(output, isReplaceBackslashToYensign);
 		env.getOut().write(japaneseTextLayouted);
 	}
 }

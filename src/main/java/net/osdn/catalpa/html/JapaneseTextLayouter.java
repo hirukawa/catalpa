@@ -42,12 +42,15 @@ public class JapaneseTextLayouter {
 			"WBR"));
 	
 	private static final Set<String> ELEMENTS_TO_SKIP = new HashSet<String>(Arrays.asList(
-			"PRE", "SCRIPT", "STYLE"));
+			"CODE", "KBD", "PRE", "SAMP", "SCRIPT", "STYLE", "TT"));
 	
 	private static final Set<String> INLINE_TEXT_TAGS = new HashSet<String>(Arrays.asList(
-			"A", "CODE", "EM", "I", "KBD", "SMALL", "SPAN", "STRONG", "TT"));
+			"A", "BIG", "EM", "I", "SMALL", "SPAN", "STRONG"));
 	
-	public static String layout(CharSequence input) {
+	public static String layout(CharSequence input, boolean isReplaceBackslashToYensign) {
+		if(isReplaceBackslashToYensign) {
+			input = input.toString().replace("\\", "&yen;");
+		}
 		List<Token> tokens = tokenize(input);
 		removeSpaces(tokens);
 		addLetterSpacing(getFirstChar(tokens));
@@ -100,7 +103,7 @@ public class JapaneseTextLayouter {
 				for(int i = index; i < m.start(); i++) {
 					previousChar = currentChar;
 					if(input.charAt(i) == 0x0D && (i+1 < m.start()) && input.charAt(i+1) == 0x0A) {
-						currentChar = new Char();
+						currentChar = new Char(); // CRLF Character
 						i++;
 					} else {
 						currentChar = new Char(input.charAt(i));
@@ -115,7 +118,7 @@ public class JapaneseTextLayouter {
 				if(!isEndTag && ELEMENTS_TO_SKIP.contains(tagName)) {
 					// ADD EMPTY CHAR
 					previousChar = currentChar;
-					currentChar = new Char((char)0);
+					currentChar = new Char((char)0); //EMPTY Character
 					if(previousChar != null) {
 						previousChar.setNextChar(currentChar);
 						currentChar.setPreviousChar(previousChar);
@@ -141,7 +144,7 @@ public class JapaneseTextLayouter {
 				} else {
 					// ADD EMPTY CHAR
 					previousChar = currentChar;
-					currentChar = new Char((char)0);
+					currentChar = new Char((char)0); //EMPTY Character
 					if(previousChar != null) {
 						previousChar.setNextChar(currentChar);
 						currentChar.setPreviousChar(previousChar);
