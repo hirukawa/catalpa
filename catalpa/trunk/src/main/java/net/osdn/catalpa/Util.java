@@ -32,7 +32,11 @@ public class Util {
 		String filename = path.getFileName().toString();
 		for(String ext : exts) {
 			if(filename.toLowerCase().endsWith(ext)) {
-				filename = filename.substring(0, filename.length() - ext.length()) + replacement;
+				if(replacement != null) {
+					filename = filename.substring(0, filename.length() - ext.length()) + replacement;
+				} else {
+					filename = filename.substring(0, filename.length() - ext.length());
+				}
 				break;
 			}
 		}

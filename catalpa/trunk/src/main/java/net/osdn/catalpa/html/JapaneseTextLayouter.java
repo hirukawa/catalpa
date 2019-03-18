@@ -103,7 +103,7 @@ public class JapaneseTextLayouter {
 				for(int i = index; i < m.start(); i++) {
 					previousChar = currentChar;
 					if(input.charAt(i) == 0x0D && (i+1 < m.start()) && input.charAt(i+1) == 0x0A) {
-						currentChar = new Char(); // CRLF Character
+						currentChar = new Char(CharClass.CRLF);
 						i++;
 					} else {
 						currentChar = new Char(input.charAt(i));
@@ -116,9 +116,9 @@ public class JapaneseTextLayouter {
 				}
 				
 				if(!isEndTag && ELEMENTS_TO_SKIP.contains(tagName)) {
-					// ADD EMPTY CHAR
+					// ADD OPENING BOUNDARY CHAR
 					previousChar = currentChar;
-					currentChar = new Char((char)0); //EMPTY Character
+					currentChar = new Char(CharClass.OPENING_BOUNDARY);
 					if(previousChar != null) {
 						previousChar.setNextChar(currentChar);
 						currentChar.setPreviousChar(previousChar);
@@ -136,6 +136,15 @@ public class JapaneseTextLayouter {
 						tokens.add(new RawChars(m.group(0)));
 						index = m.end();
 					}
+					
+					// ADD CLOSING BOUNDARY CHAR
+					previousChar = currentChar;
+					currentChar = new Char(CharClass.CLOSING_BOUNDARY);
+					if(previousChar != null) {
+						previousChar.setNextChar(currentChar);
+						currentChar.setPreviousChar(previousChar);
+					}
+					tokens.add(currentChar);
 				} else if(INLINE_TEXT_TAGS.contains(tagName)) {
 					// ADD CURRENT TAG
 					RawChars.Type type = isEndTag ? RawChars.Type.INLINE_TAG_CLOSE : RawChars.Type.INLINE_TAG_OPEN;
@@ -144,7 +153,7 @@ public class JapaneseTextLayouter {
 				} else {
 					// ADD EMPTY CHAR
 					previousChar = currentChar;
-					currentChar = new Char((char)0); //EMPTY Character
+					currentChar = new Char(CharClass.EMPTY);
 					if(previousChar != null) {
 						previousChar.setNextChar(currentChar);
 						currentChar.setPreviousChar(previousChar);
@@ -171,7 +180,7 @@ public class JapaneseTextLayouter {
 		for(int i = index; i < input.length(); i++) {
 			previousChar = currentChar;
 			if(input.charAt(i) == 0x0D && (i+1 < input.length()) && input.charAt(i+1) == 0x0A) {
-				currentChar = new Char();
+				currentChar = new Char(CharClass.EMPTY);
 				i++;
 			} else {
 				currentChar = new Char(input.charAt(i));
@@ -240,6 +249,54 @@ public class JapaneseTextLayouter {
 			switch(currentChar.getCharClass()) {
 			case EMPTY:
 				break;
+			case OPENING_BOUNDARY:
+				break;
+			case CLOSING_BOUNDARY:
+				switch(nextChar.getCharClass()) {
+				case EMPTY:
+					break;
+				case OPENING_BOUNDARY:
+					currentChar.setLetterSpacing(0.25);
+					break;
+				case CLOSING_BOUNDARY:
+					break;
+				case CRLF:
+					break;
+				case CR:
+					break;
+				case LF:
+					break;
+				case WHITESPACE:
+					break;
+				case OPENING_BRACKET:
+					currentChar.setLetterSpacing(0.5);
+					break;
+				case CLOSING_BRACKET:
+					break;
+				case HYPHEN:
+					break;
+				case DIVIDING_PUNCTUATION_MARK:
+					break;
+				case MIDDLE_DOT:
+					currentChar.setLetterSpacing(0.25);
+					break;
+				case FULL_STOP:
+					break;
+				case COMMA:
+					break;
+				case INSEPARABLE_CHARACTER:
+					break;
+				case JAPANESE:
+					currentChar.setLetterSpacing(0.25);
+					break;
+				case LATIN_WORD_CHARACTER:
+					currentChar.setLetterSpacing(0.25);
+					break;
+				case LATIN_NON_WORD_CHARACTER:
+					currentChar.setLetterSpacing(0.25);
+					break;
+				}
+				break;
 			case CRLF:
 				break;
 			case CR:
@@ -251,6 +308,10 @@ public class JapaneseTextLayouter {
 			case OPENING_BRACKET:
 				switch(nextChar.getCharClass()) {
 				case EMPTY:
+					break;
+				case OPENING_BOUNDARY:
+					break;
+				case CLOSING_BOUNDARY:
 					break;
 				case CRLF:
 					break;
@@ -288,6 +349,11 @@ public class JapaneseTextLayouter {
 			case CLOSING_BRACKET:
 				switch(nextChar.getCharClass()) {
 				case EMPTY:
+					break;
+				case OPENING_BOUNDARY:
+					currentChar.setLetterSpacing(0.5);
+					break;
+				case CLOSING_BOUNDARY:
 					break;
 				case CRLF:
 					break;
@@ -333,6 +399,10 @@ public class JapaneseTextLayouter {
 				switch(nextChar.getCharClass()) {
 				case EMPTY:
 					break;
+				case OPENING_BOUNDARY:
+					break;
+				case CLOSING_BOUNDARY:
+					break;
 				case CRLF:
 					break;
 				case CR:
@@ -371,6 +441,10 @@ public class JapaneseTextLayouter {
 				switch(nextChar.getCharClass()) {
 				case EMPTY:
 					break;
+				case OPENING_BOUNDARY:
+					break;
+				case CLOSING_BOUNDARY:
+					break;
 				case CRLF:
 					break;
 				case CR:
@@ -408,6 +482,11 @@ public class JapaneseTextLayouter {
 			case MIDDLE_DOT:
 				switch(nextChar.getCharClass()) {
 				case EMPTY:
+					break;
+				case OPENING_BOUNDARY:
+					currentChar.setLetterSpacing(0.25);
+					break;
+				case CLOSING_BOUNDARY:
 					break;
 				case CRLF:
 					break;
@@ -455,12 +534,21 @@ public class JapaneseTextLayouter {
 			case FULL_STOP:
 				switch(nextChar.getCharClass()) {
 				case EMPTY:
+					currentChar.setLetterSpacing(0.5);
+					break;
+				case OPENING_BOUNDARY:
+					currentChar.setLetterSpacing(0.5);
+					break;
+				case CLOSING_BOUNDARY:
 					break;
 				case CRLF:
+					currentChar.setLetterSpacing(0.5);
 					break;
 				case CR:
+					currentChar.setLetterSpacing(0.5);
 					break;
 				case LF:
+					currentChar.setLetterSpacing(0.5);
 					break;
 				case WHITESPACE:
 					break;
@@ -499,6 +587,11 @@ public class JapaneseTextLayouter {
 			case COMMA:
 				switch(nextChar.getCharClass()) {
 				case EMPTY:
+					break;
+				case OPENING_BOUNDARY:
+					currentChar.setLetterSpacing(0.5);
+					break;
+				case CLOSING_BOUNDARY:
 					break;
 				case CRLF:
 					break;
@@ -544,6 +637,10 @@ public class JapaneseTextLayouter {
 				switch(nextChar.getCharClass()) {
 				case EMPTY:
 					break;
+				case OPENING_BOUNDARY:
+					break;
+				case CLOSING_BOUNDARY:
+					break;
 				case CRLF:
 					break;
 				case CR:
@@ -581,6 +678,11 @@ public class JapaneseTextLayouter {
 			case JAPANESE:
 				switch(nextChar.getCharClass()) {
 				case EMPTY:
+					break;
+				case OPENING_BOUNDARY:
+					currentChar.setLetterSpacing(0.25);
+					break;
+				case CLOSING_BOUNDARY:
 					break;
 				case CRLF:
 					break;
@@ -622,6 +724,11 @@ public class JapaneseTextLayouter {
 				switch(nextChar.getCharClass()) {
 				case EMPTY:
 					break;
+				case OPENING_BOUNDARY:
+					currentChar.setLetterSpacing(0.25);
+					break;
+				case CLOSING_BOUNDARY:
+					break;
 				case CRLF:
 					break;
 				case CR:
@@ -660,6 +767,11 @@ public class JapaneseTextLayouter {
 			case LATIN_NON_WORD_CHARACTER:
 				switch(nextChar.getCharClass()) {
 				case EMPTY:
+					break;
+				case OPENING_BOUNDARY:
+					currentChar.setLetterSpacing(0.25);
+					break;
+				case CLOSING_BOUNDARY:
 					break;
 				case CRLF:
 					break;

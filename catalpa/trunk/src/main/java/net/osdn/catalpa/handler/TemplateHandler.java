@@ -3,6 +3,7 @@ package net.osdn.catalpa.handler;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.AbstractMap;
@@ -21,6 +22,7 @@ import freemarker.template.TemplateNotFoundException;
 import net.osdn.catalpa.Context;
 import net.osdn.catalpa.Handler;
 import net.osdn.catalpa.Util;
+import net.osdn.util.io.AutoDetectReader;
 
 public class TemplateHandler implements Handler {
 
@@ -29,6 +31,7 @@ public class TemplateHandler implements Handler {
 		".markdown",
 		".md.txt",
 		".md",
+		".ftl"
 	};
 
 	private static final String OUTPUT_EXTENSION = ".html";
@@ -51,12 +54,23 @@ public class TemplateHandler implements Handler {
 
 	@Override
 	public void handle(Context context, Reader reader, Writer writer) throws YamlException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
-		context.setOutputPath(Util.replaceFileExtension(context.getOutputPath(), APPLICABLE_EXTENSIONS, OUTPUT_EXTENSION));
+		Template template = null;
+		FileTime lastModifiedTime = null;
 		
-		Entry<Template, FileTime> entry = getTemplate(context);
-		if(entry != null) {
-			Template template = entry.getKey();
-			FileTime lastModifiedTime = entry.getValue();
+		if(context.getInputPath().getFileName().toString().toLowerCase().endsWith(".ftl")) {
+			context.setOutputPath(Util.replaceFileExtension(context.getOutputPath(), new String[] { ".ftl" }, null));
+			template = new Template(null, AutoDetectReader.readAll(context.getInputPath()), context.getFreeMarker());
+			lastModifiedTime = Files.getLastModifiedTime(context.getInputPath());
+		} else {
+			context.setOutputPath(Util.replaceFileExtension(context.getOutputPath(), APPLICABLE_EXTENSIONS, OUTPUT_EXTENSION));
+			Entry<Template, FileTime> entry = getTemplate(context);
+			if(entry != null) {
+				template = entry.getKey();
+				lastModifiedTime = entry.getValue();
+			}
+		}
+		
+		if(template != null) {
 			if(lastModifiedTime != null && lastModifiedTime.compareTo(context.getLastModifiedTime()) > 0) {
 				context.setLastModifiedTime(lastModifiedTime);
 			}
@@ -76,7 +90,7 @@ public class TemplateHandler implements Handler {
 		// template not found
 		context.setOutputPath(null);
 	}
-
+	
 	protected Entry<Template, FileTime> getTemplate(Context context) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException {
 		Map<String, Object> dataModel = context.getDataModel();
 		String name = "default";

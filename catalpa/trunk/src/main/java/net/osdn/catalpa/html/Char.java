@@ -4,6 +4,8 @@ public class Char implements Token {
 
 	public enum CharClass {
 		EMPTY,
+		OPENING_BOUNDARY,
+		CLOSING_BOUNDARY,
 		CRLF,
 		CR,
 		LF,
@@ -44,10 +46,32 @@ public class Char implements Token {
 	private double marginRight   = 0.0;
 	
 	/* create CR+LF */
-	public Char() {
-		characterClass = CharClass.CRLF;
-		isLatin = true;
-		isWhitespace = true;
+	public Char(CharClass charClass) {
+		switch(charClass) {
+		case EMPTY:
+			characterClass = CharClass.EMPTY;
+			value = 0;
+			break;
+			
+		case OPENING_BOUNDARY:
+			characterClass = CharClass.OPENING_BOUNDARY;
+			value = 0;
+			break;
+			
+		case CLOSING_BOUNDARY:
+			characterClass = CharClass.CLOSING_BOUNDARY;
+			value = 0;
+			break;
+			
+		case CRLF:
+			characterClass = CharClass.CRLF;
+			isLatin = true;
+			isWhitespace = true;
+			break;
+			
+		default:
+			throw new IllegalArgumentException();
+		}
 	}
 	
 	public Char(char value) {
@@ -89,6 +113,8 @@ public class Char implements Token {
 			characterClass = CharClass.HYPHEN;
 		} else if(DIVIDING_PUNCTUATION_MARKS.indexOf(value) != -1) {
 			characterClass = CharClass.DIVIDING_PUNCTUATION_MARK;
+			marginLeft = 0.0;
+			marginRight = 0.0;
 		} else if(MIDDLE_DOTS.indexOf(value) != -1) {
 			characterClass = CharClass.MIDDLE_DOT;
 			marginLeft = -0.25;
@@ -182,33 +208,35 @@ public class Char implements Token {
 	@Override
 	public String getHtml() {
 		if(isEndOfSentence) {
-			if(value == '!' || value == '?') {
+			if(isDividingPunctuationMark()) {
 				letterSpacing = 1.0;
-			} else if(DIVIDING_PUNCTUATION_MARKS.indexOf(value) != -1) {
-				letterSpacing = 0.75;
 			}
 		}
 		if(characterClass == CharClass.EMPTY) {
 			return "";
 		} else if(characterClass == CharClass.CRLF) {
 			return "\r\n";
-		} else if(marginLeft == 0.0 && marginRight == 0.0 && letterSpacing == 0.0) {
+		} else if(characterClass == CharClass.FULL_STOP && letterSpacing == 0.5) {
+			return String.valueOf(value);
+		} else if(value != 0 && marginLeft == 0.0 && marginRight == 0.0 && letterSpacing == 0.0) {
 			return String.valueOf(value);
 		} else {
 			StringBuilder sb = new StringBuilder();
-			if(marginLeft == 0.0 && marginRight == 0.0) {
-				sb.append(value);
-			} else {
-				sb.append("<span style=\"");
-				if(marginLeft != 0.0) {
-					sb.append(String.format("margin-left:%.2fem;", marginLeft));
+			if(value != 0) {
+				if(marginLeft == 0.0 && marginRight == 0.0) {
+					sb.append(value);
+				} else {
+					sb.append("<span style=\"");
+					if(marginLeft != 0.0) {
+						sb.append(String.format("margin-left:%.2fem;", marginLeft));
+					}
+					if(marginRight != 0.0) {
+						sb.append(String.format("margin-right:%.2fem;", marginRight));
+					}
+					sb.append("\">");
+					sb.append(value);
+					sb.append("</span>");
 				}
-				if(marginRight != 0.0) {
-					sb.append(String.format("margin-right:%.2fem;", marginRight));
-				}
-				sb.append("\">");
-				sb.append(value);
-				sb.append("</span>");
 			}
 			if(letterSpacing != 0.0) {
 				sb.append(String.format("<span style=\"font-family:monospace;margin-right:%.2fem;\"> </span>", (letterSpacing - 0.5)));
