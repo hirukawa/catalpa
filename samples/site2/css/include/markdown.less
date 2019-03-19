@@ -1,0 +1,315 @@
+/*
+ * flex
+ */
+.markdown .flex {
+	display: flex;
+	justify-content: space-evenly;
+}
+.markdown .flex.space-between,
+.markdown .flex.left.right {
+	justify-content: space-between;
+}
+.markdown .flex.flex-start,
+.markdown .flex.left {
+	justify-content: flex-start;
+}
+.markdown .flex.flex-end,
+.markdown .flex.right {
+	justify-content: flex-end
+}
+
+/*
+ * hr
+ */
+.markdown hr {
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+	border: 0;
+	border-top: 1px solid #C0C0C0;	
+}
+
+/*
+ * IMG
+ */
+.markdown img {
+	max-width: 100%;
+	border: 0;
+	vertical-align: middle;
+}
+.markdown img.border {
+	border: 1px solid #808080;
+}
+.markdown img.shadow {
+	box-shadow: 2px 2px 8px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.25);
+}
+.markdown img.zoom {
+	box-shadow: none;
+}
+.markdown img.shadow.zoom {
+	box-shadow: 2px 2px 8px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.25);
+	transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.markdown img.shadow.zoom:hover {
+	box-shadow: 2px 7px 28px rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.25);
+}
+.markdown img.shadow.zoom:active {
+	box-shadow: 2px 2px 8px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.25);
+}
+
+/*
+ * P
+ */
+.markdown p.images-only {
+	text-align: center;
+}
+
+/*
+ * UL
+ */
+.markdown ul {
+	padding-left: 1.75em;
+}
+
+/*
+ * OL
+ */
+.markdown ol {
+	padding-left: 1.75em;
+}
+
+/*
+ * LI
+ */
+.markdown li > p {
+	margin: 0;
+}
+
+/*
+ * task-list
+ */
+.markdown li.task-list-item {
+	list-style-type: none;
+	text-indent: -1.75em;
+	margin-left:  1.75em;
+}
+.markdown li.task-list-item input.task-list-item-checkbox:not(:checked),
+.markdown li.task-list-item input.task-list-item-checkbox:checked {
+	visibility: hidden;
+	margin: 0 0.75em 0 0;
+}
+.markdown li.task-list-item input.task-list-item-checkbox:not(:checked)::before {
+	&:extend(.material-icons);
+	visibility: visible;
+	content: 'check_box_outline_blank';
+	/* content: ''; */
+	line-height: 0.9;
+	font-size: 130%;
+	font-weight: 100;
+	color: #C0C0C0;
+}
+.markdown li.task-list-item input.task-list-item-checkbox:checked::before {
+	&:extend(.material-icons);
+	visibility: visible;
+	/* content: 'check_box'; */
+	content: 'done';
+	line-height: 0.9;
+	font-size: 130%;
+	font-weight: 900;
+	color: #2573b8;
+}
+
+/*
+ * UL .tree
+ */
+.markdown ul.tree {
+	font-family: @font-monospace-family;
+	font-weight: @font-monospace-weight;
+}
+.markdown ul.tree,
+.markdown ul.tree ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+.markdown ul.tree ul {
+	position: relative;
+	margin-left: 7px;     
+}
+.markdown ul.tree ul:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 0;
+	border-left: 1px solid #999;
+}
+.markdown ul.tree li {
+	position: relative;
+	margin: 0;
+	padding: 3px 0 3px 15px;
+	line-height: 20px;   
+}
+.markdown ul.tree ul li:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 12px;
+	left: 0;
+	width: 12px;
+	height: 0;
+	border-top: 1px solid #999;
+}
+.markdown ul.tree ul li:last-child:before {
+	bottom: 0;
+	height: auto;
+	background: #FFFFFF; 
+}
+
+/*
+ * TABLE
+ */
+.markdown table {
+	min-width:  60%;
+	max-width: 100%;
+	margin: 1.5rem auto 1.5rem auto;
+	font-size: 83.33%;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+.markdown table > thead > tr > th {
+	padding: 0 0.5em;
+	line-height: 1.5;
+	vertical-align: bottom;
+	border-bottom: 2px solid #C0C0C0;
+	white-space: nowrap;
+}
+.markdown table > thead > tr > th:not([align]) {
+	text-align: left;
+}
+.markdown table > tbody > tr:nth-of-type(odd) {
+	background-color: #f9f9f9;
+}
+.markdown table > tbody > tr > td {
+	vertical-align: baseline;
+	padding: 0.25em 0.5em;
+	border-bottom: 1px solid #C0C0C0;
+}
+.markdown table var {
+	font-style: normal;
+	white-space: nowrap;
+}
+.markdown table th::after,
+.markdown table td::after {
+	content: ' ';
+}
+.markdown table.left {
+	margin-left: 0;
+}
+.markdown table.right {
+	margin-right: 0;
+}
+
+/*
+ * BLOCKQUOTE
+ */
+.markdown blockquote {
+	margin-left: 0.5em;
+	margin-right: 1em;
+	padding-top: 0.1em;
+	padding-bottom: 0.1em;
+	padding-left: 1.5em;
+	padding-right: 1.5em;
+	font-family: @font-italic-family;
+	font-style: italic;
+	font-weight: @font-italic-weight;
+	font-size: 0.95em;
+	border-left: 0.25em solid #eee;
+}
+.markdown blockquote:empty {
+	margin: 3.0em 0 0 0;
+	padding: 0;
+	height: 0;
+	border: 0;
+}
+
+/*
+ * TT
+ */
+.markdown tt {
+	font-family: @font-monospace-family;
+}
+
+/*
+ * CODE
+ */
+.markdown code {
+	padding: 0.15em 0.25em 0.10em 0.25em;
+	font-family: @font-monospace-family;
+	font-size: 92%;
+	letter-spacing: 0.06em;
+	color: #c7254e;
+	background-color: rgba(128, 0, 32, 0.05);
+	border-radius: 4px;
+	white-space: pre-wrap;
+}
+.markdown code[data-length="1"],  .markdown code[data-length="2"],  .markdown code[data-length="3"],  .markdown code[data-length="4"],  .markdown code[data-length="5"],
+.markdown code[data-length="6"],  .markdown code[data-length="7"],  .markdown code[data-length="8"],  .markdown code[data-length="9"],  .markdown code[data-length="10"],
+.markdown code[data-length="11"], .markdown code[data-length="12"], .markdown code[data-length="13"], .markdown code[data-length="14"], .markdown code[data-length="15"],
+.markdown code[data-length="16"], .markdown code[data-length="17"], .markdown code[data-length="18"], .markdown code[data-length="19"], .markdown code[data-length="20"] {
+	white-space: pre;
+}
+
+
+/*
+ * KBD
+ */
+.markdown kbd {
+	display: inline-block;
+	vertical-align: text-top;
+	margin: 0;
+	padding: 0.2em 0.5em 0.2em 0.5em;
+	font-family: @font-monospace-family;
+	font-size: 92%;
+	line-height: 1.0;
+	color: #D0D0D0;
+	text-shadow: -1px -1px 0 rgba(0,0,0,0.5);
+	background-color: #202020;
+	border: 1px solid #000000;
+	border-radius: 3px;
+	box-shadow: 1px 1px 2px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.3) inset;
+	white-space: pre-wrap;
+}
+.markdown kbd[data-length="1"],  .markdown kbd[data-length="2"],  .markdown kbd[data-length="3"],  .markdown kbd[data-length="4"],  .markdown kbd[data-length="5"],
+.markdown kbd[data-length="6"],  .markdown kbd[data-length="7"],  .markdown kbd[data-length="8"],  .markdown kbd[data-length="9"],  .markdown kbd[data-length="10"],
+.markdown kbd[data-length="11"], .markdown kbd[data-length="12"], .markdown kbd[data-length="13"], .markdown kbd[data-length="14"], .markdown kbd[data-length="15"],
+.markdown kbd[data-length="16"], .markdown kbd[data-length="17"], .markdown kbd[data-length="18"], .markdown kbd[data-length="19"], .markdown kbd[data-length="20"] {
+	white-space: pre;
+}
+
+
+/*
+ * SAMP
+ */
+.markdown samp.button {
+	display: inline-block;
+	vertical-align: text-top;
+	margin: 0;
+	padding: 0.4em 0.5em 0.3em 0.5em;
+	font-family: @font-monospace-family;
+	font-size: 80%;
+	line-height: 1.0;
+	color: #202020;
+	background-color: #E0E0E0;
+	border: 1px solid #606060;
+	border-radius: 3px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,0.5), 1px 1px 2px #FFFFFF inset;
+	white-space: pre-wrap;
+}
+.markdown samp[data-length="1"],  .markdown samp[data-length="2"],  .markdown samp[data-length="3"],  .markdown samp[data-length="4"],  .markdown samp[data-length="5"],
+.markdown samp[data-length="6"],  .markdown samp[data-length="7"],  .markdown samp[data-length="8"],  .markdown samp[data-length="9"],  .markdown samp[data-length="10"],
+.markdown samp[data-length="11"], .markdown samp[data-length="12"], .markdown samp[data-length="13"], .markdown samp[data-length="14"], .markdown samp[data-length="15"],
+.markdown samp[data-length="16"], .markdown samp[data-length="17"], .markdown samp[data-length="18"], .markdown samp[data-length="19"], .markdown samp[data-length="20"] {
+	white-space: pre;
+}

@@ -1,0 +1,102 @@
+
+@sidebar-width: 300px;
+@content-width: 728px;
+@header-title-height: 40px;
+@header-menu-height:  20px;
+
+@font-normal-family: "Meiryo";
+@font-normal-weight: 400;
+
+@font-monospace-family: "Consolas", "Meiryo", monospace;
+@font-monospace-weight: 500;
+
+@font-italic-family: "Yu Gothic";
+@font-italic-weight: 500;
+
+@font-family-datetime: Georgia, "Times New Roman", Times, serif;
+
+html {
+	overflow-y: scroll;
+	height: 100%;
+	line-height: 1.8;
+	font-size: 12pt;
+	font-family: @font-normal-family;
+	scroll-behavior: smooth;
+}
+
+body {
+	display: flex;
+	height: 100%;
+	margin: 0;
+	overflow-wrap: break-word;
+	word-break: break-word;
+	line-break: strict;
+	color: #303030;
+	background-color: #F0F0F0;
+}
+
+hr {
+	margin: 0;
+	border: 0;
+	border-top: 1px solid #C0C0C0;	
+}
+
+@import "include/material-color.less";
+@import "include/material-icons.less";
+@import "include/layout.less";
+@import "include/admonition.less";
+@import "include/button.less";
+@import "include/header.less";
+@import "include/sidebar.less";
+@import "include/markdown.less";
+@import "include/highlight.less";
+
+
+/*
+	background-color: #007396;
+	color: #ED8B00;
+*/
+
+div.footer-ad {
+	width: 300px;
+	height: 200px;
+	background-color: green;
+}
+
+div.header-fixed-ad {
+	width: 728px;
+	height: 90px;
+	position: sticky;
+	top: 60px;
+	bottom: 0px;
+	margin-left: auto;
+	background-color: blue;
+}
+div.content {
+	padding: 0 2.0rem;
+	text-align: justify;
+}
+div.content-clear-padding {
+	margin-left: -2.0rem;
+}
+
+a {
+	color: #2573b8;
+	text-decoration: none;
+}
+a:visited {
+	color: #2573b8;
+}
+a:hover {
+	color: #eb7a3d;
+}
+
+/*
+ * font
+ */
+.font-normal {
+	font-weight: normal;
+}
+.font-bold {
+	font-weight: bold;
+}
