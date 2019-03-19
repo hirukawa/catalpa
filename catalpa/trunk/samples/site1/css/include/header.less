@@ -1,0 +1,72 @@
+.markdown p[id]:empty {
+	display: block;
+	margin: ~"calc(+1.5rem - @{header-title-height} - @{header-menu-height})" 0 0 0;
+	padding: ~"calc(-1.5rem + @{header-title-height} + @{header-menu-height})" 0 0 0;
+}
+
+.markdown h1 {
+	margin-top: 2.0rem;
+	margin-bottom: 2.0rem;
+	padding-top: 0.16em;
+	text-align: center;
+	font-size: 2.5em;
+	font-weight: bold;
+	color: #3e4750;
+}
+.markdown h1 > img {
+	padding-bottom: 0.2em;
+}
+
+.markdown h2 {
+	margin-top: 2.5rem;
+	margin-bottom: 0;
+	padding-left: 0.75em;
+	padding-top: 0.16em;
+	font-size: 1.5em;
+	font-weight: normal;
+	color: #FFFFFF;
+	background-color: #3e4750;
+}
+.markdown h2 > img {
+	padding-bottom: 0.2em;
+}
+
+.markdown h3 {
+	margin-top: 2.0rem;
+	margin-bottom: 0;
+	padding-left: 8px;
+	border-left: 8px solid #3e4750;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+.markdown h4 {
+	margin-top: 1.5rem;
+	margin-bottom: 0;
+	border-bottom: 2px dashed #3e4750;
+	font-size: 1.1em;
+	font-weight: bold;
+}
+
+.markdown h5 {
+	margin-top: 1.5rem;
+	margin-bottom: 0;
+	font-size: 1.0em;
+	font-weight: bold;
+}
+
+.markdown h6 {
+	margin-top: 1.5rem;
+	margin-bottom: 0;
+	font-size: 0.8em;
+	font-weight: bold;
+}
+
+.markdown h1 img,
+.markdown h2 img,
+.markdown h3 img,
+.markdown h4 img,
+.markdown h5 img,
+.markdown h6 img {
+	vertical-align: middle;
+}

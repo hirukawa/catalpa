@@ -1,0 +1,95 @@
+
+@content-width: 728px;
+
+@font-normal-family: "Meiryo";
+@font-normal-weight: 400;
+
+@font-monospace-family: "Consolas", "Meiryo", monospace;
+@font-monospace-weight: 500;
+
+@font-italic-family: "Yu Gothic";
+@font-italic-weight: 500;
+
+@font-family-datetime: Georgia, "Times New Roman", Times, serif;
+
+html {
+	overflow-y: scroll;
+	height: 100%;
+	line-height: 1.8;
+	font-size: 12pt;
+	font-family: @font-normal-family;
+	scroll-behavior: smooth;
+}
+
+@import "include/admonition.less";
+@import "include/button.less";
+@import "include/header.less";
+@import "include/markdown.less";
+@import "include/highlight.less";
+
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow-wrap: break-word;
+	word-break: break-word;
+	line-break: strict;
+	color: #303030;
+	background-color: #F0F0F0;
+}
+
+hr {
+	margin: 0;
+	border: 0;
+	border-top: 1px solid #C0C0C0;	
+}
+
+div.content {
+	width: @content-width;
+	min-height: 100%;
+	margin: 0 auto;
+	padding: 1px 2.0rem;
+	background-color: #FFFFFF;
+	text-align: justify;
+	box-shadow: 0px 0px 8px 0px #C0C0C0;
+}
+
+a {
+	color: #2573b8;
+	text-decoration: none;
+}
+a:visited {
+	color: #2573b8;
+}
+a:hover {
+	color: #eb7a3d;
+}
+
+.center {
+	text-align: center !important;
+}
+.right {
+	text-align: right !important;
+}
+.left {
+	text-align: left !important;
+}
+.smaller {
+	font-size: smaller;
+}
+.datetime {
+	font-family: @font-family-datetime;
+}
+.padding-v10 {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+@media (max-device-width: 480px), (max-width: @content-width) {
+	div.content {
+		width: initial;
+		padding: 0.1rem 1.0rem !important;
+		text-align: justify;
+		box-shadow: none;
+	}
+}

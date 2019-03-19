@@ -1,0 +1,234 @@
+.markdown pre > code {
+	display: block;
+	margin: 0;
+	padding: 0.5em 0.75em;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;  word-wrap: break-word;
+	text-align: left;
+	letter-spacing: 0;
+	font-size: 86%;
+	line-height: 1.5;
+	tab-size: 4;
+	border: 0;
+	border-radius: 0;
+	color: #F0F0F0;
+	background: #272822;
+}
+
+.markdown pre > div.title {
+	padding: 2px 0px 0px 6px;
+	color: #f8f8f2;
+	background: #414339;
+	font-family: @font-monospace-family;
+	font-size: 86%;
+	font-weight: normal;
+	border-bottom: 0;
+}
+.markdown pre.cmd > div.title {
+	background: #2e3e4d;
+	border-bottom: 1px solid #C0C0C0;
+}
+.markdown pre > div.title > span.copy-button {
+	float: right;
+	margin-right: 0.25em;
+	padding: 0 5px;
+	font-size: 10px;
+	font-weight: normal;
+	cursor: pointer;
+	border-radius: 10px;
+}
+.markdown pre > div.title > span.copy-button::after {
+	content: 'クリップボードへコピー';
+}
+.markdown pre > div.title > span.copy-button {
+	border: 1px solid #808080;
+	color: #a0a0a0;
+}
+.markdown pre > div.title > span.copy-button:hover {
+	border: 1px solid #e0e0e0;
+	color: #e0e0e0;
+}
+.markdown pre > div.title > span.copy-button:active {
+	border: 1px solid #606060;
+	color: #e0e0e0;
+	background-color: #606060;
+}
+
+
+.markdown pre > code.nohighlight {
+	color: #f8f8f2;
+}
+
+.markdown pre > code.language-java {
+	.hljs-meta {
+		color: #66d9ef;
+	}
+	.hljs-class .hljs-title {
+		color: #a6e22e;
+		text-decoration: underline;
+	}
+}
+
+.markdown pre > code.yaml {
+	.hljs-bullet,
+	.hljs-number,
+	.hljs-string {
+		color: #f8f8f2;
+	}
+	.hljs-array {
+		color: #e6db74;
+	}
+	.hljs-object {
+		color: #66d9ef;
+	}
+	.hljs-attr {
+		color: #a6e22e;
+	}
+}
+
+.hljs,
+.hljs-tag,
+.hljs-subst {
+	color: #f8f8f2;
+}
+
+.hljs-strong,
+.hljs-emphasis {
+	color: #a8a8a2;
+}
+
+.hljs-bullet,
+.hljs-quote,
+.hljs-number,
+.hljs-regexp,
+.hljs-literal,
+.hljs-link {
+	color: #ae81ff;
+}
+
+.hljs-code,
+.hljs-title,
+.hljs-section,
+.hljs-selector-class,
+.hljs-attr {
+	color: #a6e22e;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-name {
+	color: #f92672;
+}
+
+.hljs-symbol,
+.hljs-attribute {
+	color: #66d9ef;
+}
+
+.hljs-params,
+.hljs-class .hljs-title {
+	color: #f8f8f2;
+}
+
+.hljs-string,
+.hljs-type,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-selector-id,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-variable {
+	color: #e6db74;
+}
+
+.hljs-comment,
+.hljs-deletion,
+.hljs-meta {
+	color: #b3ad8f;
+}
+
+/**
+ * GitHub Gist Theme
+ * Author : Louis Barranqueiro - https://github.com/LouisBarranqueiro
+ */
+
+/*
+
+ .hljs {
+	display: block;
+	background: white;
+	padding: 0.5em;
+	color: #333333;
+	overflow-x: auto;
+  }
+  
+  .hljs-comment,
+  .hljs-meta {
+	color: #969896;
+  }
+  
+  .hljs-string,
+  .hljs-variable,
+  .hljs-template-variable,
+  .hljs-strong,
+  .hljs-emphasis,
+  .hljs-quote {
+	color: #df5000;
+  }
+  
+  .hljs-keyword,
+  .hljs-selector-tag,
+  .hljs-type {
+	color: #a71d5d;
+  }
+  
+  .hljs-literal,
+  .hljs-symbol,
+  .hljs-bullet,
+  .hljs-attribute {
+	color: #0086b3;
+  }
+  
+  .hljs-section,
+  .hljs-name {
+	color: #63a35c;
+  }
+  
+  .hljs-tag {
+	color: #333333;
+  }
+  
+  .hljs-title,
+  .hljs-attr,
+  .hljs-selector-id,
+  .hljs-selector-class,
+  .hljs-selector-attr,
+  .hljs-selector-pseudo {
+	color: #795da3;
+  }
+  
+  .hljs-addition {
+	color: #55a532;
+	background-color: #eaffea;
+  }
+  
+  .hljs-deletion {
+	color: #bd2c00;
+	background-color: #ffecec;
+  }
+  
+  .hljs-link {
+	text-decoration: underline;
+  }
+  
+*/

@@ -42,7 +42,7 @@ import net.osdn.util.io.AutoDetectReader;
 
 public class BlogAddOn implements AddOn {
 	private static Pattern LEADING_SEPARATOR = Pattern.compile("(<!--+\\s*more\\s*-+->)", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
-	private static final Pattern CATEGORY_ID_PATTERN = Pattern.compile("(.+)\\((\\w*)\\)$");
+	private static final Pattern CATEGORY_ID_PATTERN = Pattern.compile("(.+)\\(([-_.a-zA-Z0-9]*)\\)$");
 	private static final String THUMBNAIL_FILENAME = "thumbnail.png";
 	
 	private static String DEFAULT_THUMBNAIL_DATA_URI = null;
