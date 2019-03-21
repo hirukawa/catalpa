@@ -1,7 +1,7 @@
 ---
 title: CatalpaはJavaで作られています
 date:  2018-12-27
-categories: ["カテゴリーA", "カテゴリーC"]
+categories: ["カテゴリーA", "カテゴリーC", "プログラミング(programming)"]
 ---
 
 CatalpaはJavaで開発されています。
