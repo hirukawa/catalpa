@@ -1,7 +1,7 @@
 ---
 title: Catalpaの名前の由来
 date:  2019-01-08
-categories: ["カテゴリーA(cat-a)"]
+categories: ["カテゴリーA(cat-a)", "組版(kumihan)"]
 ---
 サイトやブログを作成してインターネット上に公開することをWebパブリッシングと言います。
 直訳すると出版ですね。

@@ -1,7 +1,7 @@
 ---
 title: 組版とは
 date:  2018-12-31
-categories: ["カテゴリーC(cat-c)"]
+categories: ["カテゴリーC(cat-c)", "組版"]
 ---
 [JIS X 4051（日本語文書の組版方法）]: https://kikakurui.com/x4/X4051-2004-02.html
 
