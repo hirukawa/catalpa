@@ -3,7 +3,6 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<link rel="stylesheet" href="${baseurl}css/main.css">
 	<link rel="stylesheet" href="${baseurl}lib/jsOnlyLightbox/css/lightbox.min.css">
 	<link rel="icon" href="${baseurl}favicon.ico">
@@ -50,7 +49,7 @@
 		<div class="body-right-adv"></div>
 	</div>
 
-	<script type="text/javascript">
+	<script>
 		function onResize() {
 			var header = document.getElementById("header");
 			if(header) {
@@ -74,7 +73,7 @@
 		onResize();
 	</script>
 
-	<script src="${baseurl}lib/jsOnlyLightbox/js/lightbox.min.js" type="text/javascript"></script>
+	<script src="${baseurl}lib/jsOnlyLightbox/js/lightbox.min.js"></script>
 	<script>
 		var e = document.getElementsByClassName("zoom");
 		for(var i = 0; i < e.length; i++) {
@@ -97,7 +96,7 @@
 	</script>
 
 	<#if (_PREVIEW!false) == true>
-	<script type="text/javascript">
+	<script>
 		function waitForUpdate() {
 			var xhr = new XMLHttpRequest();
 			xhr.onload = function (e) {
