@@ -21,12 +21,6 @@ html {
 	scroll-behavior: smooth;
 }
 
-@import "include/admonition.less";
-@import "include/button.less";
-@import "include/header.less";
-@import "include/markdown.less";
-@import "include/highlight.less";
-
 body {
 	height: 100%;
 	margin: 0;
@@ -65,14 +59,14 @@ a:hover {
 	color: #eb7a3d;
 }
 
-.center {
-	text-align: center !important;
+/*
+ * font
+ */
+.font-normal {
+	font-weight: normal;
 }
-.right {
-	text-align: right !important;
-}
-.left {
-	text-align: left !important;
+.font-bold {
+	font-weight: bold;
 }
 .smaller {
 	font-size: smaller;
@@ -80,16 +74,14 @@ a:hover {
 .datetime {
 	font-family: @font-family-datetime;
 }
-.padding-v10 {
-	padding-top: 10px;
-	padding-bottom: 10px;
-}
 
-@media (max-device-width: 480px), (max-width: @content-width) {
-	div.content {
-		width: initial;
-		padding: 0.1rem 1.0rem !important;
-		text-align: justify;
-		box-shadow: none;
-	}
-}
+@import "include/material-color.less";
+@import "include/material-icons.less";
+@import "include/layout.less";
+@import "include/admonition.less";
+@import "include/button.less";
+@import "include/heading.less";
+@import "include/markdown.less";
+@import "include/highlight.less";
+@import "include/layout.less";
+@import "include/responsive.less";

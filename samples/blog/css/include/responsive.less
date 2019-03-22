@@ -1,0 +1,32 @@
+@media (max-device-width: 480px), (max-width: @content-width) {
+	body {
+		display: initial !important;
+	}
+	div.body-center {
+		width: initial !important;
+	}
+	div.flex-container > div.flex-item-left {
+		display: none !important;
+	}
+	div.flex-container > div.flex-item-right {
+		width: 100% !important;
+	}
+	div.header {
+		position: initial !important;
+	}
+	div.content {
+		padding: 0 1.0rem !important;
+		text-align: justify;
+	}
+	div.content-clear-padding {
+		margin-left: -1.0rem !important;
+	}
+}
+@media screen and (max-width: @sidebar-width + @content-width + 280px) {
+	body > div.body-left > div.body-left-adv {
+		display: none;
+	}
+	body > div.body-right > div.body-right-adv {
+		display: none;
+	}
+}
