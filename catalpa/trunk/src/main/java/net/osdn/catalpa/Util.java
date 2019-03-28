@@ -43,6 +43,37 @@ public class Util {
 		return path.getParent().resolve(filename);
 	}
 	
+	/** JavaScriptの文字列として扱えるようにエスケープした文字列を返します。
+	 * 
+	 * @param text
+	 * @return
+	 */
+	public static String getJavaScriptString(String text) {
+		if(text == null) {
+			return "";
+		}
+		
+		//連続する改行コードをまとめて \n に置き換えます。
+		text = text.replace("\r", "\n");
+		while(text.contains("\n\n")) {
+			text = text.replace("\n\n", "\n");
+		}
+		
+		//連続するタブ、スペースを単独のスペース1つに置き換えます。
+		text = text.replace("\t", " ");
+		while(text.contains("  ")) {
+			text = text.replace("  ", " ");
+		}
+		
+		//エスケープ処理
+		text = text.replace("\\", "\\\\");
+		text = text.replace("\n", "\\n");
+		text = text.replace("\"", "\\\"");
+		text = text.replace("'", "\\'");
+		
+		return text;
+	}
+	
 	public static int[] getApplicationVersion() {
 		String s = System.getProperty("java.application.version");
 		if(s == null || s.trim().length() == 0) {

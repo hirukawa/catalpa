@@ -72,12 +72,12 @@ public class Catalpa {
 	private Path inputPath;
 	private List<Handler> handlers = new ArrayList<Handler>();
 	private List<AddOn> addons = new ArrayList<AddOn>();
-	private List<String> excludeFileNames = Arrays.asList(new String[] {
+	private List<String> excludeFileNames = new ArrayList<String>(Arrays.asList(new String[] {
 		"htdocs",
 		"include",
 		"templates",
 		CONFIG_FILENAME
-	});
+	}));
 	private List<String> copyOnlyDirectoryNames = Arrays.asList(new String[] {
 		"lib"
 	});
@@ -91,6 +91,7 @@ public class Catalpa {
 	private AddOn addon;
 	private Configuration freeMarker;
 	private List<SitemapItem> sitemap = new ArrayList<SitemapItem>();
+	private List<SearchIndex> searchIndexes;
 	
 	public Catalpa(Path inputPath) {
 		this(inputPath, DEFAULT_HANDLERS, Arrays.asList(new BlogAddOn()));
@@ -169,11 +170,18 @@ public class Catalpa {
 			addon.prepare(inputPath, outputPath, config, options, context);
 		}
 		
+		filename = inputPath.resolve("templates").resolve("search.ftl");
+		if(Files.exists(filename) && !Files.isDirectory(filename)) {
+			searchIndexes = new ArrayList<SearchIndex>();
+			excludeFileNames.add("search.md");
+		}
+		
 		context.setFreeMarker(freeMarker);
 		context.setInputPath(inputPath);
 		context.setOutputPath(outputPath);
 		retrieve(context);
 		createSitemap(context);
+		createSearchIndex(context);
 		
 		if(addon != null) {
 			addon.postExecute(inputPath, outputPath, options, context);
@@ -246,6 +254,13 @@ public class Catalpa {
 					} else {
 						List<String> lines = Util.readAllLines(reader);
 						Files.write(context.getOutputPath(), lines, StandardCharsets.UTF_8);
+						// create search index
+						if(searchIndexes != null && context.getOutputPath().getFileName().toString().toLowerCase().endsWith(".html")) {
+							SearchIndex index = SearchIndex.create(context, lines);
+							if(index != null) {
+								searchIndexes.add(index);
+							}
+						}
 					}
 					if(Files.exists(context.getOutputPath()) && !Files.isDirectory(context.getOutputPath())) {
 						Files.setLastModifiedTime(context.getOutputPath(), context.getLastModifiedTime());
@@ -354,10 +369,65 @@ public class Catalpa {
 		Map<String, Object> dataModel = new HashMap<String, Object>();
 		dataModel.put("sitemap", sitemap);
 		
-		
 		Template template = context.getFreeMarker().getTemplate("sitemap.ftl");
 		Path sitemap = context.getRootOutputPath().resolve("sitemap.xml");
 		try (Writer out = Files.newBufferedWriter(sitemap, StandardCharsets.UTF_8,
+				StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+			template.process(dataModel, out);
+		}
+	}
+	
+	protected void createSearchIndex(Context context) throws Exception {
+		if(searchIndexes == null) {
+			return;
+		}
+		
+		StringBuilder db = new StringBuilder("\r\n");
+		for(int i = 0; i < searchIndexes.size(); i++) {
+			SearchIndex index = searchIndexes.get(i);
+			db.append("\t\t\t{ title:\"");
+			db.append(index.getTitle());
+			db.append("\", url:\"");
+			db.append(index.getUrl());
+			db.append("\", text:\"");
+			db.append(index.getTitle());
+			db.append("\\n");
+			db.append(index.getText());
+			db.append("\" }");
+			if(i + 1 < searchIndexes.size()) {
+				db.append(",\r\n");
+			}
+		}
+		db.append("\r\n\t\t");
+		
+		Context subContext = context.clone();
+		Path path = context.getRootInputPath().resolve("search.md");
+		if(Files.exists(path) && !Files.isDirectory(path)) {
+			List<Handler> handlers = getApplicableHandlers(path);
+			if(handlers.size() > 0) {
+				Reader reader = null;
+				try {
+					reader = new AutoDetectReader(path);
+					for(Handler handler : handlers) {
+						Writer writer = new StringWriter();
+						handler.handle(subContext, reader, writer);
+						reader.close();
+						reader = new StringReader(writer.toString());
+					}
+				} finally {
+					if(reader != null) {
+						reader.close();
+					}
+				}
+			}
+		}
+
+		Map<String, Object> dataModel = subContext.getDataModel();
+		dataModel.put("db", db.toString());
+
+		Template template = context.getFreeMarker().getTemplate("search.ftl");
+		Path searchHtml = context.getRootOutputPath().resolve("search.html");
+		try (Writer out = Files.newBufferedWriter(searchHtml, StandardCharsets.UTF_8,
 				StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 			template.process(dataModel, out);
 		}

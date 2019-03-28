@@ -6,10 +6,10 @@
 	<link rel="stylesheet" href="${baseurl}css/main.css">
 	<link rel="stylesheet" href="${baseurl}lib/jsOnlyLightbox/css/lightbox.min.css">
 	<link rel="icon" href="${baseurl}favicon.ico">
-	<title>${blog.title!}</title>
+	<title>${title!}</title>
 	<meta name="description" content="${description!}">
 </head>
-<body class="blog page">
+<body>
 	<div class="body-left">
 		<div class="body-left-adv"></div>
 	</div>
@@ -18,48 +18,37 @@
 			<div class="header-title">
 				&nbsp;
 				<#if (_PREVIEW!false) == true>
-				<a href="/">${blog.title!}</a>
+				<a href="/">${title!}</a>
 				<#else>
-				<#if siteurl?has_content><a href="${siteurl}"></#if>${blog.title!}<#if siteurl?has_content></a></#if>
+				<#if siteurl?has_content><a href="${siteurl}"></#if>${title!}<#if siteurl?has_content></a></#if>
 				</#if>
 			</div>
 		</div>
 		<div class="flex-container">
 			<div class="flex-item-left" id="flex-item-left">
-				<#include "sidebar.ftl">
+
+				<div class="sidebar">
+					<div class="sidebar-fixed-top px-3 pt-3 pb-1">
+						<form method="GET" action="${baseurl}search.html?">
+							<input type="search" name="keyword" placeholder="検索">
+						</form>
+					</div><@markdown replace_backslash_to_yensign=true>${sidebar!}</@markdown>
+				</div>
+
 			</div>
 			<div class="flex-item-right">
-
-				<#list blog.page.posts as post>
-				<article class="card">
-					<header>
-						<a class="title" href="${baseurl}${post.url}">${post.title}</a>
-						<div>
-						 	<span class="datetime">${post.date}</span>
-							<span class="categories">
-							<#list post.categories as category>
-								<a class="category" href="${baseurl}${category.url}">${category.name}</a>
-							</#list>
-							</span>
-						</div>
-					</header>
-					<div class="leading markdown"><@markdown replace_backslash_to_yensign=true relative_url_prefix="${post.relativeUrlPrefix}">${post.leading}</@markdown></div>
-					<footer>
-						<a class="more" href="${baseurl}${post.url}">続きを読む...</a>
-					</footer>
-				</article>
-				</#list>
-
-				<#-- footer pager -->
-				<ul class="pager <#if blog.pager.previous??>left</#if> <#if blog.pager.next??>right</#if>">
-					<#if blog.pager.previous??>
-					<li class="left"><a href="${blog.pager.previous.url}" class="previous">${blog.pager.previous.title}</a></li>
+				<div class="content markdown"><!--start-search-target--><@markdown replace_backslash_to_yensign=true>${content!}</@markdown><!--end-search-target--></div>
+				<hr>
+				<footer>
+					<#if dateModified??>
+					<span>最終更新日</span>
+					<span class="datetime">${dateModified?string["yyyy-MM-dd"]}</span>
 					</#if>
-					<#if blog.pager.next??>
-					<li class="right"><a href="${blog.pager.next.url}" class="next">${blog.pager.next.title}</a></li>
+					<#if mailto?has_content>
+					&thinsp;
+					<address><a href="mailto:${mailto}"><#if author?has_content>${author}<#else>${mailto}</#if></a></address>
 					</#if>
-				</ul>
-
+				</footer>
 			</div>
 		</div>
 	</div>
