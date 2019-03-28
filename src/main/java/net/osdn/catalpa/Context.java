@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 
 import freemarker.template.Configuration;
@@ -34,6 +35,7 @@ public class Context {
 	private FileTime lastModifiedTime;
 	
 	private Map<String, Object> systemDataModel = new LinkedHashMap<String, Object>();
+	private String declaredYamlFrontMatter;
 	private List<String> yamlFrontMatters = new ArrayList<String>();
 	private Map<String, String> blocks = new LinkedHashMap<String, String>();
 	private Map<String, Object> dataModel = null;
@@ -87,6 +89,25 @@ public class Context {
 
 	public FileTime getLastModifiedTime() {
 		return lastModifiedTime;
+	}
+	
+	public void setDeclaredYamlFrontMatter(String yamlFrontMatter) {
+		declaredYamlFrontMatter = yamlFrontMatter;
+	}
+	
+	public Map<String, Object> getDeclaredYamlFrontMatter() throws YamlException {
+		Map<String, Object> dm = new HashMap<String, Object>();
+		if(declaredYamlFrontMatter != null && declaredYamlFrontMatter.length() > 0) {
+			Object obj = new YamlReader(declaredYamlFrontMatter).read();
+			if(obj instanceof Map) {
+				@SuppressWarnings("unchecked")
+				Map<String, Object> map = (Map<String, Object>)obj;
+				for(Entry<String, Object> entry : map.entrySet()) {
+					dm.put(entry.getKey(), entry.getValue());
+				}
+			}
+		}
+		return dm;
 	}
 	
 	public void addYamlFrontMatter(String yamlFrontMatter) {

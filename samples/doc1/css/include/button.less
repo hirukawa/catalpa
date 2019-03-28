@@ -1,0 +1,80 @@
+/*
+
+  * {.pager} [前へ](/url) {.previous}
+  * {.pager} [次へ](/url) {.next}
+
+*/
+
+/*
+ * pager
+ */
+ul.pager {
+	padding: 0;
+}
+ul.pager:after {
+	display: block;
+	clear: both;
+	content: '';
+}
+ul.pager > li {
+	list-style-type: none;
+	padding: 0.25em 0;
+}
+ul.pager > li.left {
+	float: left;
+	padding-right: 0.25em;
+}
+ul.pager > li.right {
+	float: right;
+	padding-left: 0.25em;
+}
+// no icon
+ul.pager > li > a {
+	display: inline-block;
+	padding-top:     0.52em;
+	padding-bottom:  0.38em;
+	padding-left:    1.0em;
+	padding-right:   1.0em;
+	font-size: 92%;
+	line-height: 1.2;
+	vertical-align: middle;
+	border-radius: 1em;
+	color: #FFFFFF;
+	background-color: #3667d5;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+ul.pager > li > a:hover {
+	box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.22);
+}
+ul.pager > li > a:active {
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+// previous
+ul.pager > li > a.previous {
+	padding-left: 0.85em;
+	padding-right: 1.0em;
+}
+ul.pager > li > a.previous:hover {
+	box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.22);
+}
+ul.pager > li > a.previous:active {
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+ul.pager > li > a.previous::before {
+	content: '\276E\2002';
+}
+// next
+ul.pager > li > a.next {
+	padding-left:   1.0em;
+	padding-right: 0.85em;
+}
+ul.pager > li > a.next:hover {
+	box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.22);
+}
+ul.pager > li > a.next:active {
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+ul.pager > li > a.next::after {
+	content: '\2002\276F';
+}

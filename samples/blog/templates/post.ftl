@@ -82,7 +82,6 @@
 			}
 		}
 		window.addEventListener('resize', function (event) {
-			console.log("resize");
 			onResize();
 		});
 		onResize();
@@ -93,9 +92,7 @@
 		var e = document.getElementsByClassName("zoom");
 		for(var i = 0; i < e.length; i++) {
 			if(e[i].tagName == "IMG") {
-				console.log(e[i].tagName);
 				e[i].className += " jslghtbx-thmb";
-				//e[i].addClass("jslghtbx-thmb");
 				e[i].setAttribute("data-jslghtbx", "");
 				e[i].setAttribute("data-jslghtbx-group", "default");
 				e[i].setAttribute("title", "クリックすると拡大します");

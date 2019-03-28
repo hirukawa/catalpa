@@ -73,6 +73,7 @@ public class YamlFrontMatterHandler implements Handler {
 			}
 		}
 		if(yamlFrontMatter != null) {
+			context.setDeclaredYamlFrontMatter(yamlFrontMatter);
 			context.addYamlFrontMatter(yamlFrontMatter);
 		}
 		Util.writeAllLines(writer, lines);
