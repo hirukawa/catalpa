@@ -1,12 +1,6 @@
 ---
-title: サイトのサンプル
-siteurl: http://www.example.com
-author: どこかのだれか
-mailto: user@example.com
+title: ドキュメントのサンプル
 ---
-
-#--header--
-<#include "_header.md">
 
 #--sidebar--
 <#include "_sidebar.md">

@@ -31,7 +31,7 @@ import net.osdn.blogs.flexmark.ext.highlight.HighlightExtension;
 import net.osdn.blogs.flexmark.ext.kbd.KbdExtension;
 import net.osdn.blogs.flexmark.ext.samp_button.SampButtonExtension;
 import net.osdn.catalpa.flexmark.ext.LineDividableTableExtension;
-import net.osdn.catalpa.flexmark.ext.ParagraphExtension;
+import net.osdn.catalpa.flexmark.ext.BasicNodeExtension;
 import net.osdn.catalpa.flexmark.ext.RelativeLinkExtension;
 import net.osdn.catalpa.html.JapaneseTextLayouter;
 
@@ -78,8 +78,8 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 				KbdExtension.create(),
 				SampButtonExtension.create(),
 				
+				BasicNodeExtension.create(),
 				LineDividableTableExtension.create(),
-				ParagraphExtension.create(),
 				RelativeLinkExtension.create()
 		}));
 		

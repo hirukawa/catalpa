@@ -29,8 +29,9 @@
 
 				<div class="sidebar">
 					<div class="sidebar-fixed-top px-3 pt-3 pb-1">
-						<form method="GET" action="${baseurl}search.html?">
-							<input type="search" name="keyword" placeholder="検索">
+						<form method="GET" action="${baseurl}search.html?"
+							onsubmit="if(document.getElementById('search-keyword').value.length == 0) { return false; }">
+							<input id="search-keyword" type="search" name="keyword" placeholder="検索">
 						</form>
 					</div><@markdown replace_backslash_to_yensign=true>${sidebar!}</@markdown>
 				</div>

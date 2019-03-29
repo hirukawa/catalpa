@@ -8,13 +8,13 @@ import com.vladsch.flexmark.html.renderer.NodeRendererFactory;
 import com.vladsch.flexmark.util.options.DataHolder;
 import com.vladsch.flexmark.util.options.MutableDataHolder;
 
-public class ParagraphExtension implements HtmlRenderer.HtmlRendererExtension {
+public class BasicNodeExtension implements HtmlRenderer.HtmlRendererExtension {
 
 	public static Extension create() {
-		return new ParagraphExtension();
+		return new BasicNodeExtension();
 	}
 	
-	private ParagraphExtension() {
+	private BasicNodeExtension() {
 	}
 	
 	@Override
@@ -26,7 +26,7 @@ public class ParagraphExtension implements HtmlRenderer.HtmlRendererExtension {
 		rendererBuilder.nodeRendererFactory(new NodeRendererFactory() {
 			@Override
 			public NodeRenderer create(DataHolder options) {
-				return new ParagraphRenderer(options);
+				return new BasicNodeRenderer(options);
 			}
 		});
 	}

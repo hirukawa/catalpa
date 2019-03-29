@@ -120,6 +120,7 @@
 			result.innerHTML = "";
 
 			if(keyword.length == 0) {
+				result.innerHTML = "<p class=\"markdown\">検索したい文字列を入力して <kbd>Enter</kbd></span> キーを押してください。</p>";
 				return;
 			}
 			keyword = keyword.replace("%20", " ");
@@ -165,7 +166,7 @@
 			}
 
 			if(matches.length == 0) {
-				result.innerHTML = "<strong>" + keyword + "</strong> に一致する情報は見つかりませんでした。";
+				result.innerHTML = "<p><strong>" + keyword + "</strong> に一致する情報は見つかりませんでした。</p>";
 				return;
 			}
 
@@ -231,15 +232,16 @@
 
 		var db = [${db}];
 
+		var keyword = "";
 		if(location.search.indexOf("?keyword=") === 0) {
 			var keyword = decodeURI(location.search.substring(9));
-			search(keyword);
-			
-			var input = document.getElementById('search-keyword');
-			input.value = keyword;
-			input.focus();
-			input.select();
 		}
+		search(keyword);
+			
+		var input = document.getElementById('search-keyword');
+		input.value = keyword;
+		input.focus();
+		input.select();
 	</script>
 
 </body>
