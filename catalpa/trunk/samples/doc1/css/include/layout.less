@@ -40,18 +40,18 @@ div.header-title {
 	width: 100%;
 	height: @header-title-height;
 	line-height: @header-title-height;
-	color: #FFFFFF;
-	background-color: #3e4750;
+	color: @text-variant-color;
+	background-color: @primary-color;
 }
 div.header-title a {
-	color: #F8F8F0;
+	color: @text-variant-color;
 }
 div.header-menu {
 	overflow: hidden;
 	height: @header-menu-height - 1;
 	line-height: @header-menu-height;
-	background-color: #FFFFFF;
-	border-bottom: 1px solid #C0C0C0;
+	background-color: @background-color;
+	border-bottom: 1px solid @border-color;
 	font-size: 0.8rem;
 }
 div.header-menu > ul {
@@ -65,13 +65,13 @@ div.header-menu > ul > li {
 div.header-menu > ul > li > a {
 	margin: 0;
 	padding: 0 20px;
-	border-right: 1px solid #C0C0C0;
+	border-right: 1px solid @border-color;
 	text-decoration: none;
-	color: #3e4750;
+	color: @primary-color;
 }
 div.header-menu > ul > li > a:hover {
-	color: #F0F0F0;
-	background-color: #3e4750;
+	color: @text-variant-color;
+	background-color: @primary-color;
 }
 div.flex-container {
 	display: flex;
@@ -79,13 +79,13 @@ div.flex-container {
 div.flex-container > div.flex-item-left {
 	align-self: start;
 	width: @sidebar-width;
-	background-color: #F8F8F8;
+	background-color: @background-variant-color;
 	position: sticky;
 }
 div.flex-container > div.flex-item-right {
 	align-self: stretch;
 	width: @content-width;
-	background-color: #FFFFFF;
+	background-color: @background-color;
 }
 div.header-fixed-ad {
 	width: 728px;

@@ -74,6 +74,26 @@ public class Util {
 		return text;
 	}
 	
+	public static StringBuilder trim(StringBuilder sb) {
+		if(sb != null) {
+			while(sb.length() >= 1) {
+				char c = sb.charAt(0);
+				if(c != '\r' && c != '\n') {
+					break;
+				}
+				sb.deleteCharAt(0);
+			}
+			while(sb.length() >= 1) {
+				char c = sb.charAt(sb.length() - 1);
+				if(c != '\r' && c != '\n') {
+					break;
+				}
+				sb.deleteCharAt(sb.length() - 1);
+			}
+		}
+		return sb;
+	}
+	
 	public static int[] getApplicationVersion() {
 		String s = System.getProperty("java.application.version");
 		if(s == null || s.trim().length() == 0) {

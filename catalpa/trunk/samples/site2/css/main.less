@@ -1,4 +1,17 @@
 
+@primary-color:            #3e4750;
+@primary-variant-color:    #000000;
+@secondary-color:          #3667d5;
+@secondary-variant-color:  #2573b8;
+@background-color:         #FFFFFF;
+@background-variant-color: #F8F8F8;
+@text-color:               #303030;
+@text-variant-color:       #F8F8F8;
+@text-link-color:          #2573b8;
+@text-visited-link-color:  #2573b8;
+@text-hover-link-color:    #eb7a3d;
+@border-color:             #C0C0C0;
+
 @sidebar-width: 300px;
 @content-width: 728px;
 @header-title-height: 40px;
@@ -38,7 +51,7 @@ body {
 hr {
 	margin: 0;
 	border: 0;
-	border-top: 1px solid #C0C0C0;	
+	border-top: 1px solid @border-color;
 }
 
 div.footer-ad {
@@ -65,14 +78,14 @@ div.content-clear-padding {
 }
 
 a {
-	color: #2573b8;
+	color: @text-link-color;
 	text-decoration: none;
 }
 a:visited {
-	color: #2573b8;
+	color: @text-visited-link-color;
 }
 a:hover {
-	color: #eb7a3d;
+	color: @text-hover-link-color;
 }
 
 /*
