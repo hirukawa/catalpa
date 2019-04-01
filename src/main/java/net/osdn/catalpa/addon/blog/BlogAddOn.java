@@ -414,7 +414,7 @@ public class BlogAddOn implements AddOn {
 					String s = ('^' + line).trim();
 					if(s.length() > 6 && s.startsWith("^#--") && s.endsWith("--")) {
 						if(blockBody.length() > 0) {
-							blocks.put(blockName, blockBody.toString());
+							blocks.put(blockName, Util.trim(blockBody).toString());
 						}
 						blockName = s.substring(4, s.length() - 2);
 						blockBody.setLength(0);
@@ -424,7 +424,7 @@ public class BlogAddOn implements AddOn {
 					}
 				}
 				if(blockBody.length() > 0) {
-					blocks.put(blockName, blockBody.toString());
+					blocks.put(blockName, Util.trim(blockBody).toString());
 				}
 				if(blocks.containsKey(null) && !blocks.containsKey("content")) {
 					blocks.put("content", blocks.remove(null));

@@ -1,4 +1,17 @@
 
+@primary-color:            #3e4750;
+@primary-variant-color:    #000000;
+@secondary-color:          #3667d5;
+@secondary-variant-color:  #2573b8;
+@background-color:         #FFFFFF;
+@background-variant-color: #F8F8F8;
+@text-color:               #303030;
+@text-variant-color:       #F8F8F8;
+@text-link-color:          #2573b8;
+@text-visited-link-color:  #2573b8;
+@text-hover-link-color:    #eb7a3d;
+@border-color:             #C0C0C0;
+
 @content-width: 728px;
 
 @font-normal-family: "Meiryo";
@@ -35,7 +48,7 @@ body {
 hr {
 	margin: 0;
 	border: 0;
-	border-top: 1px solid #C0C0C0;	
+	border-top: 1px solid @border-color;
 }
 
 div.content {
@@ -43,20 +56,20 @@ div.content {
 	min-height: 100%;
 	margin: 0 auto;
 	padding: 1px 2.0rem;
-	background-color: #FFFFFF;
+	background-color: @background-color;
 	text-align: justify;
 	box-shadow: 0px 0px 8px 0px #C0C0C0;
 }
 
 a {
-	color: #2573b8;
+	color: @text-link-color;
 	text-decoration: none;
 }
 a:visited {
-	color: #2573b8;
+	color: @text-visited-link-color;
 }
 a:hover {
-	color: #eb7a3d;
+	color: @text-hover-link-color;
 }
 
 /*
