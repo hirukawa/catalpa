@@ -90,9 +90,13 @@ public class Context {
 	 * 
 	 * @param contentLastModifiedTime コンテンツの最終更新日時
 	 */
-	public void setContentLastModifiedTime(FileTime contentLastModifiedTime) {
-		this.contentLastModifiedTime = contentLastModifiedTime;
-		dataModel = null;
+	public void setContentLastModifiedTime(FileTime t) {
+		if(t != null) {
+			if(contentLastModifiedTime == null || t.compareTo(contentLastModifiedTime) > 0) {
+				contentLastModifiedTime = t;
+				dataModel = null;
+			}
+		}
 	}
 	
 	/** コンテンツ（通常は.md）の最終更新日時を取得します。
@@ -108,8 +112,12 @@ public class Context {
 	 * 
 	 * @param configLastModifiedTime 設定ファイルの最終更新日時
 	 */
-	public void setConfigLastModifiedTime(FileTime configLastModifiedTime) {
-		this.configLastModifiedTime = configLastModifiedTime;
+	public void setConfigLastModifiedTime(FileTime t) {
+		if(t != null) {
+			if(configLastModifiedTime == null || t.compareTo(configLastModifiedTime) > 0) {
+				configLastModifiedTime = t;
+			}
+		}
 	}
 	
 	/** 設定ファイルの最終更新日時を取得します。
@@ -124,8 +132,12 @@ public class Context {
 	 * 
 	 * @param lastModifiedTime　最終更新日時
 	 */
-	public void setLastModifiedTime(FileTime lastModifiedTime) {
-		this.lastModifiedTime = lastModifiedTime;
+	public void setLastModifiedTime(FileTime t) {
+		if(t != null) {
+			if(lastModifiedTime == null || t.compareTo(lastModifiedTime) > 0) {
+				lastModifiedTime = t;
+			}
+		}
 	}
 
 	/** 最終更新日時を取得します。

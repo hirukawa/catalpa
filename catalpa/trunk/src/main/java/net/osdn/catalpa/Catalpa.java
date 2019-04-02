@@ -218,9 +218,7 @@ public class Catalpa {
 			try {
 				Path path = context.getInputPath();
 				FileTime lastModifiedTime = Files.getLastModifiedTime(path);
-				if(context.getLastModifiedTime() == null || lastModifiedTime.compareTo(context.getLastModifiedTime()) > 0) {
-					context.setLastModifiedTime(lastModifiedTime);
-				}
+				context.setLastModifiedTime(lastModifiedTime);
 				if(addon != null) {
 					addon.execute(context);
 				}
