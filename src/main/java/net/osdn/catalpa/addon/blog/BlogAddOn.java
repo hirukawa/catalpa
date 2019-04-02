@@ -193,7 +193,9 @@ public class BlogAddOn implements AddOn {
 				dataModel.put("baseurl", baseUrl);
 				
 				try(Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-					pageTemplate.process(dataModel, writer);
+					synchronized (context.getFreeMarker()) {
+						pageTemplate.process(dataModel, writer);
+					}
 				}
 				
 				// next page
@@ -244,7 +246,9 @@ public class BlogAddOn implements AddOn {
 						path = context.getOutputPath().resolve("category").resolve(category.getId()).resolve(page + ".html");
 					}
 					try(Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-						categoryTemplate.process(dataModel, writer);
+						synchronized (context.getFreeMarker()) {
+							categoryTemplate.process(dataModel, writer);
+						}
 					}
 					
 					// next page
