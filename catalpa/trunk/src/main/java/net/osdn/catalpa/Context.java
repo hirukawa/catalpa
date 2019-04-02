@@ -5,6 +5,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.sql.Date;
@@ -21,6 +22,7 @@ import com.esotericsoftware.yamlbeans.YamlReader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import net.osdn.catalpa.freemarker.LastModifiedTracker;
 import net.osdn.catalpa.handler.BlockHandler;
 import net.osdn.catalpa.handler.YamlFrontMatterHandler;
 import net.osdn.util.io.AutoDetectReader;
@@ -32,6 +34,8 @@ public class Context {
 	private Path rootOutputPath;
 	private Path inputPath;
 	private Path outputPath;
+	private FileTime contentLastModifiedTime;
+	private FileTime configLastModifiedTime;
 	private FileTime lastModifiedTime;
 	
 	private Map<String, Object> systemDataModel = new LinkedHashMap<String, Object>();
@@ -82,11 +86,54 @@ public class Context {
 		return (outputPath != null) ? rootOutputPath.relativize(outputPath) : null;
 	}
 	
-	public void setLastModifiedTime(FileTime lastModifiedTime) {
-		this.lastModifiedTime = lastModifiedTime;
+	/** コンテンツ（通常は.md）の最終更新日時を設定します。
+	 * 
+	 * @param contentLastModifiedTime コンテンツの最終更新日時
+	 */
+	public void setContentLastModifiedTime(FileTime contentLastModifiedTime) {
+		this.contentLastModifiedTime = contentLastModifiedTime;
 		dataModel = null;
 	}
+	
+	/** コンテンツ（通常は.md）の最終更新日時を取得します。
+	 * この値は ${dateModified} で参照することができ、Webページ内で最終更新日時を表示する目的に適しています。
+	 * 
+	 * @return コンテンツの最終更新日時
+	 */
+	public FileTime getContentLastModifiedTime() {
+		return contentLastModifiedTime;
+	}
+	
+	/** 設定ファイルの最終更新日時を設定します。
+	 * 
+	 * @param configLastModifiedTime 設定ファイルの最終更新日時
+	 */
+	public void setConfigLastModifiedTime(FileTime configLastModifiedTime) {
+		this.configLastModifiedTime = configLastModifiedTime;
+	}
+	
+	/** 設定ファイルの最終更新日時を取得します。
+	 * 
+	 * @return 設定ファイルの最終更新日時
+	 */
+	public FileTime getConfigLastModifiedTime() {
+		return configLastModifiedTime;
+	}
+	
+	/** 最終更新日時を設定します。
+	 * 
+	 * @param lastModifiedTime　最終更新日時
+	 */
+	public void setLastModifiedTime(FileTime lastModifiedTime) {
+		this.lastModifiedTime = lastModifiedTime;
+	}
 
+	/** 最終更新日時を取得します。
+	 * この値はコンテンツだけでなく関連するテンプレート・ファイルも含めもっとも新しい更新日時を表しています。
+	 * 出力するファイルのタイムスタンプに使用することを目的としています。
+	 * 
+	 * @return 最終更新日時
+	 */
 	public FileTime getLastModifiedTime() {
 		return lastModifiedTime;
 	}
@@ -128,8 +175,8 @@ public class Context {
 		if(dataModel == null) {
 			Map<String, Object> dm = new HashMap<String, Object>();
 			dm.put("baseurl", getBaseUrl());
-			if(lastModifiedTime != null) {
-				dm.put("dateModified", new Date(lastModifiedTime.toMillis()));
+			if(contentLastModifiedTime != null) {
+				dm.put("dateModified", new Date(contentLastModifiedTime.toMillis()));
 			}
 			if(systemDataModel != null) {
 				for(Entry<String, Object> entry : systemDataModel.entrySet()) {
@@ -149,12 +196,23 @@ public class Context {
 			for(Entry<String, String> block : blocks.entrySet()) {
 				Template template = new Template(null, block.getValue(), getFreeMarker());
 				StringWriter out = new StringWriter();
+				String lastModifiedCommentTag = "";
 				try {
-					template.process(dm, out);
+					synchronized (getFreeMarker()) {
+						LastModifiedTracker.reset(getFreeMarker());
+						
+						template.process(dm, out);
+						
+						if(LastModifiedTracker.getLastModified() > 0) {
+							lastModifiedCommentTag = "<!--catalpa.block.lastModified="
+									+ FileTime.fromMillis(LastModifiedTracker.getLastModified())
+									+ "-->\r\n";
+						}
+					}
 				} catch(TemplateException e) {
 					throw new IOException(e);
 				}
-				dm.put(block.getKey(), out.toString());
+				dm.put(block.getKey(), lastModifiedCommentTag + out.toString());
 			}
 			dataModel = dm;
 		}
@@ -203,6 +261,11 @@ public class Context {
 	}
 	
 	public Map<String, Object> load(Path configPath) throws IOException {
+		FileTime ft = Files.getLastModifiedTime(configPath);
+		if(configLastModifiedTime == null || configLastModifiedTime.compareTo(ft) > 0) {
+			configLastModifiedTime = ft;
+		}
+		
 		Map<String, Object> map = configs.get(configPath);
 		if(map == null) {
 			
@@ -243,6 +306,7 @@ public class Context {
 	@Override
 	public Context clone() {
 		Context clone = new Context(this.rootInputPath, this.rootOutputPath);
+		clone.setConfigLastModifiedTime(this.configLastModifiedTime);
 		clone.setLastModifiedTime(this.lastModifiedTime);
 		clone.setFreeMarker(this.freeMarker);
 		clone.setInputPath(this.inputPath);

@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.core.ParseException;
@@ -38,6 +37,7 @@ import freemarker.template.TemplateNotFoundException;
 import net.osdn.catalpa.SitemapItem.ChangeFreq;
 import net.osdn.catalpa.addon.blog.BlogAddOn;
 import net.osdn.catalpa.freemarker.BaseurlMethod;
+import net.osdn.catalpa.freemarker.LastModifiedTracker;
 import net.osdn.catalpa.freemarker.MarkdownDirective;
 import net.osdn.catalpa.handler.BlockHandler;
 import net.osdn.catalpa.handler.LessHandler;
@@ -47,19 +47,6 @@ import net.osdn.util.io.AutoDetectReader;
 
 public class Catalpa {
 
-	/*
-	public static void main(String[] args) throws Exception {
-	
-		Path inputPath = Paths.get("samples/blog");
-		Path outputPath = Paths.get("samples/output");
-		Catalpa catalpa = new Catalpa(inputPath);
-		long s = System.currentTimeMillis();
-		catalpa.process(outputPath);
-		long e = System.currentTimeMillis();
-		System.out.println("time=" + (e - s) + "ms");
-	}
-	*/
-	
 	public static final String CONFIG_FILENAME = "config.yml";
 	
 	private static final List<Handler> DEFAULT_HANDLERS = Arrays.asList(
@@ -146,8 +133,8 @@ public class Catalpa {
 		freeMarker.setSharedVariable("baseurl", new BaseurlMethod());
 		freeMarker.setSharedVariable("markdown", new MarkdownDirective());
 		freeMarker.setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[] {
-			new FileTemplateLoader(new File(inputPath.toFile(), "templates")),
-			new FileTemplateLoader(inputPath.toFile())
+			new LastModifiedTracker.TemplateLoader(new File(inputPath.toFile(), "templates")),
+			new LastModifiedTracker.TemplateLoader(inputPath.toFile())
 		}));
 
 		Context context = new Context(inputPath, outputPath);
@@ -203,7 +190,7 @@ public class Catalpa {
 			if(Files.exists(config) && !Files.isDirectory(config)) {
 				context.load(config);
 			}
-			FileTime lastModifiedTime = null;
+			FileTime lastModifiedTime = context.getLastModifiedTime();
 			for(Iterator<Path> it = Files.list(context.getInputPath()).iterator(); it.hasNext();) {
 				Path child = it.next();
 				if(child.getFileName().toString().equalsIgnoreCase(CONFIG_FILENAME)) {
@@ -373,7 +360,9 @@ public class Catalpa {
 		Path sitemap = context.getRootOutputPath().resolve("sitemap.xml");
 		try (Writer out = Files.newBufferedWriter(sitemap, StandardCharsets.UTF_8,
 				StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-			template.process(dataModel, out);
+			synchronized(context.getFreeMarker()) {
+				template.process(dataModel, out);
+			}
 		}
 	}
 	
@@ -429,7 +418,9 @@ public class Catalpa {
 		Path searchHtml = context.getRootOutputPath().resolve("search.html");
 		try (Writer out = Files.newBufferedWriter(searchHtml, StandardCharsets.UTF_8,
 				StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-			template.process(dataModel, out);
+			synchronized (context.getFreeMarker()) {
+				template.process(dataModel, out);
+			}
 		}
 	}
 }
