@@ -62,33 +62,23 @@ public class TemplateHandler implements Handler {
 	@Override
 	public void handle(Context context, Reader reader, Writer writer) throws YamlException, TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
 		Template template = null;
-		FileTime lastModifiedTime = context.getConfigLastModifiedTime();
-		if(lastModifiedTime != null && lastModifiedTime.compareTo(context.getLastModifiedTime()) > 0) {
-			context.setLastModifiedTime(lastModifiedTime);
-		}
 		
 		if(context.getInputPath().getFileName().toString().toLowerCase().endsWith(".ftl")) {
 			context.setOutputPath(Util.replaceFileExtension(context.getOutputPath(), new String[] { ".ftl" }, null));
 			template = new Template(null, AutoDetectReader.readAll(context.getInputPath()), context.getFreeMarker());
-			lastModifiedTime = Files.getLastModifiedTime(context.getInputPath());
+			context.setLastModifiedTime(Files.getLastModifiedTime(context.getInputPath()));
 		} else {
 			context.setOutputPath(Util.replaceFileExtension(context.getOutputPath(), APPLICABLE_EXTENSIONS, OUTPUT_EXTENSION));
 			Entry<Template, FileTime> entry = getTemplate(context);
 			if(entry != null) {
 				template = entry.getKey();
-				lastModifiedTime = entry.getValue();
+				context.setLastModifiedTime(entry.getValue());
 			}
 		}
 		
 		if(template != null) {
-			if(lastModifiedTime != null) {
-				if(context.getContentLastModifiedTime() == null || lastModifiedTime.compareTo(context.getContentLastModifiedTime()) > 0) {
-					context.setContentLastModifiedTime(lastModifiedTime);
-				}
-				if(lastModifiedTime.compareTo(context.getLastModifiedTime()) > 0) {
-					context.setLastModifiedTime(lastModifiedTime);
-				}
-			}
+			context.setLastModifiedTime(context.getConfigLastModifiedTime());
+			context.setContentLastModifiedTime(context.getLastModifiedTime());
 			if(template != null) {
 				try {
 					context.getDataModel().put("_INPUT_PATH", context.getInputPath());
@@ -100,17 +90,12 @@ public class TemplateHandler implements Handler {
 						StringWriter out = new StringWriter();
 						template.process(context.getDataModel(), out);
 						
-						lastModifiedTime = FileTime.fromMillis(LastModifiedTracker.getLastModified());
-						if(lastModifiedTime.compareTo(context.getLastModifiedTime()) > 0) {
-							context.setLastModifiedTime(lastModifiedTime);
-						}
+						context.setLastModifiedTime(FileTime.fromMillis(LastModifiedTracker.getLastModified()));
 						Matcher m = BLOCK_LAST_MODIFIED.matcher(out.toString());
 						int start = 0;
 						while(m.find(start)) {
-							lastModifiedTime = FileTime.from(Instant.from(DateTimeFormatter.ISO_INSTANT.parse(m.group(1))));
-							if(lastModifiedTime.compareTo(context.getLastModifiedTime()) > 0) {
-								context.setLastModifiedTime(lastModifiedTime);
-							}
+							context.setLastModifiedTime(
+								FileTime.from(Instant.from(DateTimeFormatter.ISO_INSTANT.parse(m.group(1)))));
 							start = m.end();
 						}
 						writer.write(m.replaceAll(""));

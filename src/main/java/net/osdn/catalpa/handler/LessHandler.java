@@ -6,7 +6,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
 
 import com.github.sommeri.less4j.Less4jException;
 import com.github.sommeri.less4j.LessCompiler;
@@ -95,10 +94,7 @@ public class LessHandler implements Handler {
 			super(inputFile);
 			this.context = context;
 			try {
-				FileTime lastModifiedTime = Files.getLastModifiedTime(inputFile.toPath());
-				if(lastModifiedTime.compareTo(context.getLastModifiedTime()) > 0) {
-					context.setLastModifiedTime(lastModifiedTime);
-				}
+				context.setLastModifiedTime(Files.getLastModifiedTime(inputFile.toPath()));
 			} catch(IOException e) {
 				throw new RuntimeException(e);
 			}
