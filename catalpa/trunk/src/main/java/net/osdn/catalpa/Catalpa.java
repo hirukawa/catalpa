@@ -75,6 +75,7 @@ public class Catalpa {
 		".ppk"	
 	});
 	
+	
 	private AddOn addon;
 	private Configuration freeMarker;
 	private List<SitemapItem> sitemap = new ArrayList<SitemapItem>();
@@ -156,6 +157,10 @@ public class Catalpa {
 			addon.setCatalpa(this);
 			addon.prepare(inputPath, outputPath, config, options, context);
 		}
+		if(config == null) {
+			config = new HashMap<String, Object>();
+		}
+		context.getSystemDataModel().put("config", config);
 		
 		filename = inputPath.resolve("templates").resolve("search.ftl");
 		if(Files.exists(filename) && !Files.isDirectory(filename)) {

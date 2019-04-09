@@ -18,9 +18,9 @@
 			<div class="header-title">
 				&nbsp;
 				<#if (_PREVIEW!false) == true>
-				<a href="/">${title!}</a>
+				<a href="/">${config.title!}</a>
 				<#else>
-				<#if siteurl?has_content><a href="${siteurl}"></#if>${title!}<#if siteurl?has_content></a></#if>
+				<#if siteurl?has_content><a href="${siteurl}"></#if>${config.title!}<#if siteurl?has_content></a></#if>
 				</#if>
 			</div>
 		</div>
