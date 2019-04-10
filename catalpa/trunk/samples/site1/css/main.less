@@ -51,10 +51,13 @@ hr {
 	border-top: 1px solid @border-color;
 }
 
-div.content {
-	width: @content-width;
+div.flex-container {
+	display: flex;
 	min-height: 100%;
+	width: @content-width;
 	margin: 0 auto;
+}
+div.content {
 	padding: 1px 2.0rem;
 	background-color: @background-color;
 	text-align: justify;

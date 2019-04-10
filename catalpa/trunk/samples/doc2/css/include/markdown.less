@@ -25,7 +25,7 @@
 	margin-top: 1.5rem;
 	margin-bottom: 1.5rem;
 	border: 0;
-	border-top: 1px solid #C0C0C0;	
+	border-top: 1px solid @border-color;
 }
 
 /*
@@ -119,7 +119,7 @@
 	line-height: 0.9;
 	font-size: 130%;
 	font-weight: 900;
-	color: #2573b8;
+	color: @secondary-variant-color;
 }
 .markdown li:not(.task-list-item) {
 	text-indent: initial;
@@ -171,7 +171,7 @@
 .markdown ul.tree ul li:last-child:before {
 	bottom: 0;
 	height: auto;
-	background: #FFFFFF; 
+	background: @background-color;
 }
 
 /*
@@ -189,19 +189,19 @@
 	padding: 0 0.5em;
 	line-height: 1.5;
 	vertical-align: bottom;
-	border-bottom: 2px solid #C0C0C0;
+	border-bottom: 2px solid @border-color;
 	white-space: nowrap;
 }
 .markdown table > thead > tr > th:not([align]) {
 	text-align: left;
 }
 .markdown table > tbody > tr:nth-of-type(odd) {
-	background-color: #f9f9f9;
+	background-color: @background-variant-color;
 }
 .markdown table > tbody > tr > td {
 	vertical-align: baseline;
 	padding: 0.25em 0.5em;
-	border-bottom: 1px solid #C0C0C0;
+	border-bottom: 1px solid @border-color;
 }
 .markdown table var {
 	font-style: normal;
@@ -232,7 +232,7 @@
 	font-style: italic;
 	font-weight: @font-italic-weight;
 	font-size: 0.95em;
-	border-left: 0.25em solid #eee;
+	border-left: 0.25em solid #e0e0e0;
 }
 .markdown blockquote:empty {
 	margin: 3.0em 0 0 0;

@@ -1,3 +1,113 @@
+body > div.body-left {
+	align-self: stretch;
+	flex-grow: 1;
+	display: flex;
+	padding-right: 10px;
+}
+body > div.body-left > div.body-left-adv {
+	position: fixed;
+	top: @header-title-height + @header-menu-height;
+	width: ~"calc((100vw - @{sidebar-width} - @{content-width} - 20px) / 2 - 10px)";
+	height: ~"calc(100vh - @{header-title-height} - @{header-menu-height})";
+	text-align: right;
+}
+body > div.body-right {
+	align-self: stretch;
+	flex-grow: 1;
+	display: flex;
+	padding-left: 10px;
+}
+body > div.body-right > div.body-right-adv {
+	position: fixed;
+	top: @header-title-height + @header-menu-height;
+	width: ~"calc((100vw - @{sidebar-width} - @{content-width} - 20px) / 2 - 10px)";
+	height: ~"calc(100vh - @{header-title-height} - @{header-menu-height})";
+	text-align: left;
+}
+body > div.body-center {
+	align-self: start;
+	width: @sidebar-width + @content-width;
+	box-shadow: 0px 0px 8px 0px #C0C0C0;
+}
+div.header {
+	position: sticky;
+	top: 0px;
+	width: 100%;
+	z-index: 1;
+}
+div.header-title {
+	overflow: hidden;
+	width: 100%;
+	height: @header-title-height;
+	line-height: @header-title-height;
+	color: @text-variant-color;
+	background-color: @primary-color;
+}
+div.header-title a {
+	color: @text-variant-color;
+}
+div.header-menu {
+	overflow: hidden;
+	height: @header-menu-height;
+	line-height: @header-menu-height;
+	background-color: @background-color;
+	border-bottom: 1px solid @border-color;
+	font-size: 0.8rem;
+}
+div.header-menu > ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+div.header-menu > ul > li {
+	display: inline-block;
+	border-right: 1px solid @border-color;
+}
+div.header-menu > ul > li > a {
+	display: inline-block;
+	margin: 0;
+	padding: 0 1rem;
+	text-decoration: none;
+	color: @primary-color;
+}
+div.header-menu > ul > li > a:hover {
+	color: @text-variant-color;
+	background-color: @primary-color;
+}
+div.flex-container {
+	display: flex;
+}
+div.flex-container > div.flex-item-left {
+	align-self: start;
+	width: @sidebar-width;
+	background-color: @background-variant-color;
+	position: sticky;
+}
+div.flex-container > div.flex-item-right {
+	align-self: stretch;
+	width: @content-width;
+	background-color: @background-color;
+}
+div.header-fixed-ad {
+	width: 728px;
+	height: 90px;
+	position: sticky;
+	top: 60px;
+	bottom: 0px;
+	margin-left: auto;
+	background-color: blue;
+}
+
+footer {
+	padding: 1rem;
+	text-align: right;
+	font-size: smaller;
+}
+footer address {
+	display: inline;
+	font-size: 105%;
+}
+
 .center {
 	text-align: center !important;
 }

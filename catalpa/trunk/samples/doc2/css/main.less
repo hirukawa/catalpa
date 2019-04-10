@@ -12,7 +12,10 @@
 @text-hover-link-color:    #eb7a3d;
 @border-color:             #C0C0C0;
 
-@content-width: 210mm;
+@sidebar-width: 300px;
+@content-width: 728px;
+@header-title-height: 40px;
+@header-menu-height:   0px;
 
 @font-normal-family: "Meiryo";
 @font-normal-weight: 400;
@@ -35,9 +38,9 @@ html {
 }
 
 body {
+	display: flex;
 	height: 100%;
 	margin: 0;
-	padding: 0;
 	overflow-wrap: break-word;
 	word-break: break-word;
 	line-break: strict;
@@ -51,17 +54,27 @@ hr {
 	border-top: 1px solid @border-color;
 }
 
-div.flex-container {
-	display: flex;
-	min-height: 100%;
-	width: @content-width;
-	margin: 0 auto;
+div.footer-ad {
+	width: 300px;
+	height: 200px;
+	background-color: green;
+}
+
+div.header-fixed-ad {
+	width: 728px;
+	height: 90px;
+	position: sticky;
+	top: 60px;
+	bottom: 0px;
+	margin-left: auto;
+	background-color: blue;
 }
 div.content {
-	padding: 1px 23mm;
-	background-color: @background-color;
+	padding: 0 2.0rem;
 	text-align: justify;
-	box-shadow: 0px 0px 8px 0px #C0C0C0;
+}
+div.content-clear-padding {
+	margin-left: -2.0rem;
 }
 
 a {
@@ -93,11 +106,12 @@ a:hover {
 
 @import "include/material-color.less";
 @import "include/material-icons.less";
-@import "include/layout.less";
-@import "include/admonition.less";
-@import "include/button.less";
-@import "include/heading.less";
 @import "include/markdown.less";
+@import "include/heading.less";
+@import "include/admonition.less";
 @import "include/highlight.less";
+@import "include/button.less";
+@import "include/search.less";
+@import "include/sidebar.less";
 @import "include/layout.less";
 @import "include/responsive.less";
