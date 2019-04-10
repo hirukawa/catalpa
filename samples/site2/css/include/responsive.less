@@ -33,3 +33,46 @@
 		display: none;
 	}
 }
+
+@media print {
+	@page {
+		size: A4;
+		margin: 22mm 20mm;
+	}
+	html {
+		font-family: 'Yu Mincho', serif;
+		font-size: 12pt;
+		color: #000000;
+	}
+	body {
+		width: 170mm;
+		background: transparent;
+	}
+	body > div.body-left {
+		display: none;
+	}
+	body > div.body-center {
+		width: 170mm;
+		box-shadow: none;
+	}
+	body > div.body-right {
+		display: none;
+	}
+	div.header {
+		display: none;
+	}
+	div.flex-container > div.flex-item-left {
+		display: none;
+	}
+	div.flex-container > div.flex-item-right {
+		width: 170mm;
+	}
+	div.content {
+		margin: 0;
+		padding: 0;
+		background: transparent;
+	}
+	h1, h2, h3, h4, h5, h6 {
+		font-family: 'Meiryo', sans-serif;
+	}
+}

@@ -9,8 +9,10 @@
 	<meta name="description" content="${description!}">
 </head>
 <body>
-	<div class="content markdown">
-		<@markdown replace_backslash_to_yensign=true>${content!}</@markdown>
+	<div class="flex-container">
+		<div class="content markdown">
+			<@markdown replace_backslash_to_yensign=true>${content!}</@markdown>
+		</div>
 	</div>
 
 	<#if (_PREVIEW!false) == true>
