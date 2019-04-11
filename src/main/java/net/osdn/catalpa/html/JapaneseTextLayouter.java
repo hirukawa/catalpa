@@ -295,6 +295,9 @@ public class JapaneseTextLayouter {
 				case LATIN_NON_WORD_CHARACTER:
 					currentChar.setLetterSpacing(0.25);
 					break;
+				case OTHER:
+					currentChar.setLetterSpacing(0.25);
+					break;
 				}
 				break;
 			case CRLF:
@@ -343,6 +346,8 @@ public class JapaneseTextLayouter {
 				case LATIN_WORD_CHARACTER:
 					break;
 				case LATIN_NON_WORD_CHARACTER:
+					break;
+				case OTHER:
 					break;
 				}
 				break;
@@ -393,6 +398,9 @@ public class JapaneseTextLayouter {
 				case LATIN_NON_WORD_CHARACTER:
 					currentChar.setLetterSpacing(0.5);
 					break;
+				case OTHER:
+					currentChar.setLetterSpacing(0.5);
+					break;
 				}
 				break;
 			case HYPHEN:
@@ -435,6 +443,8 @@ public class JapaneseTextLayouter {
 					break;
 				case LATIN_NON_WORD_CHARACTER:
 					break;
+				case OTHER:
+					break;
 				}
 				break;
 			case DIVIDING_PUNCTUATION_MARK:
@@ -476,6 +486,8 @@ public class JapaneseTextLayouter {
 				case LATIN_WORD_CHARACTER:
 					break;
 				case LATIN_NON_WORD_CHARACTER:
+					break;
+				case OTHER:
 					break;
 				}
 				break;
@@ -527,6 +539,9 @@ public class JapaneseTextLayouter {
 					currentChar.setLetterSpacing(0.25);
 					break;
 				case LATIN_NON_WORD_CHARACTER:
+					currentChar.setLetterSpacing(0.25);
+					break;
+				case OTHER:
 					currentChar.setLetterSpacing(0.25);
 					break;
 				}
@@ -582,6 +597,9 @@ public class JapaneseTextLayouter {
 				case LATIN_NON_WORD_CHARACTER:
 					currentChar.setLetterSpacing(0.5);
 					break;
+				case OTHER:
+					currentChar.setLetterSpacing(0.5);
+					break;
 				}
 				break;
 			case COMMA:
@@ -631,6 +649,9 @@ public class JapaneseTextLayouter {
 				case LATIN_NON_WORD_CHARACTER:
 					currentChar.setLetterSpacing(0.5);
 					break;
+				case OTHER:
+					currentChar.setLetterSpacing(0.5);
+					break;
 				}
 				break;
 			case INSEPARABLE_CHARACTER:
@@ -672,6 +693,8 @@ public class JapaneseTextLayouter {
 				case LATIN_WORD_CHARACTER:
 					break;
 				case LATIN_NON_WORD_CHARACTER:
+					break;
+				case OTHER:
 					break;
 				}
 				break;
@@ -718,6 +741,8 @@ public class JapaneseTextLayouter {
 				case LATIN_NON_WORD_CHARACTER:
 					// no space
 					break;
+				case OTHER:
+					break;
 				}
 				break;
 			case LATIN_WORD_CHARACTER:
@@ -762,6 +787,9 @@ public class JapaneseTextLayouter {
 					break;
 				case LATIN_NON_WORD_CHARACTER:
 					break;
+				case OTHER:
+					// no space
+					break;
 				}
 				break;
 			case LATIN_NON_WORD_CHARACTER:
@@ -805,6 +833,56 @@ public class JapaneseTextLayouter {
 				case LATIN_WORD_CHARACTER:
 					break;
 				case LATIN_NON_WORD_CHARACTER:
+					break;
+				case OTHER:
+					// no space
+					break;
+				}
+				break;
+			case OTHER:
+				switch(nextChar.getCharClass()) {
+				case EMPTY:
+					break;
+				case OPENING_BOUNDARY:
+					currentChar.setLetterSpacing(0.25);
+					break;
+				case CLOSING_BOUNDARY:
+					break;
+				case CRLF:
+					break;
+				case CR:
+					break;
+				case LF:
+					break;
+				case WHITESPACE:
+					break;
+				case OPENING_BRACKET:
+					currentChar.setLetterSpacing(0.5);
+					break;
+				case CLOSING_BRACKET:
+					break;
+				case HYPHEN:
+					break;
+				case DIVIDING_PUNCTUATION_MARK:
+					break;
+				case MIDDLE_DOT:
+					currentChar.setLetterSpacing(0.25);
+					break;
+				case FULL_STOP:
+					break;
+				case COMMA:
+					break;
+				case INSEPARABLE_CHARACTER:
+					break;
+				case JAPANESE:
+					break;
+				case LATIN_WORD_CHARACTER:
+					// no space
+					break;
+				case LATIN_NON_WORD_CHARACTER:
+					// no space
+					break;
+				case OTHER:
 					break;
 				}
 				break;
