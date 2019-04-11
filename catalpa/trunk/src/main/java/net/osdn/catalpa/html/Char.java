@@ -20,7 +20,8 @@ public class Char implements Token {
 		FULL_STOP,
 		COMMA,
 		INSEPARABLE_CHARACTER,
-		JAPANESE
+		JAPANESE,
+		OTHER
 	}
 	
 	private static final String OPENING_BRACKETS = "“‘（〔［｛〈《「『【";
@@ -94,11 +95,7 @@ public class Char implements Token {
 				isWhitespace = true;
 			} else if( ('0' <= value && value <= '9')
 					|| ('a' <= value && value <= 'z')
-					|| ('A' <= value && value <= 'Z')
-					|| (value == '!')
-					|| (value == '*') || (value == '+') || (value == '-') || (value == '/')
-					|| (value == '.') || (value == ':') || (value == '=') || (value == '?')
-					|| (value == '@') || (value == '\\') || (value == '_')) {
+					|| ('A' <= value && value <= 'Z')) {
 				characterClass = CharClass.LATIN_WORD_CHARACTER;
 			} else {
 				characterClass = CharClass.LATIN_NON_WORD_CHARACTER;
@@ -131,7 +128,21 @@ public class Char implements Token {
 			characterClass = CharClass.WHITESPACE;
 			isWhitespace = true;
 		} else {
-			characterClass = CharClass.JAPANESE;
+			if((value == 0x3005) // 3005 々 (漢字の踊り字)
+					|| (value == 0x3007) // 3007 〇 (漢数字のゼロ)
+					|| (value == 0x303B) // 303B 〻 (漢字の踊り字)
+					|| (0x3040 <= value && value <= 0x309F) // Hiragana / 平仮名
+					|| (0x30A0 <= value && value <= 0x30FF) // Katakana / 片仮名
+					|| (0x31F0 <= value && value <= 0x31FF) // Katakana Phonetic Extensions / 片仮名拡張
+					|| (0x4E00 <= value && value <= 0x9FEF) // CJK Unified Ideographs / CJK統合漢字
+					|| (0x3400 <= value && value <= 0x4DB5) // CJK Unified Ideographs Extension A / CJK統合漢字拡張A
+					|| (0xF900 <= value && value <= 0xFAFF) // CJK Compatibillity Ideographs / CJK互換漢字
+					) {
+				characterClass = CharClass.JAPANESE;
+			} else {
+				// 0xFF00～0xFFEFに配置されている全角記号などは和字として分類しません。すなわち、欧字との間にアキを設けません。
+				characterClass = CharClass.OTHER;
+			}
 		}
 	}
 	

@@ -18,9 +18,9 @@
 			<div class="header-title">
 				&nbsp;
 				<#if (_PREVIEW!false) == true>
-				<a href="/">${blog.title!}</a>
+				<a href="/"><#if icon?has_content><img class="icon" src="${icon}">&nbsp;</#if>${blog.title!}</a>
 				<#else>
-				<#if siteurl?has_content><a href="${siteurl}"></#if>${blog.title!}<#if siteurl?has_content></a></#if>
+				<#if siteurl?has_content><a href="${siteurl}"></#if><#if icon?has_content><img class="icon" src="${icon}">&nbsp;</#if>${blog.title!}<#if siteurl?has_content></a></#if>
 				</#if>
 			</div>
 		</div>
