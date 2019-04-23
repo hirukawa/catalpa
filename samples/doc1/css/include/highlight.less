@@ -1,3 +1,6 @@
+/*
+ *  dark
+ */
 .markdown pre > code {
 	display: block;
 	margin: 0;
@@ -156,4 +159,23 @@
 .hljs-deletion,
 .hljs-meta {
 	color: #b3ad8f;
+}
+
+/*
+ *  light (still only `nohighlight`)
+ */
+.markdown pre.light > code {
+	color: #303030;
+	background: #F2F2F2;
+}
+
+.markdown pre.light > code.nohighlight {
+	color: #303030;
+}
+
+/*
+ * smaller
+ */
+.markdown pre.smaller > code {
+	font-size: 92%;
 }
