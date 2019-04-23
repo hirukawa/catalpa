@@ -44,6 +44,9 @@ public class JapaneseTextLayouter {
 	private static final Set<String> ELEMENTS_TO_SKIP = new HashSet<String>(Arrays.asList(
 			"CODE", "KBD", "PRE", "SAMP", "SCRIPT", "STYLE", "TT"));
 	
+	private static final Set<String> ELEMENTS_WITH_BOUNDARY = new HashSet<String>(Arrays.asList(
+			"CODE", "KBD", "SAMP", "TT"));
+	
 	private static final Set<String> INLINE_TEXT_TAGS = new HashSet<String>(Arrays.asList(
 			"A", "BIG", "EM", "I", "SMALL", "SPAN", "STRONG"));
 	
@@ -116,14 +119,16 @@ public class JapaneseTextLayouter {
 				}
 				
 				if(!isEndTag && ELEMENTS_TO_SKIP.contains(tagName)) {
-					// ADD OPENING BOUNDARY CHAR
-					previousChar = currentChar;
-					currentChar = new Char(CharClass.OPENING_BOUNDARY);
-					if(previousChar != null) {
-						previousChar.setNextChar(currentChar);
-						currentChar.setPreviousChar(previousChar);
+					if(ELEMENTS_WITH_BOUNDARY.contains(tagName)) {
+						// ADD OPENING BOUNDARY CHAR
+						previousChar = currentChar;
+						currentChar = new Char(CharClass.OPENING_BOUNDARY);
+						if(previousChar != null) {
+							previousChar.setNextChar(currentChar);
+							currentChar.setPreviousChar(previousChar);
+						}
+						tokens.add(currentChar);
 					}
-					tokens.add(currentChar);
 					
 					int end = upperCaseInput.indexOf("/" + tagName, m.end());
 					if(end != -1) {
@@ -137,14 +142,16 @@ public class JapaneseTextLayouter {
 						index = m.end();
 					}
 					
-					// ADD CLOSING BOUNDARY CHAR
-					previousChar = currentChar;
-					currentChar = new Char(CharClass.CLOSING_BOUNDARY);
-					if(previousChar != null) {
-						previousChar.setNextChar(currentChar);
-						currentChar.setPreviousChar(previousChar);
+					if(ELEMENTS_WITH_BOUNDARY.contains(tagName)) {
+						// ADD CLOSING BOUNDARY CHAR
+						previousChar = currentChar;
+						currentChar = new Char(CharClass.CLOSING_BOUNDARY);
+						if(previousChar != null) {
+							previousChar.setNextChar(currentChar);
+							currentChar.setPreviousChar(previousChar);
+						}
+						tokens.add(currentChar);
 					}
-					tokens.add(currentChar);
 				} else if(INLINE_TEXT_TAGS.contains(tagName)) {
 					// ADD CURRENT TAG
 					RawChars.Type type = isEndTag ? RawChars.Type.INLINE_TAG_CLOSE : RawChars.Type.INLINE_TAG_OPEN;
@@ -224,8 +231,8 @@ public class JapaneseTextLayouter {
 						iterator.remove();
 						previousChar.setNextChar(nextChar);
 						nextChar.setPreviousChar(previousChar);
-					} else if((previousChar.getCharClass() == CharClass.LATIN_WORD_CHARACTER && nextChar.isLatin() == false)
-							|| (previousChar.isLatin() == false && nextChar.getCharClass() == CharClass.LATIN_WORD_CHARACTER)) {
+					} else if((previousChar.getCharClass() == CharClass.LATIN_WORD_CHARACTER && nextChar.isLatin() == false && nextChar.getCharClass() != CharClass.OTHER)
+							|| (previousChar.isLatin() == false && previousChar.getCharClass() != CharClass.OTHER && nextChar.getCharClass() == CharClass.LATIN_WORD_CHARACTER)) {
 						iterator.remove();
 						previousChar.setNextChar(nextChar);
 						nextChar.setPreviousChar(previousChar);
