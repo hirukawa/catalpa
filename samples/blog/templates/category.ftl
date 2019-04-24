@@ -52,12 +52,16 @@
 
 				<#-- footer pager -->
 				<ul class="pager <#if blog.pager.previous??>left</#if> <#if blog.pager.next??>right</#if>">
-					<#if blog.pager.previous??>
-					<li class="left"><a href="${blog.pager.previous.url}" class="previous">${blog.pager.previous.title}</a></li>
-					</#if>
-					<#if blog.pager.next??>
-					<li class="right"><a href="${blog.pager.next.url}" class="next">${blog.pager.next.title}</a></li>
-					</#if>
+				<#if blog.pager.previous??>
+					<li class="left">
+						<a href="${blog.pager.previous.url}" class="previous"><span class="title">${blog.pager.previous.title}</span></a>
+					</li>
+				</#if>
+				<#if blog.pager.next??>
+					<li class="right">
+						<a href="${blog.pager.next.url}" class="next"><span class="title">${blog.pager.next.title}</span></a>
+					</li>
+				</#if>
 				</ul>
 
 			</div>

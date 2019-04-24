@@ -42,11 +42,15 @@ ul.pager > li > a {
 	background-color: @secondary-color;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 	transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-	//
+}
+ul.pager > li > a > span.title {
+	display: inline-block;
+	vertical-align: middle;
+	text-align: left;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	max-width: ~"calc(@{content-width} * 0.75)";
+	max-width: ~"calc(@{content-width} * 0.6)";
 }
 ul.pager > li > a:hover {
 	box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.22);
@@ -67,6 +71,7 @@ ul.pager > li > a.previous:active {
 }
 ul.pager > li > a.previous::before {
 	content: '\276E\2002';
+	vertical-align: middle;
 }
 // next
 ul.pager > li > a.next {
@@ -81,4 +86,17 @@ ul.pager > li > a.next:active {
 }
 ul.pager > li > a.next::after {
 	content: '\2002\276F';
+	vertical-align: middle;
+}
+
+/*
+ * default button
+ */
+.default-button {
+	appearance: button; -webkit-appearance: button; -moz-appearance: button;
+	padding: 0.5em 1.0em;
+	color: @text-color;
+}
+.default-button:hover {
+	color: @text-color;
 }
