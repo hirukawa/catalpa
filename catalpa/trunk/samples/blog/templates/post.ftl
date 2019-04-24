@@ -48,12 +48,12 @@
 				<ul class="pager <#if blog.pager.previous??>left</#if> <#if blog.pager.next??>right</#if>">
 				<#if blog.pager.previous??>
 					<li class="left">
-						<a href="${blog.pager.previous.url}" class="previous"><span class="datetime">${blog.pager.previous.date}</span>&nbsp; ${blog.pager.previous.title}</a>
+						<a href="${blog.pager.previous.url}" class="previous"><span class="datetime">${blog.pager.previous.date}</span>&nbsp; <span class="title">${blog.pager.previous.title}</span></a>
 					</li>
 				</#if>
 				<#if blog.pager.next??>
 					<li class="right">
-						<a href="${blog.pager.next.url}" class="next"><span class="datetime">${blog.pager.next.date}</span>&nbsp; ${blog.pager.next.title}</a>
+						<a href="${blog.pager.next.url}" class="next"><span class="datetime">${blog.pager.next.date}</span>&nbsp; <span class="title">${blog.pager.next.title}</span></a>
 					</li>
 				</#if>
 				</ul>
