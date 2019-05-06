@@ -75,6 +75,10 @@ public class Util {
 	}
 	
 	public static StringBuilder trim(StringBuilder sb) {
+		return trim(sb, null);
+	}
+	
+	public static StringBuilder trim(StringBuilder sb, CharSequence trailer) {
 		if(sb != null) {
 			while(sb.length() >= 1) {
 				char c = sb.charAt(0);
@@ -89,6 +93,9 @@ public class Util {
 					break;
 				}
 				sb.deleteCharAt(sb.length() - 1);
+			}
+			if(trailer != null) {
+				sb.append(trailer);
 			}
 		}
 		return sb;

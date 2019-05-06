@@ -47,7 +47,7 @@ public class BlockHandler implements Handler {
 			String s = ('^' + line).trim();
 			if(s.length() > 6 && s.startsWith("^#--") && s.endsWith("--")) {
 				if(blockBody.length() > 0) {
-					blocks.put(blockName, Util.trim(blockBody).toString());
+					blocks.put(blockName, Util.trim(blockBody, "\r\n").toString());
 				}
 				blockName = s.substring(4, s.length() - 2);
 				blockBody.setLength(0);
@@ -57,7 +57,7 @@ public class BlockHandler implements Handler {
 			}
 		}
 		if(blockBody.length() > 0) {
-			blocks.put(blockName, Util.trim(blockBody).toString());
+			blocks.put(blockName, Util.trim(blockBody, "\r\n").toString());
 		}
 		if(blocks.containsKey(null) && !blocks.containsKey("content")) {
 			blocks.put("content", blocks.remove(null));
