@@ -144,6 +144,7 @@ public class Catalpa {
 				context.getSystemDataModel().put(option.getKey(), option.getValue());
 			}
 		}
+		context.setFreeMarker(freeMarker);
 
 		Map<String, Object> config = null;
 		String type = null;
@@ -168,7 +169,6 @@ public class Catalpa {
 			excludeFileNames.add("search.md");
 		}
 		
-		context.setFreeMarker(freeMarker);
 		context.setInputPath(inputPath);
 		context.setOutputPath(outputPath);
 		retrieve(context);
