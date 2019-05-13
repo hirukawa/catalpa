@@ -10,17 +10,14 @@
 	<meta name="description" content="${description!}">
 </head>
 <body class="blog category">
-	<div class="body-left">
-		<div class="body-left-adv"></div>
-	</div>
 	<div class="body-center">
 		<div class="header" id="header">
 			<div class="header-title">
 				&nbsp;
 				<#if (_PREVIEW!false) == true>
-				<a href="/"><#if icon?has_content><img class="icon" src="${icon}">&nbsp;</#if>${blog.title!}</a>
+				<a href="/"><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>${blog.title!}</a>
 				<#else>
-				<#if siteurl?has_content><a href="${siteurl}"></#if><#if icon?has_content><img class="icon" src="${icon}">&nbsp;</#if>${blog.title!}<#if siteurl?has_content></a></#if>
+				<#if siteurl?has_content><a href="${siteurl}"></#if><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>${blog.title!}<#if siteurl?has_content></a></#if>
 				</#if>
 			</div>
 		</div>
@@ -66,6 +63,9 @@
 
 			</div>
 		</div>
+	</div>
+	<div class="body-left">
+		<div class="body-left-adv"></div>
 	</div>
 	<div class="body-right">
 		<div class="body-right-adv"></div>

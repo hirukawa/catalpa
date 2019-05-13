@@ -10,24 +10,22 @@
 	<meta name="description" content="${description!}">
 </head>
 <body>
-	<div class="body-left">
-		<div class="body-left-adv"></div>
-	</div>
 	<div class="body-center">
 		<div class="header" id="header">
 			<div class="header-title">
 				&nbsp;
 				<#if (_PREVIEW!false) == true>
-				<a href="/"><#if icon?has_content><img class="icon" src="${icon}">&nbsp;</#if>${title!}</a>
+				<a href="/"><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>${title!}</a>
 				<#else>
-				<#if siteurl?has_content><a href="${siteurl}"></#if><#if icon?has_content><img class="icon" src="${icon}">&nbsp;</#if>${title!}<#if siteurl?has_content></a></#if>
+				<#if siteurl?has_content><a href="${siteurl}"></#if><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>${title!}<#if siteurl?has_content></a></#if>
 				</#if>
 			</div>
 			<div class="header-menu"><@markdown replace_backslash_to_yensign=true>${header!}</@markdown></div>
 		</div>
 		<div class="flex-container">
 			<div class="flex-item-left" id="flex-item-left">
-				<div class="sidebar"><@markdown replace_backslash_to_yensign=true>${sidebar!}</@markdown></div>
+				<div class="sidebar" id="sidebar"><@markdown replace_backslash_to_yensign=true>${sidebar!}</@markdown></div>
+				<div class="sidebar-bottom" id="sidebar-bottom"></div>
 			</div>
 			<div class="flex-item-right">
 				<div class="content markdown"><@markdown replace_backslash_to_yensign=true>${content!}</@markdown></div>
@@ -44,6 +42,9 @@
 				</footer>
 			</div>
 		</div>
+	</div>
+	<div class="body-left">
+		<div class="body-left-adv"></div>
 	</div>
 	<div class="body-right">
 		<div class="body-right-adv"></div>
