@@ -16,6 +16,7 @@
 @content-width: 728px;
 @header-title-height: 40px;
 @header-menu-height:  20px;
+@header-fixed-ad-height: 0px;
 
 @font-normal-family: "Meiryo";
 @font-normal-weight: 400;
@@ -38,7 +39,6 @@ html {
 }
 
 body {
-	display: flex;
 	height: 100%;
 	margin: 0;
 	overflow-wrap: break-word;
@@ -60,6 +60,7 @@ div.content {
 }
 div.content-clear-padding {
 	margin-left: -2.0rem;
+	margin-right: -2.0rem;
 }
 
 a {
@@ -111,13 +112,11 @@ div.header-fixed-ad {
 	width: 728px;
 	height: 90px;
 	position: sticky;
+	z-index: 2147483647;
 	top: calc(@header-title-height + @header-menu-height);
-	bottom: 0;
 	background-color: @background-color;
+	text-align: center;
 }
-
-div.footer-ad {
-	width: 300px;
-	height: 200px;
-	background-color: green;
+div.sidebar-ad {
+	text-align: center;
 }

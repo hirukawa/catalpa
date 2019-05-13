@@ -1,32 +1,28 @@
 body > div.body-left {
-	align-self: stretch;
-	flex-grow: 1;
-	display: flex;
-	padding-right: 10px;
-}
-body > div.body-left > div.body-left-adv {
 	position: fixed;
-	top: @header-title-height + @header-menu-height;
-	width: ~"calc((100vw - @{sidebar-width} - @{content-width} - 20px) / 2 - 10px)";
-	height: ~"calc(100vh - @{header-title-height} - @{header-menu-height})";
+	top: 0;
+	left: 0;
+	width: ~"calc((100vw - @{sidebar-width} - @{content-width} - 30px) / 2)";
+	height: 100vh;
 	text-align: right;
 }
-body > div.body-right {
-	align-self: stretch;
-	flex-grow: 1;
-	display: flex;
-	padding-left: 10px;
+body > div.body-left > div.body-left-adv {
+	margin-top: calc(@header-title-height + @header-menu-height);
 }
-body > div.body-right > div.body-right-adv {
+body > div.body-right {
 	position: fixed;
-	top: @header-title-height + @header-menu-height;
-	width: ~"calc((100vw - @{sidebar-width} - @{content-width} - 20px) / 2 - 10px)";
-	height: ~"calc(100vh - @{header-title-height} - @{header-menu-height})";
+	top: 0;
+	right: 0;
+	width: ~"calc((100vw - @{sidebar-width} - @{content-width} - 30px) / 2)";
+	height: 100vh;
 	text-align: left;
 }
+body > div.body-right > div.body-right-adv {
+	margin-top: calc(@header-title-height + @header-menu-height + @header-fixed-ad-height);
+}
 body > div.body-center {
-	align-self: start;
 	width: @sidebar-width + @content-width;
+	margin: 0 auto;
 	box-shadow: 0px 0px 8px 0px #C0C0C0;
 }
 div.header {
@@ -49,13 +45,16 @@ div.header-title a {
 div.header-title img.icon {
 	vertical-align: text-bottom;
 }
-div.header-menu {
+div.header-menu when (@header-menu-height > 0) {
 	overflow: hidden;
 	height: ~"calc(@{header-menu-height} - 1px)";
-	line-height: ~"calc(@{header-menu-height} - 1px)";
+	line-height: ~"calc(@{header-menu-height} - 0px)";
 	background-color: @background-color;
 	border-bottom: 1px solid @border-color;
 	font-size: 0.8rem;
+}
+div.header-menu when (@header-menu-height <= 0) {
+	display: none;
 }
 div.header-menu > ul {
 	margin: 0;
