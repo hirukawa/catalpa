@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 public class Post {
-	
+
 	private Path           path;
 	private String         url;
 	private LocalDate      date;
@@ -15,6 +15,7 @@ public class Post {
 	private String         leading;
 	private String         relativeUrlPrefix;
 	private String         thumbnail;
+	private boolean        isDraft;
 	
 	protected Post(Path path, String url, LocalDate date, String title, Set<Category> categories, String leading) {
 		this.path = path;
@@ -63,6 +64,14 @@ public class Post {
 	
 	public String getThumbnail() {
 		return thumbnail;
+	}
+	
+	public void setDraft(boolean isDraft) {
+		this.isDraft = isDraft;
+	}
+	
+	public boolean isDraft() {
+		return isDraft;
 	}
 
 	protected static final String[] APPLICABLE_EXTENSIONS = new String[] {

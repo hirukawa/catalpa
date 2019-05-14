@@ -91,10 +91,14 @@ public class BlogAddOn implements AddOn {
 			}
 		}
 		
-		//default template
-		context.getSystemDataModel().put("template", "post.ftl");
-		
 		factory = createFactory(inputPath, outputPath);
+		if(factory.hasDraft) {
+			//draft template
+			context.getSystemDataModel().put("template", "draft.ftl");
+		} else {
+			//default template
+			context.getSystemDataModel().put("template", "post.ftl");
+		}
 		
 		List<Category> categories = factory.getCategories();
 		categories.sort(Comparator.comparing(Category::getDate).thenComparing(c -> c.getPosts().size()).reversed());
@@ -308,6 +312,22 @@ public class BlogAddOn implements AddOn {
 		for(Path path : list) {
 			factory.getPostBy(path);
 		}
+		if(factory.hasDraft) {
+			factory.categories.clear();
+			Iterator<Entry<Path, Post>> it = factory.posts.entrySet().iterator();
+			while(it.hasNext()) {
+				Entry<Path, Post> e = it.next();
+				Post post = e.getValue();
+				if(post.isDraft()) {
+					for(Category category : post.getCategories()) {
+						Category c = factory.getCategoryBy(category.getName() + "(" + category.getId() + ")");
+						c.add(post);
+					}
+				} else {
+					it.remove();
+				}
+			}
+		}
 		for(Category category : factory.getCategories()) {
 			if(category.getId() == null) {
 				category.setId(category.getName().toLowerCase());
@@ -323,6 +343,7 @@ public class BlogAddOn implements AddOn {
 		private Path inputPath;
 		private Map<String, Category> categories = new HashMap<String, Category>();
 		private Map<Path, Post> posts = new HashMap<Path, Post>();
+		private boolean hasDraft = false;
 
 		public Factory(Path inputPath) {
 			this.inputPath = inputPath;
@@ -476,6 +497,11 @@ public class BlogAddOn implements AddOn {
 					post = new Post(path, url, date, title, categories, leading);
 					for(Category category : categories) {
 						category.add(post);
+					}
+					
+					if(map.containsKey("draft")) {
+						post.setDraft(true);
+						hasDraft = true;
 					}
 					posts.put(path, post);
 				}
