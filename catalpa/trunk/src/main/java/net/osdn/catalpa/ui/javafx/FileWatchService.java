@@ -43,7 +43,11 @@ public class FileWatchService extends ScheduledService<Path[]> {
 	}
 	
 	public FileWatchService() {
-		setExecutor(Executors.newSingleThreadExecutor());
+		setExecutor(Executors.newSingleThreadExecutor(r -> {
+			Thread thread = new Thread(r);
+			thread.setDaemon(true);
+			return thread;
+		}));
 		
 		pathProperty.addListener((observable, oldValue, newValue)-> {
 			try {
