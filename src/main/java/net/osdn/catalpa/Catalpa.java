@@ -26,6 +26,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.vladsch.flexmark.Extension;
+import com.vladsch.flexmark.ext.attributes.AttributesExtension;
+import com.vladsch.flexmark.ext.definition.DefinitionExtension;
+import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
+import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
+import com.vladsch.flexmark.ext.tables.TablesExtension;
+import com.vladsch.flexmark.ext.typographic.TypographicExtension;
+import com.vladsch.flexmark.ext.wikilink.WikiLinkExtension;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.options.MutableDataSet;
+
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.core.ParseException;
@@ -34,8 +46,14 @@ import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateNotFoundException;
+import net.osdn.blogs.flexmark.ext.highlight.HighlightExtension;
+import net.osdn.blogs.flexmark.ext.kbd.KbdExtension;
+import net.osdn.blogs.flexmark.ext.samp_button.SampButtonExtension;
 import net.osdn.catalpa.SitemapItem.ChangeFreq;
 import net.osdn.catalpa.addon.blog.BlogAddOn;
+import net.osdn.catalpa.flexmark.ext.BasicNodeExtension;
+import net.osdn.catalpa.flexmark.ext.LineDividableTableExtension;
+import net.osdn.catalpa.flexmark.ext.RelativeLinkExtension;
 import net.osdn.catalpa.freemarker.BaseurlMethod;
 import net.osdn.catalpa.freemarker.LastModifiedTracker;
 import net.osdn.catalpa.freemarker.MarkdownDirective;
@@ -75,7 +93,6 @@ public class Catalpa {
 		".ppk"	
 	});
 	
-	
 	private AddOn addon;
 	private Configuration freeMarker;
 	private List<SitemapItem> sitemap = new ArrayList<SitemapItem>();
@@ -87,6 +104,7 @@ public class Catalpa {
 	
 	public Catalpa(Path inputPath, Collection<Handler> handlers, Collection<AddOn> addons) {
 		this.inputPath = inputPath;
+		
 		if(handlers != null) {
 			for(Handler handler : handlers) {
 				this.handlers.add(handler);
@@ -103,6 +121,30 @@ public class Catalpa {
 				this.addons.add(addon);
 			}
 		}
+	}
+	
+	public MutableDataSet getMarkdownOptions() {
+		MutableDataSet options = new MutableDataSet();
+		options.set(HtmlRenderer.FENCED_CODE_NO_LANGUAGE_CLASS, "nohighlight");
+		options.set(HighlightExtension.REPLACE_YEN_SIGN, true);
+		options.set(Parser.EXTENSIONS, Arrays.asList(new Extension[] {
+				AttributesExtension.create(),
+				DefinitionExtension.create(),
+				WikiLinkExtension.create(),
+				StrikethroughExtension.create(),
+				TaskListExtension.create(),
+				TablesExtension.create(),
+				TypographicExtension.create(),
+
+				HighlightExtension.create(),
+				KbdExtension.create(),
+				SampButtonExtension.create(),
+				
+				BasicNodeExtension.create(),
+				LineDividableTableExtension.create(),
+				RelativeLinkExtension.create()
+		}));
+		return options;
 	}
 	
 	public AddOn getApplicableAddOn(String type) throws Exception {
@@ -132,7 +174,7 @@ public class Catalpa {
 		freeMarker = new Configuration(Configuration.VERSION_2_3_28);
 		freeMarker.setDefaultEncoding("UTF-8");
 		freeMarker.setSharedVariable("baseurl", new BaseurlMethod());
-		freeMarker.setSharedVariable("markdown", new MarkdownDirective());
+		freeMarker.setSharedVariable("markdown", new MarkdownDirective(getMarkdownOptions()));
 		freeMarker.setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[] {
 			new LastModifiedTracker.TemplateLoader(new File(inputPath.toFile(), "templates")),
 			new LastModifiedTracker.TemplateLoader(inputPath.toFile())
