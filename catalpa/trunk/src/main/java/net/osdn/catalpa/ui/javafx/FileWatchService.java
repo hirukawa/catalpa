@@ -10,6 +10,7 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.Executors;
 import java.nio.file.WatchEvent.Kind;
 import java.nio.file.WatchEvent.Modifier;
 
@@ -42,6 +43,8 @@ public class FileWatchService extends ScheduledService<Path[]> {
 	}
 	
 	public FileWatchService() {
+		setExecutor(Executors.newSingleThreadExecutor());
+		
 		pathProperty.addListener((observable, oldValue, newValue)-> {
 			try {
 				restart(newValue);

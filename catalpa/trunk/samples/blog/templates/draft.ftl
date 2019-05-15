@@ -14,11 +14,9 @@
 		<div class="header" id="header">
 			<div class="header-title">
 				&nbsp;
-				<#if (_PREVIEW!false) == true>
-				<a href="/"><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>下書き</a>
-				<#else>
-				<#if siteurl?has_content><a href="${siteurl}"></#if><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>下書き<#if siteurl?has_content></a></#if>
-				</#if>
+				<a href="/">下書き</a>
+				<span style="font-size:smaller">（記事数 ${blog.draft.postCount}）</span>
+				<span style="float:right">${blog.draft.characterCount} <span style="font-size:90%">文字</span>&emsp;</span>
 			</div>
 		</div>
 		<div class="flex-container">

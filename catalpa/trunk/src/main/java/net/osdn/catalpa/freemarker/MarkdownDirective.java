@@ -2,18 +2,9 @@ package net.osdn.catalpa.freemarker;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.vladsch.flexmark.Extension;
-import com.vladsch.flexmark.ext.attributes.AttributesExtension;
-import com.vladsch.flexmark.ext.definition.DefinitionExtension;
-import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
-import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
-import com.vladsch.flexmark.ext.tables.TablesExtension;
-import com.vladsch.flexmark.ext.typographic.TypographicExtension;
-import com.vladsch.flexmark.ext.wikilink.WikiLinkExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Document;
@@ -27,11 +18,6 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
-import net.osdn.blogs.flexmark.ext.highlight.HighlightExtension;
-import net.osdn.blogs.flexmark.ext.kbd.KbdExtension;
-import net.osdn.blogs.flexmark.ext.samp_button.SampButtonExtension;
-import net.osdn.catalpa.flexmark.ext.LineDividableTableExtension;
-import net.osdn.catalpa.flexmark.ext.BasicNodeExtension;
 import net.osdn.catalpa.flexmark.ext.RelativeLinkExtension;
 import net.osdn.catalpa.html.JapaneseTextLayouter;
 
@@ -43,46 +29,7 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 	private Parser parser;
 	private HtmlRenderer renderer;
 	
-	public MarkdownDirective() {
-		MutableDataSet options = new MutableDataSet();
-		
-		options.set(HtmlRenderer.FENCED_CODE_NO_LANGUAGE_CLASS, "nohighlight");
-		
-		options.set(HighlightExtension.REPLACE_YEN_SIGN, true);
-
-		/*
-		options.set(AnchorLinkExtension.ANCHORLINKS_SET_NAME, true);
-		options.set(AnchorLinkExtension.ANCHORLINKS_WRAP_TEXT, false);
-		options.set(AnchorLinkExtension.ANCHORLINKS_ANCHOR_CLASS, "anchor");
-		*/
-
-		/*
-		options.set(AttributesExtension.ASSIGN_TEXT_ATTRIBUTES, true);
-		options.set(AttributesExtension.USE_EMPTY_IMPLICIT_AS_SPAN_DELIMITER, true);
-		*/
-		
-		/*
-		options.set(AttributesExtension.WRAP_NON_ATTRIBUTE_TEXT, false);
-		*/
-
-		options.set(Parser.EXTENSIONS, Arrays.asList(new Extension[] {
-				AttributesExtension.create(),
-				DefinitionExtension.create(),
-				WikiLinkExtension.create(),
-				StrikethroughExtension.create(),
-				TaskListExtension.create(),
-				TablesExtension.create(),
-				TypographicExtension.create(),
-
-				HighlightExtension.create(),
-				KbdExtension.create(),
-				SampButtonExtension.create(),
-				
-				BasicNodeExtension.create(),
-				LineDividableTableExtension.create(),
-				RelativeLinkExtension.create()
-		}));
-		
+	public MarkdownDirective(MutableDataSet options) {
 		parser = Parser.builder(options).build();
 		renderer = HtmlRenderer.builder(options).build();
 	}

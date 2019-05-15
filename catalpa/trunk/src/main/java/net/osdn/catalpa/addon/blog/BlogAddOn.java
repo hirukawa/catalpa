@@ -26,6 +26,10 @@ import java.util.regex.Pattern;
 import java.util.Map.Entry;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.ast.Document;
+import com.vladsch.flexmark.util.options.MutableDataSet;
 
 import freemarker.core.ParseException;
 import freemarker.template.MalformedTemplateNameException;
@@ -58,7 +62,10 @@ public class BlogAddOn implements AddOn {
 	private Catalpa catalpa;
 	private Factory factory;
 	private Map<String, Object> blogDataModel = new HashMap<String, Object>();
+	private Map<String, Object> draftDataModel = null;
 	private int paginate = 10;
+	
+	private Map<Post, Integer> characterCounts = new HashMap<Post, Integer>();
 	
 	@Override
 	public void setCatalpa(Catalpa catalpa) {
@@ -151,6 +158,10 @@ public class BlogAddOn implements AddOn {
 		*/
 
 		blogDataModel.put("post", post);
+
+		if(draftDataModel != null) {
+			draftDataModel.put("characterCount", characterCounts.get(post));
+		}
 	}
 	
 	@Override
@@ -313,6 +324,10 @@ public class BlogAddOn implements AddOn {
 			factory.getPostBy(path);
 		}
 		if(factory.hasDraft) {
+			draftDataModel = new HashMap<String, Object>();
+			draftDataModel.put("postCount", factory.posts.size());
+			blogDataModel.put("draft", draftDataModel);
+			
 			factory.categories.clear();
 			Iterator<Entry<Path, Post>> it = factory.posts.entrySet().iterator();
 			while(it.hasNext()) {
@@ -338,7 +353,7 @@ public class BlogAddOn implements AddOn {
 		return factory;
 	}
 	
-	/* package private */ static class Factory {
+	/* package private */ class Factory {
 
 		private Path inputPath;
 		private Map<String, Category> categories = new HashMap<String, Category>();
@@ -502,11 +517,34 @@ public class BlogAddOn implements AddOn {
 					if(map.containsKey("draft")) {
 						post.setDraft(true);
 						hasDraft = true;
+						characterCounts.put(post, countCharacters(content));
 					}
 					posts.put(path, post);
 				}
 			}
 			return post;
 		}
+	}
+	
+	private int countCharacters(String markdown) {
+		MutableDataSet options = catalpa.getMarkdownOptions();
+		Parser parser = Parser.builder(options).build();
+		HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+		Document document = parser.parse(markdown);
+		String html = renderer.render(document);
+		String text = html
+				.replaceAll("<[^>]*>", "")
+				.replaceAll("&amp;", "&")
+				.replaceAll("&lt;", "<")
+				.replaceAll("&gt;", ">")
+				.replaceAll("&quot;", "\"")
+				.replaceAll("&ldquo;", "\"")
+				.replaceAll("&rdquo;", "\"")
+				.replaceAll("&lsquo;", "'")
+				.replaceAll("&rsquo;", "'")
+				.replaceAll("\r", "")
+				.replaceAll("\n", "")
+				.replaceAll(" ", "");
+		return text.length();
 	}
 }

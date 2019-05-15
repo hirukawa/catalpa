@@ -47,7 +47,7 @@ public class SearchIndex {
 		}
 		text = sb.toString();
 		text = text.replaceAll("</?(a|big|code|em|i|kbd|small|span|strong|tt).*?>", "");
-		text = text.replaceAll("<.+?>", "\n");
+		text = text.replaceAll("<[^>]*>", "\n");
 		text = text.replaceAll("&amp;", "&");
 		text = text.replaceAll("&lt;", "<");
 		text = text.replaceAll("&gt;", ">");
