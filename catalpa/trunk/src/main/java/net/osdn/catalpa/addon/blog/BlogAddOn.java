@@ -83,6 +83,9 @@ public class BlogAddOn implements AddOn {
 	 */
 	@Override
 	public void prepare(Path inputPath, Path outputPath, Map<String, Object> config, Map<String, Object> options, Context context) throws IOException {
+		if(options == null) {
+			options = new HashMap<String, Object>();
+		}
 		Object obj;
 
 		//config
