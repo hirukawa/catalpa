@@ -39,6 +39,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -149,7 +151,11 @@ public class Main extends Application implements Initializable {
 				LocalDateTime t = this.lastModified = LocalDateTime.now();
 				new Timeline(new KeyFrame(Duration.millis(600), onFinished -> {
 					if(t.equals(lastModified) && inputPath.getValue() != null) {
+						try {
 						update(inputPath.getValue());
+						} catch (IOException e) {
+							showException(e);
+						}
 					}
 				})).play();
 			}
@@ -237,9 +243,6 @@ public class Main extends Application implements Initializable {
 			if(Files.isDirectory(path)) {
 				tfInputPath.setText(path.toAbsolutePath().toString());
 				inputPath.setValue(path);
-				if(uploadConfigFactory != null) {
-					uploadConfig.setValue(uploadConfigFactory.create(path));
-				}
 				createTemporaryDirectory("preview-htdocs", true);
 				update(path);
 			} else {
@@ -248,9 +251,13 @@ public class Main extends Application implements Initializable {
 		}
 	}
 	
-	protected void update(Path inputPath) {
+	protected void update(Path inputPath) throws IOException {
 		toast.hide();
 		busy.setValue(true);
+		draft.set(false);
+		if(uploadConfigFactory != null) {
+			uploadConfig.setValue(uploadConfigFactory.create(inputPath));
+		}
 		previewOutputPath.setValue(null);
 		executorService.submit(() -> {
 			try {
@@ -262,6 +269,8 @@ public class Main extends Application implements Initializable {
 				httpServer.setDocumentRoot(outputPath);
 				httpServer.update();
 				Platform.runLater(()-> {
+					draft.setValue(options.containsKey("_DRAFT"));
+					defaultUrl.setValue((String)options.get("_DEFAULT_URL"));
 					previewOutputPath.setValue(outputPath);
 				});
 				toast.show(Toast.GREEN, "更新プロセスが正常に終了しました", Toast.SHORT);
@@ -333,7 +342,8 @@ public class Main extends Application implements Initializable {
 		if (Desktop.isDesktopSupported()) {
 			Desktop desktop = Desktop.getDesktop();
 			if(desktop.isSupported(Desktop.Action.BROWSE)) {
-				desktop.browse(new URI("http://localhost:" + HTTP_SERVER_PORT + "/"));
+				String url = defaultUrl.get() != null ? defaultUrl.get() : "";
+				desktop.browse(new URI("http://localhost:" + HTTP_SERVER_PORT + "/" + url));
 			}
 		}
 	}
@@ -498,6 +508,8 @@ public class Main extends Application implements Initializable {
 	private ObjectProperty<Path> previewOutputPath = new SimpleObjectProperty<Path>();
 	private ObjectProperty<UploadConfig> uploadConfig = new SimpleObjectProperty<UploadConfig>();
 	private BooleanProperty busy = new SimpleBooleanProperty();
+	private BooleanProperty draft = new SimpleBooleanProperty();
+	private StringProperty defaultUrl = new SimpleStringProperty();
 
 	@FXML MenuBar   menuBar;
 	@FXML Menu      menuFile;
@@ -586,7 +598,8 @@ public class Main extends Application implements Initializable {
 		btnSaveAs.disableProperty().bind(Bindings.isNull(inputPath));
 		btnOpenBrowser.disableProperty().bind(Bindings
 				.or(Bindings.isNull(inputPath), Bindings.isNull(previewOutputPath)));
-		btnUpload.disableProperty().bind(Bindings.isNull(uploadConfig));
+		btnUpload.disableProperty().bind(Bindings
+				.or(Bindings.isNull(uploadConfig), draft));
 		
 		blocker.visibleProperty().bind(busy);
 		
