@@ -102,10 +102,13 @@ public class BlogAddOn implements AddOn {
 		if(factory.hasDraft) {
 			//draft template
 			context.getSystemDataModel().put("template", "draft.ftl");
+			options.put("_DRAFT", true);
 		} else {
 			//default template
 			context.getSystemDataModel().put("template", "post.ftl");
+			options.remove("_DRAFT");
 		}
+		options.remove("_DEFAULT_URL");
 		
 		List<Category> categories = factory.getCategories();
 		categories.sort(Comparator.comparing(Category::getDate).thenComparing(c -> c.getPosts().size()).reversed());
@@ -114,6 +117,9 @@ public class BlogAddOn implements AddOn {
 		posts.sort(Comparator.comparing(Post::getDate).reversed());
 		for(int i = 0; i < posts.size(); i++) {
 			Post post = posts.get(i);
+			if(factory.hasDraft && i == 0) {
+				options.put("_DEFAULT_URL", post.getUrl());
+			}
 			if(Files.exists(post.getPath().getParent().resolve(THUMBNAIL_FILENAME))) {
 				Path thumbnail = inputPath.relativize(post.getPath().getParent()).resolve(THUMBNAIL_FILENAME);
 				post.setThumbnail(thumbnail.toString().replace('\\', '/'));
