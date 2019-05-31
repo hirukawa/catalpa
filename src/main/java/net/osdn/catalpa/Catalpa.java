@@ -214,12 +214,13 @@ public class Catalpa {
 		context.setInputPath(inputPath);
 		context.setOutputPath(outputPath);
 		retrieve(context);
-		createSitemap(context);
-		createSearchIndex(context);
 		
 		if(addon != null) {
-			addon.postExecute(inputPath, outputPath, options, context);
+			addon.postExecute(inputPath, outputPath, options, context, sitemap);
 		}
+		
+		createSitemap(context);
+		createSearchIndex(context);
 	}
 	
 	protected void retrieve(Context context) throws Exception {
@@ -398,8 +399,11 @@ public class Catalpa {
 			return;
 		}
 		
+		List<SitemapItem> copyList = new ArrayList<SitemapItem>(sitemap);
+		Collections.reverse(copyList);
+		
 		Map<String, Object> dataModel = new HashMap<String, Object>();
-		dataModel.put("sitemap", sitemap);
+		dataModel.put("sitemap", copyList);
 		
 		Template template = context.getFreeMarker().getTemplate("sitemap.ftl");
 		Path sitemap = context.getRootOutputPath().resolve("sitemap.xml");

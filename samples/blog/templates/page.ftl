@@ -3,6 +3,13 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
+
+	<#if blog.pager.next??>
+	<meta name="robots" content="noindex">
+	<#elseif siteurl?has_content>
+	<link rel="canonical" href="${siteurl}">
+	</#if>
+
 	<link rel="stylesheet" href="${baseurl}css/main.css">
 	<link rel="stylesheet" href="${baseurl}lib/jsOnlyLightbox/css/lightbox.min.css">
 	<link rel="icon" href="${baseurl}favicon.ico">
