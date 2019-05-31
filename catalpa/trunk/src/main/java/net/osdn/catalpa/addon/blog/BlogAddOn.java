@@ -9,7 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -40,6 +42,9 @@ import net.osdn.catalpa.AddOn;
 import net.osdn.catalpa.Catalpa;
 import net.osdn.catalpa.CatalpaException;
 import net.osdn.catalpa.Context;
+import net.osdn.catalpa.SitemapItem;
+import net.osdn.catalpa.SitemapItem.ChangeFreq;
+import net.osdn.catalpa.URLEncoder;
 import net.osdn.catalpa.Util;
 import net.osdn.catalpa.handler.TemplateHandler;
 import net.osdn.util.io.AutoDetectReader;
@@ -174,7 +179,7 @@ public class BlogAddOn implements AddOn {
 	}
 	
 	@Override
-	public void postExecute(Path inputPath, Path outputPath, Map<String, Object> options, Context context) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
+	public void postExecute(Path inputPath, Path outputPath, Map<String, Object> options, Context context, List<SitemapItem> sitemap) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
 		Map<String, Object> dataModel = context.getDataModel();
 		
 		{ // create page html
@@ -200,6 +205,12 @@ public class BlogAddOn implements AddOn {
 				Path path;
 				if(page == pages) {
 					path = context.getOutputPath().resolve("index.html");
+					SitemapItem item = new SitemapItem(
+							URLEncoder.encode(context.getUrl()),
+							FileTime.from(ZonedDateTime.now().toInstant()),
+							ChangeFreq.Daily,
+							1.0);
+					sitemap.add(item);
 				} else {
 					baseUrl = "../";
 					path = context.getOutputPath().resolve("page").resolve(page + ".html");
