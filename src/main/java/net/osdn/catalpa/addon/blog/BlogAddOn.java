@@ -140,6 +140,10 @@ public class BlogAddOn implements AddOn {
 		if(obj instanceof String) {
 			blogDataModel.put("title", obj);
 		}
+		obj = context.getDataModel().get("description");
+		if(obj instanceof String) {
+			blogDataModel.put("description", obj);
+		}
 		blogDataModel.put("categories", categories);
 		blogDataModel.put("posts", posts);
 		blogDataModel.put("pager", new Pager(inputPath, outputPath, posts));

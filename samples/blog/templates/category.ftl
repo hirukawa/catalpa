@@ -7,8 +7,8 @@
 	<link rel="stylesheet" href="${baseurl}css/main.css">
 	<link rel="stylesheet" href="${baseurl}lib/jsOnlyLightbox/css/lightbox.min.css">
 	<link rel="icon" href="${baseurl}favicon.ico">
-	<title>${blog.title!} </title>
-	<meta name="description" content="${description!}">
+	<title>${blog.title!} - ${blog.category.name!}</title>
+	<meta name="description" content="${description?replace('\n', '')}">
 </head>
 <body class="blog category">
 	<div class="body-center">
