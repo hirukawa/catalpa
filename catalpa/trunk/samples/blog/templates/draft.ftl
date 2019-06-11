@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="${baseurl}lib/jsOnlyLightbox/css/lightbox.min.css">
 	<link rel="icon" href="${baseurl}favicon.ico">
 	<title>下書き</title>
-	<meta name="description" content="${description!}">
+	<meta name="description" content="${description?replace('\n', '')}">
 </head>
 <body class="blog post">
 	<div class="body-center">
