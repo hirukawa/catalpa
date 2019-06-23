@@ -539,11 +539,18 @@ public class BlogAddOn implements AddOn {
 					}
 					
 					if(map.containsKey("draft")) {
-						post.setDraft(true);
-						hasDraft = true;
-						characterCounts.put(post, countCharacters(content));
+						Object obj = map.get("draft");
+						if(obj instanceof String && ((String)obj).equalsIgnoreCase("skip")) {
+							post = null;
+						} else {
+							post.setDraft(true);
+							hasDraft = true;
+							characterCounts.put(post, countCharacters(content));
+						}
 					}
-					posts.put(path, post);
+					if(post != null) {
+						posts.put(path, post);
+					}
 				}
 			}
 			return post;
