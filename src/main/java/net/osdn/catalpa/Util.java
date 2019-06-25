@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Util {
 	
@@ -99,6 +100,45 @@ public class Util {
 			}
 		}
 		return sb;
+	}
+	
+	public static String getFileExtension(Path path) {
+		String s = path.getFileName().toString().toLowerCase();
+		int i = s.lastIndexOf('.');
+		if(0 <= i && i + 1 < s.length()) {
+			return s.substring(i + 1);
+		}
+		return null;
+	}
+	
+	public static List<String> getValues(Map<?, ?> map, String key) {
+		List<String> list = new ArrayList<String>();
+		String[] names = key.split("\\.");
+		for(int i = 0; i < names.length; i++) {
+			if(i + 1 < names.length) {
+				Object obj = map.get(names[i]);
+				if(obj == null) {
+					return list;
+				} else if(obj instanceof Map<?, ?>) {
+					map = (Map<?, ?>)obj;
+				} else {
+					throw new ClassCastException(obj.getClass().getName());
+				}
+			} else {
+				Object obj = map.get(names[i]);
+				if(obj instanceof List<?>) {
+					List<?> l = (List<?>)obj;
+					for(Object e : l) {
+						if(e != null) {
+							list.add(e.toString());
+						}
+					}
+				} else if(obj != null) {
+					list.add(obj.toString());
+				}
+			}
+		}
+		return list;
 	}
 	
 	public static int[] getApplicationVersion() {

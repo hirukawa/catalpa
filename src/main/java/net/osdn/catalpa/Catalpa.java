@@ -1,11 +1,16 @@
 package net.osdn.catalpa;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -21,10 +26,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+
+import org.brotli.wrapper.Brotli;
+import org.brotli.wrapper.enc.Encoder;
 
 import com.vladsch.flexmark.Extension;
 import com.vladsch.flexmark.ext.attributes.AttributesExtension;
@@ -64,7 +74,11 @@ import net.osdn.catalpa.handler.YamlFrontMatterHandler;
 import net.osdn.util.io.AutoDetectReader;
 
 public class Catalpa {
-
+	
+	static {
+		Brotli.loadLibrary();
+	}
+	
 	public static final String CONFIG_FILENAME = "config.yml";
 	
 	private static final List<Handler> DEFAULT_HANDLERS = Arrays.asList(
@@ -97,6 +111,8 @@ public class Catalpa {
 	private Configuration freeMarker;
 	private List<SitemapItem> sitemap = new ArrayList<SitemapItem>();
 	private List<SearchIndex> searchIndexes;
+	private Set<String> compressionTargets = new HashSet<String>();
+	private Set<String> compressionFormats = new HashSet<String>();
 	
 	public Catalpa(Path inputPath) {
 		this(inputPath, DEFAULT_HANDLERS, Arrays.asList(new BlogAddOn()));
@@ -167,7 +183,8 @@ public class Catalpa {
 	}
 	
 	public void process(Path outputPath) throws Exception {
-		process(outputPath, null);
+		Map<String, Object> options = new HashMap<String, Object>();
+		process(outputPath, options);
 	}
 	
 	public void process(Path outputPath, Map<String, Object> options) throws Exception {
@@ -194,6 +211,25 @@ public class Catalpa {
 		if(Files.exists(filename) && !Files.isDirectory(filename)) {
 			config = context.load(filename);
 			type = config.get("type") != null ? config.get("type").toString() : null;
+
+			
+			compressionTargets.clear();
+			compressionFormats.clear();
+			if(!Boolean.TRUE.equals(options.get("_PREVIEW"))) {
+				for(String s : Util.getValues(config, "compression.target")) {
+					if(s.startsWith(".")) {
+						s = s.substring(1);
+					}
+					compressionTargets.add(s.toLowerCase());
+				}
+				for(String s : Util.getValues(config, "compression.format")) {
+					if(s.startsWith(".")) {
+						s = s.substring(1);
+					}
+					compressionFormats.add(s.toLowerCase());
+				}
+			}
+			
 			addon = getApplicableAddOn(type);
 		}
 		if(addon != null) {
@@ -286,7 +322,7 @@ public class Catalpa {
 						return;
 					} else {
 						List<String> lines = Util.readAllLines(reader);
-						Files.write(context.getOutputPath(), lines, StandardCharsets.UTF_8);
+						write(context.getOutputPath(), lines, StandardCharsets.UTF_8);
 						// create search index
 						if(searchIndexes != null && context.getOutputPath().getFileName().toString().toLowerCase().endsWith(".html")) {
 							SearchIndex index = SearchIndex.create(context, lines);
@@ -347,6 +383,40 @@ public class Catalpa {
 		return false;
 	}
 	
+	public void write(Path path, Iterable<? extends CharSequence> lines, Charset cs) throws IOException {
+		CharsetEncoder encoder = cs.newEncoder();
+		try(ByteArrayOutputStream out = new ByteArrayOutputStream();
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, encoder))) {
+			for(CharSequence line : lines) {
+				writer.append(line);
+				writer.newLine();
+			}
+			writer.flush();
+			write(path, out.toByteArray());
+		}
+	}
+	
+	public void write(Path path, byte[] bytes) throws IOException {
+
+		Files.write(path, bytes);
+		
+		String ext = Util.getFileExtension(path);
+		if(compressionTargets.contains(ext)) {
+			for(String format : compressionFormats) {
+				byte[] data = null;
+				if(format.equals("gz") || format.equals("gzip")) {
+					data = Zopfli.compress(bytes);
+				} else if(format.equals("br") || format.equals("brotli")) {
+					data = Encoder.compress(bytes);
+				}
+				if(data != null) {
+					Path p = path.resolveSibling(path.getFileName().toString() + "." + format);
+					Files.write(p, data);
+				}
+			}
+		}
+	}
+	
 	protected void copyRecursively(Path src, Path dst) throws IOException {
 		Files.walkFileTree(src, new SimpleFileVisitor<Path>() {
 			@Override
@@ -370,9 +440,15 @@ public class Catalpa {
 				&& Files.size(src) == Files.size(dst)) {
 			return;
 		}
-		Files.copy(src, dst,
-				StandardCopyOption.REPLACE_EXISTING,
-				StandardCopyOption.COPY_ATTRIBUTES);
+		
+		String ext = Util.getFileExtension(dst);
+		if(compressionTargets.contains(ext)) {
+			write(dst, Files.readAllBytes(src));
+		} else {
+			Files.copy(src, dst,
+					StandardCopyOption.REPLACE_EXISTING,
+					StandardCopyOption.COPY_ATTRIBUTES);
+		}
 	}
 	
 	protected SitemapItem createSitemapItem(Context context) throws IOException {

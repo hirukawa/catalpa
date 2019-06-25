@@ -1,8 +1,10 @@
 package net.osdn.catalpa.addon.blog;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -135,7 +137,7 @@ public class BlogAddOn implements AddOn {
 				post.setThumbnail(DEFAULT_THUMBNAIL_DATA_URI);
 			}
 		}
-
+		
 		obj = context.getDataModel().get("title");
 		if(obj instanceof String) {
 			blogDataModel.put("title", obj);
@@ -166,14 +168,6 @@ public class BlogAddOn implements AddOn {
 		}
 		
 		Post post = factory.getPostBy(context.getInputPath());
-
-		/*
-		Template template = new Template(null, post.getLeading() + "\n" + post.getMore(), context.getFreeMarker());
-		StringWriter content = new StringWriter();
-		template.process(context.getDataModel(), content);
-		post.setContent(content.toString());
-		System.out.println("!" + content.toString());
-		*/
 
 		blogDataModel.put("post", post);
 
@@ -231,10 +225,13 @@ public class BlogAddOn implements AddOn {
 				}
 				dataModel.put("baseurl", baseUrl);
 				
-				try(Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+				try(ByteArrayOutputStream out = new ByteArrayOutputStream();
+						BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8))) {
 					synchronized (context.getFreeMarker()) {
 						pageTemplate.process(dataModel, writer);
 					}
+					writer.flush();
+					catalpa.write(path, out.toByteArray());
 				}
 				
 				// next page
@@ -284,10 +281,14 @@ public class BlogAddOn implements AddOn {
 					} else {
 						path = context.getOutputPath().resolve("category").resolve(category.getId()).resolve(page + ".html");
 					}
-					try(Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+
+					try(ByteArrayOutputStream out = new ByteArrayOutputStream();
+							BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8))) {
 						synchronized (context.getFreeMarker()) {
 							categoryTemplate.process(dataModel, writer);
 						}
+						writer.flush();
+						catalpa.write(path, out.toByteArray());
 					}
 					
 					// next page
@@ -359,6 +360,9 @@ public class BlogAddOn implements AddOn {
 				Post post = e.getValue();
 				if(post.isDraft()) {
 					for(Category category : post.getCategories()) {
+						if(category.getId() == null) {
+							category.setId(category.getName().toLowerCase());
+						}
 						Category c = factory.getCategoryBy(category.getName() + "(" + category.getId() + ")");
 						c.add(post);
 					}
@@ -422,7 +426,7 @@ public class BlogAddOn implements AddOn {
 				categories.put(name, category);
 			}
 			if(category.getId() == null && id != null && !id.isEmpty()) {
-				category.setId(id);
+				category.setId(id.toLowerCase());
 			}
 			
 			return category;
