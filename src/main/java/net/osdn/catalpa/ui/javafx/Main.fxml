@@ -121,9 +121,14 @@
 		</center>	
 	</BorderPane>
 
-	<VBox fx:id="blocker" visible="false" alignment="CENTER">
+	<StackPane fx:id="blocker" visible="false">
 		<ProgressIndicator />
-	</VBox>
+		<ProgressBar fx:id="progressBar"
+			StackPane.alignment="BOTTOM_CENTER"
+			maxWidth="Infinity"/>
+		<Label fx:id="progressLabel"
+			StackPane.alignment="BOTTOM_LEFT"/>
+	</StackPane>
 	
 	<AnchorPane pickOnBounds="false">
 		<Toast fx:id="toast"

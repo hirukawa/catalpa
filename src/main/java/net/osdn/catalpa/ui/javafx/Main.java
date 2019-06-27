@@ -56,13 +56,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Screen;
@@ -70,11 +71,12 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import net.osdn.catalpa.Catalpa;
+import net.osdn.catalpa.ProgressObserver;
 import net.osdn.catalpa.Util;
 import net.osdn.catalpa.upload.UploadConfig;
 import net.osdn.catalpa.upload.UploadConfigFactory;
 
-public class Main extends Application implements Initializable {
+public class Main extends Application implements Initializable, ProgressObserver {
 	private static final String MARKDOWN_CHEAT_SHEET_URL = "https://catalpa.osdn.jp/markdown.html";
 	
 	private static AtomicInteger count = new AtomicInteger(0);
@@ -252,6 +254,9 @@ public class Main extends Application implements Initializable {
 	}
 	
 	protected void update(Path inputPath) throws IOException {
+		progressBar.setProgress(0.0);
+		progressLabel.setText("");
+		
 		toast.hide();
 		busy.setValue(true);
 		draft.set(false);
@@ -265,7 +270,7 @@ public class Main extends Application implements Initializable {
 				Catalpa catalpa = new Catalpa(inputPath);
 				Map<String, Object> options = new HashMap<String, Object>();
 				options.put("_PREVIEW", true);
-				catalpa.process(outputPath, options);
+				catalpa.process(outputPath, options, this);
 				httpServer.setDocumentRoot(outputPath);
 				httpServer.update();
 				Platform.runLater(()-> {
@@ -283,12 +288,16 @@ public class Main extends Application implements Initializable {
 	}
 	
 	protected void save(Path inputPath, Path outputPath) {
+		progressBar.setProgress(0.0);
+		progressLabel.setText("");
+		
 		toast.hide();
 		busy.setValue(true);
 		executorService.submit(()-> {
 			try {
 				Catalpa catalpa = new Catalpa(inputPath);
-				catalpa.process(outputPath);
+				Map<String, Object> options = new HashMap<String, Object>();
+				catalpa.process(outputPath, options, this);
 				toast.show(Toast.GREEN, "保存しました", outputPath.toString(), Toast.LONG);
 			} catch (Exception e) {
 				showException(e);
@@ -299,14 +308,19 @@ public class Main extends Application implements Initializable {
 	}
 	
 	protected void upload(Path inputPath) {
+		progressBar.setProgress(0.0);
+		progressLabel.setText("");
+
 		toast.hide();
 		busy.setValue(true);
 		executorService.submit(()-> {
 			try {
 				Path outputPath = createTemporaryDirectory("upload-htdocs", true);
 				Catalpa catalpa = new Catalpa(inputPath);
-				catalpa.process(outputPath);
+				Map<String, Object> options = new HashMap<String, Object>();
+				catalpa.process(outputPath, options, this);
 				uploadConfig.get().upload(outputPath.toFile());
+				setText("アップロードしています…");
 				toast.show(Toast.GREEN, "アップロードが完了しました", Toast.LONG);
 			} catch(Exception e) {
 				showException(e);
@@ -314,6 +328,16 @@ public class Main extends Application implements Initializable {
 				Platform.runLater(()-> busy.setValue(false));
 			}
 		});
+	}
+	
+	@Override
+	public void setProgress(double value) {
+		Platform.runLater(() -> progressBar.setProgress(value));
+	}
+
+	@Override
+	public void setText(String text) {
+		Platform.runLater(() -> progressLabel.setText(text));
 	}
 	
 	//
@@ -525,8 +549,10 @@ public class Main extends Application implements Initializable {
 	@FXML Button    btnOpenBrowser;
 	@FXML Button    btnSaveAs;
 	@FXML Button    btnUpload;
-	@FXML VBox      blocker;
+	@FXML Pane      blocker;
 	@FXML Toast     toast;
+	@FXML ProgressBar progressBar;
+	@FXML Label       progressLabel;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
