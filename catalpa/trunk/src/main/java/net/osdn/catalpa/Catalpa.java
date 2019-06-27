@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.brotli.wrapper.Brotli;
 import org.brotli.wrapper.enc.Encoder;
@@ -113,6 +115,9 @@ public class Catalpa {
 	private List<SearchIndex> searchIndexes;
 	private Set<String> compressionTargets = new HashSet<String>();
 	private Set<String> compressionFormats = new HashSet<String>();
+	private ProgressObserver observer;
+	private int progress;
+	private int maxProgress;
 	
 	public Catalpa(Path inputPath) {
 		this(inputPath, DEFAULT_HANDLERS, Arrays.asList(new BlogAddOn()));
@@ -182,12 +187,9 @@ public class Catalpa {
 		return applicableHandlers;
 	}
 	
-	public void process(Path outputPath) throws Exception {
-		Map<String, Object> options = new HashMap<String, Object>();
-		process(outputPath, options);
-	}
-	
-	public void process(Path outputPath, Map<String, Object> options) throws Exception {
+	public void process(Path outputPath, Map<String, Object> options, ProgressObserver observer) throws Exception {
+		this.observer = (observer != null) ? observer : ProgressObserver.EMPTY;
+		
 		freeMarker = new Configuration(Configuration.VERSION_2_3_28);
 		freeMarker.setDefaultEncoding("UTF-8");
 		freeMarker.setSharedVariable("baseurl", new BaseurlMethod());
@@ -247,6 +249,7 @@ public class Catalpa {
 			excludeFileNames.add("search.md");
 		}
 		
+		maxProgress = countFiles(inputPath);
 		context.setInputPath(inputPath);
 		context.setOutputPath(outputPath);
 		retrieve(context);
@@ -257,6 +260,31 @@ public class Catalpa {
 		
 		createSitemap(context);
 		createSearchIndex(context);
+	}
+	
+	protected int countFiles(Path path) throws IOException {
+		if(isExclude(path)) {
+			return 0;
+		}
+		if(isCopyOnlyDirectory(path)) {
+			try (Stream<Path> stream = Files.walk(path)) {
+				return (int)stream.filter(Files::isRegularFile).count();
+			}
+		}
+		if(Files.isDirectory(path)) {
+			try(Stream<Path> stream = Files.list(path)) {
+				int count = 0;
+				for(Path child : stream.collect(Collectors.toList())) {
+					if(child.getFileName().toString().equalsIgnoreCase(CONFIG_FILENAME)) {
+						continue;
+					}
+					count += countFiles(child);
+				}
+				return count;
+			}
+		} else {
+			return 1;
+		}
 	}
 	
 	protected void retrieve(Context context) throws Exception {
@@ -275,21 +303,23 @@ public class Catalpa {
 				context.load(config);
 			}
 			FileTime lastModifiedTime = context.getLastModifiedTime();
-			for(Iterator<Path> it = Files.list(context.getInputPath()).iterator(); it.hasNext();) {
-				Path child = it.next();
-				if(child.getFileName().toString().equalsIgnoreCase(CONFIG_FILENAME)) {
-					continue;
-				}
-				Context subContext = context.clone();
-				subContext.setInputPath(context.getInputPath().resolve(child.getFileName()));
-				subContext.setOutputPath(context.getOutputPath().resolve(child.getFileName()));
-				retrieve(subContext);
-				Path out = subContext.getOutputPath();
-				if(out != null && Files.exists(out)) {
-					if(!Files.isDirectory(out) || out.toFile().listFiles(f->f.isFile()).length > 0) {
-						FileTime ft = Files.getLastModifiedTime(out);
-						if(lastModifiedTime == null || ft.compareTo(lastModifiedTime) > 0) {
-							lastModifiedTime = ft;
+			try(Stream<Path> list = Files.list(context.getInputPath())) {
+				for(Iterator<Path> it = list.iterator(); it.hasNext();) {
+					Path child = it.next();
+					if(child.getFileName().toString().equalsIgnoreCase(CONFIG_FILENAME)) {
+						continue;
+					}
+					Context subContext = context.clone();
+					subContext.setInputPath(context.getInputPath().resolve(child.getFileName()));
+					subContext.setOutputPath(context.getOutputPath().resolve(child.getFileName()));
+					retrieve(subContext);
+					Path out = subContext.getOutputPath();
+					if(out != null && Files.exists(out)) {
+						if(!Files.isDirectory(out) || out.toFile().listFiles(f->f.isFile()).length > 0) {
+							FileTime ft = Files.getLastModifiedTime(out);
+							if(lastModifiedTime == null || ft.compareTo(lastModifiedTime) > 0) {
+								lastModifiedTime = ft;
+							}
 						}
 					}
 				}
@@ -321,6 +351,8 @@ public class Catalpa {
 						copyFileIfModified(context.getInputPath(), context.getOutputPath());
 						return;
 					} else {
+						observer.setProgress(++progress / (double)maxProgress);
+						observer.setText(inputPath.relativize(path).toString());
 						List<String> lines = Util.readAllLines(reader);
 						write(context.getOutputPath(), lines, StandardCharsets.UTF_8);
 						// create search index
@@ -339,6 +371,9 @@ public class Catalpa {
 							sitemap.add(item);
 						}
 					}
+				} else {
+					observer.setProgress(++progress / (double)maxProgress);
+					observer.setText("");
 				}
 			} finally {
 				if(reader != null) {
@@ -435,6 +470,9 @@ public class Catalpa {
 	}
 	
 	protected void copyFileIfModified(Path src, Path dst) throws IOException {
+		observer.setProgress(++progress / (double)maxProgress);
+		observer.setText(inputPath.relativize(src).toString());
+				
 		if(Files.exists(dst)
 				&& Files.getLastModifiedTime(src).equals(Files.getLastModifiedTime(dst))
 				&& Files.size(src) == Files.size(dst)) {
