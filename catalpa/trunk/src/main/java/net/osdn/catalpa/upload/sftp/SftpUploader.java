@@ -22,6 +22,8 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 
+import net.osdn.catalpa.ProgressObserver;
+
 public class SftpUploader {
 	
 	private static final String UPLOAD_INDEX_FILE = ".upload.idx";
@@ -30,6 +32,9 @@ public class SftpUploader {
 	private JSch jsch;
 	private Session session;
 	private ChannelSftp channel;
+	private ProgressObserver observer;
+	private int progress;
+	private int maxProgress;
 
 	public SftpUploader(SftpConfig config) throws JSchException {
 		this.config = config;
@@ -68,11 +73,15 @@ public class SftpUploader {
 		}
 	}
 	
-	public int upload(File localDirectory) throws SftpException, IOException {
-		return upload(localDirectory, config.getPath());
+	public int upload(File localDirectory, ProgressObserver observer) throws SftpException, IOException {
+		return upload(localDirectory, config.getPath(), observer);
 	}
 	
-	public int upload(File localDirectory, String remoteDirectory) throws SftpException, IOException {
+	public int upload(File localDirectory, String remoteDirectory, ProgressObserver observer) throws SftpException, IOException {
+		this.observer = (observer != null) ? observer : ProgressObserver.EMPTY;
+		this.observer.setProgress(0.0);
+		this.observer.setText("アップロードの準備をしています…");
+		
 		int uploadCount = 0;
 		System.out.println("localDirectory=" + localDirectory.getAbsolutePath());
 		System.out.println("remoteDirectory=" + remoteDirectory);
@@ -81,22 +90,42 @@ public class SftpUploader {
 		
 		Map<String, Long> index = getUploadIndex(remoteDirectory);
 		
+		class FileEntry {
+			String localFile;
+			String remoteFile;
+			long   localHash;
+		}
+		List<FileEntry> entries = new ArrayList<FileEntry>();
+
 		List<File> list = listLocalFiles(localDirectory);
 		for(File file : list) {
-			String localFile = file.getAbsolutePath();
-			String remoteFile = remoteDirectory + localFile.substring(localDirectoryLength).replace('\\', '/');
+			FileEntry entry = new FileEntry();
+			entry.localFile = file.getAbsolutePath();
+			entry.remoteFile = remoteDirectory + entry.localFile.substring(localDirectoryLength).replace('\\', '/');
 			
-			long localHash = (0x4000000000000000L | (file.length() << 32) | file.lastModified()) & 0x7FFFFFFFFFFFFFFFL;
-			Long remoteHash = index.get(remoteFile);
-			
-			if(remoteHash == null || remoteHash.longValue() != localHash) {
-				System.out.println(localFile + " -> " + remoteFile);
-				put(localFile, remoteFile);
-				uploadCount++;
-				index.put(remoteFile, localHash);
+			entry.localHash = (0x4000000000000000L | (file.length() << 32) | file.lastModified()) & 0x7FFFFFFFFFFFFFFFL;
+			Long remoteHash = index.get(entry.remoteFile);
+
+			if(remoteHash == null || remoteHash.longValue() != entry.localHash) {
+				entries.add(entry);
 			}
 		}
 		
+		progress = 0;
+		maxProgress = entries.size() + 1;
+		
+		for(FileEntry entry : entries) {
+			observer.setProgress(++progress / (double)maxProgress);
+			observer.setText(entry.remoteFile.substring(remoteDirectory.length()));
+			
+			System.out.println(entry.localFile + " -> " + entry.remoteFile);
+			put(entry.localFile, entry.remoteFile);
+			uploadCount++;
+			index.put(entry.remoteFile, entry.localHash);
+		}
+		
+		observer.setProgress(++progress / (double)maxProgress);
+		observer.setText("アップロード管理用インデックスを更新しています…");
 		putUploadIndex(remoteDirectory, index);
 		
 		return uploadCount;

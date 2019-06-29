@@ -8,6 +8,7 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.UserInfo;
 
+import net.osdn.catalpa.ProgressObserver;
 import net.osdn.catalpa.upload.UploadConfig;
 import net.osdn.catalpa.upload.UploadType;
 
@@ -111,14 +112,14 @@ public class SftpConfig implements UploadConfig {
 	}
 
 	@Override
-	public int upload(File dir) throws JSchException, SftpException, IOException {
+	public int upload(File dir, ProgressObserver observer) throws JSchException, SftpException, IOException {
 		System.out.println("upload: " + dir);
-
+		
 		int count = 0;
 		SftpUploader uploader = new SftpUploader(this);
 		try {
 			uploader.connect();
-			count = uploader.upload(dir);
+			count = uploader.upload(dir, observer);
 		} finally {
 			uploader.disconnect();
 		}

@@ -8,16 +8,27 @@
 }
 
 #progressBar {
-	-fx-min-height: 30px;
+	-fx-min-height: 25px;
+}
+#progressBar > .track {
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
+	-fx-control-inner-background: transparent;
+}
+#progressBar > .bar {
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
 }
 #progressLabel {
-	-fx-min-height: 32px;
-	-fx-padding: 0 0 0 10px;
+	-fx-min-height: 25px;
+	-fx-padding: 0 0 0 5px;
 }
 #progressLabel .text {
-	-fx-fill: #F2F2F2;
-	-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,1.0), 3,1.0,0,0 );
+	-fx-fill: #FFFFFF;
+	-fx-font-weight: bold;
+	-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,1.0), 4,0.75,0,0);
 }
+
 
 #lblShowCheatSheet {
 	-fx-padding: 0 0 0 0;

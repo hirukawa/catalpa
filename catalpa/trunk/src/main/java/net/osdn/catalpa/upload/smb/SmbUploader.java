@@ -22,22 +22,30 @@ import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFileInputStream;
 import jcifs.smb.SmbFileOutputStream;
+import net.osdn.catalpa.ProgressObserver;
 
 public class SmbUploader {
 	
 	private static final String UPLOAD_INDEX_FILE = ".upload.idx";
 	
 	private SmbConfig config;
+	private ProgressObserver observer;
+	private int progress;
+	private int maxProgress;
 	
 	public SmbUploader(SmbConfig config) {
 		this.config = config;
 	}
 	
-	public int upload(File localDirectory) throws IOException {
-		return upload(localDirectory, config.getPath());
+	public int upload(File localDirectory, ProgressObserver observer) throws IOException {
+		return upload(localDirectory, config.getPath(), observer);
 	}
 	
-	public int upload(File localDirectory, String remoteDirectory) throws IOException {
+	public int upload(File localDirectory, String remoteDirectory, ProgressObserver observer) throws IOException {
+		this.observer = (observer != null) ? observer : ProgressObserver.EMPTY;
+		this.observer.setProgress(0.0);
+		this.observer.setText("アップロードの準備をしています…");
+		
 		int uploadCount = 0;
 
 		Properties prop = new Properties();
@@ -59,21 +67,41 @@ public class SmbUploader {
 		
 		Map<String, Long> index = getUploadIndex(remoteDirectory);
 		
+		class FileEntry {
+			String localFile;
+			String remoteFile;
+			long   localHash;
+		}
+		List<FileEntry> entries = new ArrayList<FileEntry>();
+		
 		List<File> list = listLocalFiles(localDirectory);
 		for(File file : list) {
-			String localFile = file.getAbsolutePath();
-			String remoteFile = remoteDirectory + localFile.substring(localDirectoryLength).replace('\\', '/');
+			FileEntry entry = new FileEntry();
+			entry.localFile = file.getAbsolutePath();
+			entry.remoteFile = remoteDirectory + entry.localFile.substring(localDirectoryLength).replace('\\', '/');
 			
-			long localHash = (0x4000000000000000L | (file.length() << 32) | file.lastModified()) & 0x7FFFFFFFFFFFFFFFL;
-			Long remoteHash = index.get(remoteFile);
+			entry.localHash = (0x4000000000000000L | (file.length() << 32) | file.lastModified()) & 0x7FFFFFFFFFFFFFFFL;
+			Long remoteHash = index.get(entry.remoteFile);
 			
-			if(remoteHash == null || remoteHash.longValue() != localHash) {
-				put(localFile, remoteFile);
-				uploadCount++;
-				index.put(remoteFile, localHash);
+			if(remoteHash == null || remoteHash.longValue() != entry.localHash) {
+				entries.add(entry);
 			}
 		}
+		
+		progress = 0;
+		maxProgress = entries.size() + 1;
 
+		for(FileEntry entry : entries) {
+			observer.setProgress(++progress / (double)maxProgress);
+			observer.setText(entry.remoteFile.substring(remoteDirectory.length()));
+			
+			put(entry.localFile, entry.remoteFile);
+			uploadCount++;
+			index.put(entry.remoteFile, entry.localHash);
+		}
+		
+		observer.setProgress(++progress / (double)maxProgress);
+		observer.setText("アップロード管理用インデックスを更新しています…");
 		try {
 			putUploadIndex(remoteDirectory, index);
 		} catch(SmbException e) {
