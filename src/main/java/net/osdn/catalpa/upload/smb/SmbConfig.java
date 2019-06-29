@@ -3,6 +3,7 @@ package net.osdn.catalpa.upload.smb;
 import java.io.File;
 import java.util.Map;
 
+import net.osdn.catalpa.ProgressObserver;
 import net.osdn.catalpa.upload.UploadConfig;
 import net.osdn.catalpa.upload.UploadType;
 
@@ -78,10 +79,10 @@ public class SmbConfig implements UploadConfig {
 	}
 
 	@Override
-	public int upload(File dir) throws Exception {
+	public int upload(File dir, ProgressObserver observer) throws Exception {
 		int count = 0;
 		SmbUploader uploader = new SmbUploader(this);
-		count = uploader.upload(dir);
+		count = uploader.upload(dir, observer);
 		
 		return count;
 	}

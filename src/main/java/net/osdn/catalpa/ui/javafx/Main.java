@@ -132,6 +132,8 @@ public class Main extends Application implements Initializable, ProgressObserver
 	private LocalDateTime lastModified;
 	private ExecutorService executorService;
 	private HttpServer httpServer;
+	private double progressOffset = 0.0;
+	private double progressScale = 1.0;
 
 	public Main() throws IOException {
 		Main.instance = this;
@@ -254,6 +256,8 @@ public class Main extends Application implements Initializable, ProgressObserver
 	}
 	
 	protected void update(Path inputPath) throws IOException {
+		progressOffset = 0.0;
+		progressScale = 1.0;
 		progressBar.setProgress(0.0);
 		progressLabel.setText("");
 		
@@ -288,6 +292,8 @@ public class Main extends Application implements Initializable, ProgressObserver
 	}
 	
 	protected void save(Path inputPath, Path outputPath) {
+		progressOffset = 0.0;
+		progressScale = 1.0;
 		progressBar.setProgress(0.0);
 		progressLabel.setText("");
 		
@@ -308,6 +314,8 @@ public class Main extends Application implements Initializable, ProgressObserver
 	}
 	
 	protected void upload(Path inputPath) {
+		progressOffset = 0.0;
+		progressScale = 0.5;
 		progressBar.setProgress(0.0);
 		progressLabel.setText("");
 
@@ -319,8 +327,8 @@ public class Main extends Application implements Initializable, ProgressObserver
 				Catalpa catalpa = new Catalpa(inputPath);
 				Map<String, Object> options = new HashMap<String, Object>();
 				catalpa.process(outputPath, options, this);
-				uploadConfig.get().upload(outputPath.toFile());
-				setText("アップロードしています…");
+				progressOffset = 0.5;
+				uploadConfig.get().upload(outputPath.toFile(), this);
 				toast.show(Toast.GREEN, "アップロードが完了しました", Toast.LONG);
 			} catch(Exception e) {
 				showException(e);
@@ -332,7 +340,7 @@ public class Main extends Application implements Initializable, ProgressObserver
 	
 	@Override
 	public void setProgress(double value) {
-		Platform.runLater(() -> progressBar.setProgress(value));
+		Platform.runLater(() -> progressBar.setProgress(progressOffset + value * progressScale));
 	}
 
 	@Override
@@ -628,6 +636,8 @@ public class Main extends Application implements Initializable, ProgressObserver
 				.or(Bindings.isNull(uploadConfig), draft));
 		
 		blocker.visibleProperty().bind(busy);
+		progressBar.visibleProperty().bind(Bindings.lessThan(0.0, progressBar.progressProperty()));
+		progressLabel.visibleProperty().bind(progressBar.visibleProperty());
 		
 		fileWatchService.pathProperty().bind(Bindings
 				.when(cbAutoReload.selectedProperty())
