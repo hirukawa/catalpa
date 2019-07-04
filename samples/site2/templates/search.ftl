@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
+<head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<meta name="robots" content="noindex">
@@ -32,10 +32,12 @@
 					<input id="search-keyword" type="search" name="keyword" placeholder="検索">
 				</form>
 			</div>
+			<div class="header-menu"><@markdown replace_backslash_to_yensign=true>${header!}</@markdown></div>
 		</div>
 		<div class="flex-container">
 			<div class="flex-item-left" id="flex-item-left">
-				<div class="sidebar"><@markdown replace_backslash_to_yensign=true>${sidebar!}</@markdown></div>
+				<div class="sidebar" id="sidebar"><@markdown replace_backslash_to_yensign=true>${sidebar!}</@markdown></div>
+				<div class="sidebar-bottom" id="sidebar-bottom"></div>
 			</div>
 			<div class="flex-item-right">
 				<div id="search-result" class="search-result"></div>
