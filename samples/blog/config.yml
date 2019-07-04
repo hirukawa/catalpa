@@ -1,5 +1,6 @@
 ---
 type: blog
+siteurl: https://www.example.com
 title: ブログのサンプル
 paginate: 3
 ---

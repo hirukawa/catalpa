@@ -9,6 +9,14 @@
 	<link rel="icon" href="${baseurl}favicon.ico">
 	<title>${title!}</title>
 	<meta name="description" content="${(description!)?replace('\n', '')}">
+
+	<!-- OGP -->
+	<meta property="og:site_name" content="${title!}">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="${siteurl!}">
+	<meta property="og:title" content="${title!}">
+	<meta property="og:description" content="${(description!)?replace('\n', '')}">
+	<!-- <meta property="og:image" content=""> -->
 </head>
 <body>
 	<div class="body-center">

@@ -187,6 +187,10 @@ public class Catalpa {
 		return applicableHandlers;
 	}
 	
+	public ProgressObserver getProgressObserver() {
+		return (this.observer != null) ? this.observer : ProgressObserver.EMPTY;
+	}
+	
 	public void process(Path outputPath, Map<String, Object> options, ProgressObserver observer) throws Exception {
 		this.observer = (observer != null) ? observer : ProgressObserver.EMPTY;
 		
@@ -534,6 +538,8 @@ public class Catalpa {
 			return;
 		}
 		
+		observer.setText("検索用インデックスを作成しています…");
+		
 		StringBuilder db = new StringBuilder("\r\n");
 		for(int i = 0; i < searchIndexes.size(); i++) {
 			SearchIndex index = searchIndexes.get(i);
@@ -579,11 +585,13 @@ public class Catalpa {
 
 		Template template = context.getFreeMarker().getTemplate("search.ftl");
 		Path searchHtml = context.getRootOutputPath().resolve("search.html");
-		try (Writer out = Files.newBufferedWriter(searchHtml, StandardCharsets.UTF_8,
-				StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+		try(ByteArrayOutputStream out = new ByteArrayOutputStream();
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8))) {
 			synchronized (context.getFreeMarker()) {
-				template.process(dataModel, out);
+				template.process(dataModel, writer);
 			}
+			writer.flush();
+			write(searchHtml, out.toByteArray());
 		}
 	}
 }

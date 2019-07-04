@@ -7,8 +7,8 @@
 	<link rel="stylesheet" href="${baseurl}css/main.css">
 	<link rel="stylesheet" href="${baseurl}lib/jsOnlyLightbox/css/lightbox.min.css">
 	<link rel="icon" href="${baseurl}favicon.ico">
-	<title>${title!}</title>
-	<meta name="description" content="${(description!)?replace('\n', '')}">
+	<title>${blog.title!}</title>
+	<meta name="description" content="${(description!)?replace('\n','')}">
 </head>
 <body>
 	<div class="body-center">
@@ -16,9 +16,9 @@
 			<div class="header-title">
 				&nbsp;
 				<#if (_PREVIEW!false) == true>
-				<a href="/"><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>${config.title!}</a>
+				<a href="/"><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>${blog.title!}</a>
 				<#else>
-				<#if siteurl?has_content><a href="${siteurl}"></#if><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>${config.title!}<#if siteurl?has_content></a></#if>
+				<#if siteurl?has_content><a href="${siteurl}"></#if><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>${blog.title!}<#if siteurl?has_content></a></#if>
 				</#if>
 				<form style="float:right" onsubmit="var e = document.getElementById('search-keyword'); search(e.value); e.select(); return false;">
 					<input id="search-keyword" type="search" name="keyword" placeholder="検索">
@@ -27,7 +27,7 @@
 		</div>
 		<div class="flex-container">
 			<div class="flex-item-left" id="flex-item-left">
-				<div class="sidebar"><@markdown replace_backslash_to_yensign=true>${sidebar!}</@markdown></div>
+				<#include "sidebar.ftl">
 			</div>
 			<div class="flex-item-right">
 				<div id="search-result" class="search-result"></div>
@@ -109,17 +109,6 @@
 	<script>
 		var urlPrefix = location.href.substring(0, location.href.lastIndexOf("/") + 1);
 
-		function htmlTagEscape(str) {
-			if (!str) return;
-			return str.replace(/[<>]/g, function(match) {
-				const escape = {
-					'<': '&lt;',
-					'>': '&gt;'
-				};
-				return escape[match];
-			});
-		}
-
 		function search(keyword) {
 			history.replaceState({}, document.title, location.pathname + "?keyword=" + encodeURI(keyword));
 
@@ -139,22 +128,22 @@
 			var keywords_OR = "";
 			for(var i = 0; i < arr.length; i++) {
 				var s = arr[i];
-				s = s.replace(/\\/g, "\\\\");
-				s = s.replace(/\*/g, "\\*");
-				s = s.replace(/\+/g, "\\+");
-				s = s.replace(/\./g, "\\.");
-				s = s.replace(/\?/g, "\\?");
-				s = s.replace(/\{/g, "\\{");
-				s = s.replace(/\}/g, "\\}");
-				s = s.replace(/\(/g, "\\(");
-				s = s.replace(/\)/g, "\\)");
-				s = s.replace(/\[/g, "\\[");
-				s = s.replace(/\]/g, "\\]");
-				s = s.replace(/\^/g, "\\^");
-				s = s.replace(/\$/g, "\\$");
-				s = s.replace(/\-/g, "\\-");
-				s = s.replace(/\|/g, "\\|");
-				s = s.replace(/\//g, "\\/");
+				s = s.replace("\\", "\\\\");
+				s = s.replace("*", "\\*");
+				s = s.replace("+", "\\+");
+				s = s.replace(".", "\\.");
+				s = s.replace("?", "\\?");
+				s = s.replace("{", "\\{");
+				s = s.replace("}", "\\}");
+				s = s.replace("(", "\\(");
+				s = s.replace(")", "\\)");
+				s = s.replace("[", "\\[");
+				s = s.replace("]", "\\]");
+				s = s.replace("^", "\\^");
+				s = s.replace("$", "\\$");
+				s = s.replace("-", "\\-");
+				s = s.replace("|", "\\|");
+				s = s.replace("/", "\\/");
 				keywords_AND += "(?=.*" + s + ")";
 				keywords_OR += "|" + s;
 			}
@@ -163,7 +152,7 @@
 			}
 			var regexp_AND = new RegExp(keywords_AND, "i");
 			var regexp_OR = new RegExp(keywords_OR.substring(1), "ig");
-			var regexp_STRONG = new RegExp(htmlTagEscape(keywords_OR.substring(1)), "ig");
+			var regexp_STRONG = new RegExp(keywords_OR.substring(1), "ig");
 
 			var matches = [];
 			for(var i = 0; i < db.length; i++) {
@@ -182,7 +171,7 @@
 			for(var i = 0; i < matches.length; i++) {
 				var db_entry = db[matches[i]];
 				var entry = "<div class=\"entry\">"
-					+ "<div class=\"title\"><a href=\"" + urlPrefix + db_entry.url + "\">" + htmlTagEscape(db_entry.title) + "</a></div>"
+					+ "<div class=\"title\"><a href=\"" + urlPrefix + db_entry.url + "\">" + db_entry.title + "</a></div>"
 					+ "<div class=\"url\"><a href=\"" + urlPrefix + db_entry.url + "\">" + decodeURI(urlPrefix + db_entry.url) + "</a></div>";
 				var text = "";
 				var divider = "";
@@ -211,7 +200,7 @@
 							range_index_s = index_s;
 							range_index_e = index_e;
 						}
-						candidate = htmlTagEscape(lines[j].substring(range_index_s, range_index_e));
+						candidate = lines[j].substring(range_index_s, range_index_e);
 					}
 					if(candidate.length > 0) {
 						text += divider + (range_index_s > 0 ? "&hellip;" : "")
