@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
+<head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<meta name="robots" content="noindex">
@@ -9,6 +9,14 @@
 	<link rel="icon" href="${baseurl}favicon.ico">
 	<title>${blog.title!}</title>
 	<meta name="description" content="${(description!)?replace('\n','')}">
+
+	<!-- OGP -->
+	<meta property="og:site_name" content="${blog.title!}">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="${siteurl!}">
+	<meta property="og:title" content="${blog.title!}">
+	<meta property="og:description" content="${(description!)?replace('\n', '')}">
+	<!-- <meta property="og:image" content=""> -->
 </head>
 <body>
 	<div class="body-center">
@@ -109,6 +117,17 @@
 	<script>
 		var urlPrefix = location.href.substring(0, location.href.lastIndexOf("/") + 1);
 
+		function htmlTagEscape(str) {
+			if (!str) return;
+			return str.replace(/[<>]/g, function(match) {
+				const escape = {
+					'<': '&lt;',
+					'>': '&gt;'
+				};
+				return escape[match];
+			});
+		}
+
 		function search(keyword) {
 			history.replaceState({}, document.title, location.pathname + "?keyword=" + encodeURI(keyword));
 
@@ -152,7 +171,7 @@
 			}
 			var regexp_AND = new RegExp(keywords_AND, "i");
 			var regexp_OR = new RegExp(keywords_OR.substring(1), "ig");
-			var regexp_STRONG = new RegExp(keywords_OR.substring(1), "ig");
+			var regexp_STRONG = new RegExp(htmlTagEscape(keywords_OR.substring(1)), "ig");
 
 			var matches = [];
 			for(var i = 0; i < db.length; i++) {
@@ -171,7 +190,7 @@
 			for(var i = 0; i < matches.length; i++) {
 				var db_entry = db[matches[i]];
 				var entry = "<div class=\"entry\">"
-					+ "<div class=\"title\"><a href=\"" + urlPrefix + db_entry.url + "\">" + db_entry.title + "</a></div>"
+					+ "<div class=\"title\"><a href=\"" + urlPrefix + db_entry.url + "\">" + htmlTagEscape(db_entry.title) + "</a></div>"
 					+ "<div class=\"url\"><a href=\"" + urlPrefix + db_entry.url + "\">" + decodeURI(urlPrefix + db_entry.url) + "</a></div>";
 				var text = "";
 				var divider = "";
@@ -200,7 +219,7 @@
 							range_index_s = index_s;
 							range_index_e = index_e;
 						}
-						candidate = lines[j].substring(range_index_s, range_index_e);
+						candidate = htmlTagEscape(lines[j].substring(range_index_s, range_index_e));
 					}
 					if(candidate.length > 0) {
 						text += divider + (range_index_s > 0 ? "&hellip;" : "")

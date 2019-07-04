@@ -76,6 +76,22 @@ public class SearchIndex {
 		if(title == null) {
 			title = relativeOutputPath.getFileName().toString();
 		}
+		title = title.replaceAll("<span[^>]*> </span>", "");
+		title = title.replaceAll("</?(a|big|code|em|i|kbd|small|span|strong|tt).*?>", "");
+		title = title.replaceAll("<[^>]*>", " ");
+		title = title.replaceAll("&amp;", "&");
+		title = title.replaceAll("&lt;", "<");
+		title = title.replaceAll("&gt;", ">");
+		title = title.replaceAll("&quot;", "\"");
+		title = title.replaceAll("&ldquo;", "\"");
+		title = title.replaceAll("&rdquo;", "\"");
+		title = title.replaceAll("&lsquo;", "'");
+		title = title.replaceAll("&rsquo;", "'");
+		title = title.replaceAll("\n", " ");
+		while(title.indexOf("  ") != -1) {
+			title = title.replace("  ", " ");
+		}
+		title = title.trim();
 		
 		SearchIndex searchIndex = new SearchIndex();
 		searchIndex.title = Util.getJavaScriptString(title);

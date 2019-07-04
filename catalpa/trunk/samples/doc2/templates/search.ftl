@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
+<head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<meta name="robots" content="noindex">
@@ -9,6 +9,14 @@
 	<link rel="icon" href="${baseurl}favicon.ico">
 	<title>${title!}</title>
 	<meta name="description" content="${(description!)?replace('\n', '')}">
+
+	<!-- OGP -->
+	<meta property="og:site_name" content="${title!}">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="${siteurl!}">
+	<meta property="og:title" content="${title!}">
+	<meta property="og:description" content="${(description!)?replace('\n', '')}">
+	<!-- <meta property="og:image" content=""> -->
 </head>
 <body>
 	<div class="body-center">
