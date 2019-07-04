@@ -162,6 +162,7 @@ public class Context {
 				@SuppressWarnings("unchecked")
 				Map<String, Object> map = (Map<String, Object>)obj;
 				for(Entry<String, Object> entry : map.entrySet()) {
+					entry = normalize(entry);
 					dm.put(entry.getKey(), entry.getValue());
 				}
 			}
@@ -192,6 +193,7 @@ public class Context {
 			}
 			if(systemDataModel != null) {
 				for(Entry<String, Object> entry : systemDataModel.entrySet()) {
+					entry = normalize(entry);
 					dm.put(entry.getKey(), entry.getValue());
 				}
 			}
@@ -201,6 +203,7 @@ public class Context {
 					@SuppressWarnings("unchecked")
 					Map<String, Object> map = (Map<String, Object>)obj;
 					for(Entry<String, Object> entry : map.entrySet()) {
+						entry = normalize(entry);
 						dm.put(entry.getKey(), entry.getValue());
 					}
 				}
@@ -306,6 +309,7 @@ public class Context {
 					@SuppressWarnings("unchecked")
 					Map<String, Object> m = (Map<String, Object>)obj;
 					for(Entry<String, Object> entry : m.entrySet()) {
+						entry = normalize(entry);
 						map.put(entry.getKey(), entry.getValue());
 					}
 				}
@@ -313,6 +317,21 @@ public class Context {
 			configs.put(configPath, map);
 		}
 		return map;
+	}
+	
+	protected Entry<String, Object> normalize(Entry<String, Object> entry) {
+		String key = entry.getKey();
+		Object value = entry.getValue();
+		if(key != null && value != null) {
+			// siteurlは末尾のスラッシュなしで指定します。末尾にスラッシュが含まれている場合、取り除きます。
+			if(key.equals("siteurl")) {
+				String s = value.toString().trim();
+				if(s.endsWith("/")) {
+					entry.setValue(s.substring(0, s.length() - 1));
+				}
+			}
+		}
+		return entry;
 	}
 	
 	@Override

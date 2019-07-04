@@ -102,3 +102,50 @@ ul.pager > li > a.next::after {
 .default-button:hover {
 	color: @text-color;
 }
+
+
+/*
+ * SNS share button
+ */
+.sns-share a {
+	display: inline-block;
+	font-family: "Meiryo";
+	font-weight: bold;
+	font-size: 10px;
+	line-height: 18px;
+	color: #FFFFFF;
+	border-radius: 3px;
+	background-repeat: no-repeat;
+	background-position: 6px center;
+	padding: 2px 6px 0 22px;
+}
+.sns-share .hatena {
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAKCAYAAACALL/6AAAAQUlEQVR4AWP4jx0ccC/wYUDGMHEgAzcgpKEBKtFAkgYQJlbDARCmvR9AGNUmhBgJGhAYmx8OYBpC2A8HYIrRnQQAxQ9kGLI+CuYAAAAASUVORK5CYII=');
+	background-color: #00A4DE;
+}
+.sns-share .hatena:hover {
+	background-color: #0091C5;
+}
+.sns-share .hatena:after {
+	content: 'ブックマーク';
+}
+.sns-share .facebook {
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAR0lEQVR4AWNwL/Bh+P///4H/hMEBkFo0xYQ1MRAyEYZhgjg1gBSRoQHhP+I1oAEG7AoxMaUaCDuJIg0HSNBwAB50+DUgIhIAhj7TTxYmPB0AAAAASUVORK5CYII=');
+	background-color: #4267B2;
+}
+.sns-share .facebook:hover {
+	background-color: #365899;
+}
+.sns-share .facebook:after {
+	content: 'シェア'
+}
+.sns-share .twitter {
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAKCAYAAACALL/6AAAAUUlEQVR4AWJwL/ABNEIGKACDMAzc0/u0/CyjbIHSzZCDoGhOxWNIgs0zVud6JzDlCbQpMIQPve5Os0ICJKS31BYcUC/6mdlRsZKyhC1B7/3LDW/mUQIKxfEnAAAAAElFTkSuQmCC');
+	background-color: #1B95E0;
+}
+.sns-share .twitter:hover {
+	background-color: #0C7ABF;
+}
+.sns-share .twitter:after {
+	content: 'ツイート';
+}

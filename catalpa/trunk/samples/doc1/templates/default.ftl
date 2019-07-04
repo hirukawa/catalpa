@@ -6,7 +6,7 @@
 	<link rel="stylesheet" href="${baseurl}css/main.css">
 	<link rel="icon" href="${baseurl}favicon.ico">
 	<title>${title!}</title>
-	<meta name="description" content="${description!}">
+	<meta name="description" content="${(description!)?replace('\n', '')}">
 </head>
 <body>
 	<div class="flex-container">

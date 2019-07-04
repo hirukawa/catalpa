@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
+<head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="stylesheet" href="${baseurl}css/main.css">
 	<link rel="stylesheet" href="${baseurl}lib/jsOnlyLightbox/css/lightbox.min.css">
 	<link rel="icon" href="${baseurl}favicon.ico">
 	<title>${title!}</title>
-	<meta name="description" content="${description!}">
+	<meta name="description" content="${(description!)?replace('\n', '')}">
 </head>
 <body>
 	<div class="body-center">
@@ -19,6 +19,10 @@
 				<#else>
 				<#if siteurl?has_content><a href="${siteurl}"></#if><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>${title!}<#if siteurl?has_content></a></#if>
 				</#if>
+				<form style="float:right" method="GET" action="${baseurl}search.html?"
+					onsubmit="if(document.getElementById('search-keyword').value.length == 0) { return false; }">
+					<input id="search-keyword" type="search" name="keyword" placeholder="検索">
+				</form>
 			</div>
 			<div class="header-menu"><@markdown replace_backslash_to_yensign=true>${header!}</@markdown></div>
 		</div>
@@ -28,7 +32,7 @@
 				<div class="sidebar-bottom" id="sidebar-bottom"></div>
 			</div>
 			<div class="flex-item-right">
-				<div class="content markdown"><@markdown replace_backslash_to_yensign=true>${content!}</@markdown></div>
+				<div class="content markdown"><!--start-search-target--><@markdown replace_backslash_to_yensign=true>${content!}</@markdown><!--end-search-target--></div>
 				<hr>
 				<footer>
 					<#if dateModified??>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
+<head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 
@@ -14,7 +14,15 @@
 	<link rel="stylesheet" href="${baseurl}lib/jsOnlyLightbox/css/lightbox.min.css">
 	<link rel="icon" href="${baseurl}favicon.ico">
 	<title>${blog.title!}</title>
-	<meta name="description" content="${description?replace('\n', '')}">
+	<meta name="description" content="${(description!)?replace('\n', '')}">
+
+	<!-- OGP -->
+	<meta property="og:site_name" content="${blog.title!}">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="${siteurl!}">
+	<meta property="og:title" content="${blog.title!}">
+	<meta property="og:description" content="${(description!)?replace('\n', '')}">
+	<!-- <meta property="og:image" content=""> -->
 </head>
 <body class="blog page">
 	<div class="body-center">
@@ -26,6 +34,10 @@
 				<#else>
 				<#if siteurl?has_content><a href="${siteurl}"></#if><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>${blog.title!}<#if siteurl?has_content></a></#if>
 				</#if>
+				<form style="float:right" method="GET" action="${baseurl}search.html?"
+					onsubmit="if(document.getElementById('search-keyword').value.length == 0) { return false; }">
+					<input id="search-keyword" type="search" name="keyword" placeholder="検索">
+				</form>
 			</div>
 		</div>
 		<div class="flex-container">

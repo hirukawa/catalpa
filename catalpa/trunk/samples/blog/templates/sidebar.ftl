@@ -26,8 +26,3 @@
 	</li>
 </#list>
 </ul>
-
-
-<!--
-https://developer.mozilla.org/ja/docs/Web/CSS/object-fit
--->

@@ -190,6 +190,8 @@ public class BlogAddOn implements AddOn {
 			int fromIndex = 0;
 			int toIndex;
 			while(fromIndex < posts.size()) {
+				catalpa.getProgressObserver().setText(String.format("リストページ（%d）を作成しています…", (pages - page + 1)));
+				
 				toIndex = Math.min(fromIndex + paginate, posts.size());
 				Map<String, Object> pageModel = new HashMap<String, Object>();
 				pageModel.put("posts", posts.subList(fromIndex, toIndex));
@@ -246,6 +248,8 @@ public class BlogAddOn implements AddOn {
 
 			Template categoryTemplate = context.getFreeMarker().getTemplate("category.ftl");
 			for(Category category : categories) {
+				catalpa.getProgressObserver().setText(String.format("カテゴリーページ（%s）を作成しています…", category.getName()));
+				
 				Files.createDirectories(context.getOutputPath().resolve("category").resolve(category.getId()));
 				blogDataModel.put("category", category);
 
