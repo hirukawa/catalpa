@@ -5,16 +5,16 @@ input[type="search"] {
 	line-height: 1.5;
 	vertical-align: middle;
 	color: #303030;
-	border: 1px solid #CCC;
+	border-style: none;
 	border-radius: 0.9em;
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	box-shadow: inset 1px 1px 3px rgba(0,0,0,.5);
 	-webkit-appearance: textfield;
 }
 input[type="search"]:focus {
 	outline: 0;
-	border-color: #66afe9;
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 0.5em rgba(102, 175, 233, .6);
+}
+input:focus::placeholder {
+	color: transparent;
 }
 input[type="search"]::-webkit-search-cancel-button {
 	-webkit-appearance: none;

@@ -1,6 +1,7 @@
 package net.osdn.catalpa.upload.smb;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Map;
 
 import net.osdn.catalpa.ProgressObserver;
@@ -28,7 +29,7 @@ public class SmbConfig implements UploadConfig {
 	private String username;
 	private String password;
 
-	public SmbConfig(File dir, Map<?, ?> map) {
+	public SmbConfig(File dir, Map<?, ?> map, Path mydataPath) {
 		Object object;
 		
 		object = map.get("path");

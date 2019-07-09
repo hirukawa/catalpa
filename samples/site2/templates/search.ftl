@@ -252,7 +252,7 @@
 
 		var keyword = "";
 		if(location.search.indexOf("?keyword=") === 0) {
-			var keyword = decodeURI(location.search.substring(9));
+			var keyword = decodeURIComponent(location.search.substring(9).replace(/\+/g, " "));
 		}
 		search(keyword);
 			

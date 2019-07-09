@@ -265,7 +265,8 @@ public class Main extends Application implements Initializable, ProgressObserver
 		busy.setValue(true);
 		draft.set(false);
 		if(uploadConfigFactory != null) {
-			uploadConfig.setValue(uploadConfigFactory.create(inputPath));
+			Path mydataPath = Util.getApplicationPath(getClass()).resolve("mydata");
+			uploadConfig.setValue(uploadConfigFactory.create(inputPath, mydataPath));
 		}
 		previewOutputPath.setValue(null);
 		executorService.submit(() -> {

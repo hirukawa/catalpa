@@ -2,6 +2,9 @@ package net.osdn.catalpa.upload.sftp;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import com.jcraft.jsch.JSchException;
@@ -23,7 +26,7 @@ public class SftpConfig implements UploadConfig {
 	private String password;
 	private UserInfo userInfo;
 
-	public SftpConfig(File dir, Map<?, ?> map) {
+	public SftpConfig(File dir, Map<?, ?> map, Path mydataPath) {
 		Object object;
 		
 		object = map.get("host");
@@ -53,6 +56,15 @@ public class SftpConfig implements UploadConfig {
 				this.privateKeyFilePath = privatekey;
 			} else {
 				this.privateKeyFilePath = dir.getAbsolutePath() + "\\" + privatekey;
+				
+				if(mydataPath != null) {
+					if(!Files.exists(Paths.get(this.privateKeyFilePath))) {
+						Path p = mydataPath.resolve(privatekey);
+						if(Files.exists(p)) {
+							this.privateKeyFilePath = p.toString();
+						}
+					}
+				}
 			}
 		}
 		
