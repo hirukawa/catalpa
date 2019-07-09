@@ -4,7 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URI;
+import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -139,6 +144,19 @@ public class Util {
 			}
 		}
 		return list;
+	}
+	
+	public static Path getApplicationPath(Class<?> cls) {
+		try {
+			ProtectionDomain pd = cls.getProtectionDomain();
+			CodeSource cs = pd.getCodeSource();
+			URL location = cs.getLocation();
+			URI uri = location.toURI();
+			Path path = Paths.get(uri);
+			return path.getParent();
+		} catch (Exception e) {
+			return Paths.get(".").toAbsolutePath().normalize();
+		}
 	}
 	
 	public static int[] getApplicationVersion() {
