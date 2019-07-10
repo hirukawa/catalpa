@@ -29,7 +29,7 @@ div.header {
 	position: sticky;
 	top: 0px;
 	width: 100%;
-	z-index: 2147483647;
+	z-index: 9;
 }
 div.header-title {
 	overflow: hidden;
@@ -38,6 +38,7 @@ div.header-title {
 	line-height: @header-title-height;
 	color: @text-variant-color;
 	background-color: @primary-color;
+	font-size: 12pt;
 }
 div.header-title a {
 	color: @text-variant-color;
@@ -51,7 +52,7 @@ div.header-menu when (@header-menu-height > 0) {
 	line-height: ~"calc(@{header-menu-height} - 0px)";
 	background-color: @background-color;
 	border-bottom: 1px solid @border-color;
-	font-size: 0.8rem;
+	font-size: 10pt;
 }
 div.header-menu when (@header-menu-height <= 0) {
 	display: none;
