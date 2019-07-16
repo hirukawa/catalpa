@@ -406,6 +406,7 @@ public class Main extends Application implements Initializable, ProgressObserver
 					dc.setInitialDirectory(lastSaveDirectory);
 					break;
 				}
+				lastSaveDirectory = lastSaveDirectory.getParentFile();
 			}
 		}
 		File dir = dc.showDialog(primaryStage);
