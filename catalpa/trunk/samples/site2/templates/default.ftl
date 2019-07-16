@@ -43,9 +43,17 @@
 				<div class="content markdown"><!--start-search-target--><@markdown replace_backslash_to_yensign=true>${content!}</@markdown><!--end-search-target--></div>
 				<hr>
 				<footer>
+					<!-- Share on SNS -->
+					<span class="sns-share" style="float:left;padding-bottom:0.5em;">
+						<a class="hatena"   href="http://b.hatena.ne.jp/add?mode=confirm&url=${siteurl!}&title=${title!}" target="_blank" alt="はてなブックマーク" title="はてなブックマークに追加する"></a>
+						<a class="facebook" href="http://www.facebook.com/share.php?u=${siteurl!}" target="_blank" alt="Facebookシェア" title="Facebookでシェアする"></a>
+						<a class="twitter"  href="http://twitter.com/share?url=${siteurl!}&text=${title!}" target="_blank" alt="Twitter" title="ツイートする"></a>
+					</span>
+
 					<#if dateModified??>
-					<span>最終更新日</span>
-					<span class="datetime">${dateModified?string["yyyy-MM-dd"]}</span>
+					<span style="white-space:nowrap">最終更新日
+						<span class="datetime">${dateModified?string["yyyy-MM-dd"]}</span>
+					</span>
 					</#if>
 					<#if mailto?has_content>
 					&thinsp;
