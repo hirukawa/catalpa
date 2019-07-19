@@ -15,6 +15,7 @@ public class Post {
 	private String         leading;
 	private String         relativeUrlPrefix;
 	private String         thumbnail;
+	private String         image;
 	private boolean        isDraft;
 	
 	protected Post(Path path, String url, LocalDate date, String title, Set<Category> categories, String leading) {
@@ -66,6 +67,14 @@ public class Post {
 		return thumbnail;
 	}
 	
+	public void setImage(String image) {
+		this.image = image;
+	}
+	
+	public String getImage() {
+		return image;
+	}
+	
 	public void setDraft(boolean isDraft) {
 		this.isDraft = isDraft;
 	}
@@ -73,7 +82,7 @@ public class Post {
 	public boolean isDraft() {
 		return isDraft;
 	}
-
+	
 	protected static final String[] APPLICABLE_EXTENSIONS = new String[] {
 		".markdown",
 		".markdown.txt",

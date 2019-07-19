@@ -53,8 +53,11 @@ import net.osdn.util.io.AutoDetectReader;
 
 public class BlogAddOn implements AddOn {
 	private static Pattern LEADING_SEPARATOR = Pattern.compile("(<!--+\\s*more\\s*-+->)", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
-	private static final Pattern CATEGORY_ID_PATTERN = Pattern.compile("(.+)\\(([-_.a-zA-Z0-9]*)\\)$");
-	private static final String THUMBNAIL_FILENAME = "thumbnail.png";
+	public static final Pattern CATEGORY_ID_PATTERN = Pattern.compile("(.+)\\(([-_.a-zA-Z0-9]*)\\)$");
+	private static final String IMAGE_PATTERN_MD = "!\\[[^\\]]*\\]\\(([^\\)\\s\\t\"']+)\\)";
+	private static final String IMAGE_PATTERN_TAG = "<img[^>]+src\\s*=\\s*[\"']([^>\"']+)[\"']";
+	private static final Pattern IMAGE_PATTERN = Pattern.compile(IMAGE_PATTERN_MD + "|" + IMAGE_PATTERN_TAG, Pattern.CASE_INSENSITIVE);
+	private static final String DEFAULT_THUMBNAIL_FILENAME = "thumbnail.png";
 	
 	private static String DEFAULT_THUMBNAIL_DATA_URI = null;
 	
@@ -124,17 +127,30 @@ public class BlogAddOn implements AddOn {
 		categories.sort(Comparator.comparing(Category::getDate).thenComparing(c -> c.getPosts().size()).reversed());
 
 		List<Post> posts = factory.getPosts();
-		posts.sort(Comparator.comparing(Post::getDate).reversed());
+		posts.sort(Comparator.comparing(Post::getDate).reversed()
+				.thenComparing(new Comparator<Post>() {
+					@Override
+					public int compare(Post o1, Post o2) {
+						FileTime ft1;
+						try {
+							ft1 = Files.getLastModifiedTime(o1.getPath());
+						} catch(IOException e) {
+							ft1 = FileTime.fromMillis(0);
+						}
+						FileTime ft2;
+						try {
+							ft2 = Files.getLastModifiedTime(o2.getPath());
+						} catch(IOException e) {
+							ft2 = FileTime.fromMillis(0);
+						}
+						return ft2.compareTo(ft1);
+					}
+				})
+			);
 		for(int i = 0; i < posts.size(); i++) {
 			Post post = posts.get(i);
 			if(factory.hasDraft && i == 0) {
 				options.put("_DEFAULT_URL", post.getUrl());
-			}
-			if(Files.exists(post.getPath().getParent().resolve(THUMBNAIL_FILENAME))) {
-				Path thumbnail = inputPath.relativize(post.getPath().getParent()).resolve(THUMBNAIL_FILENAME);
-				post.setThumbnail(thumbnail.toString().replace('\\', '/'));
-			} else if(DEFAULT_THUMBNAIL_DATA_URI != null) {
-				post.setThumbnail(DEFAULT_THUMBNAIL_DATA_URI);
 			}
 		}
 		
@@ -545,6 +561,42 @@ public class BlogAddOn implements AddOn {
 					for(Category category : categories) {
 						category.add(post);
 					}
+					if(map.get("thumbnail") != null) {
+						Path thumbnail = post.getPath().getParent().resolve(map.get("thumbnail").toString());
+						if(Files.exists(thumbnail)) {
+							post.setThumbnail(inputPath.relativize(thumbnail).toString().replace('\\', '/'));
+						}
+					}
+					if(post.getThumbnail() == null) {
+						Path thumbnail = post.getPath().getParent().resolve(DEFAULT_THUMBNAIL_FILENAME);
+						if(Files.exists(thumbnail)) {
+							post.setThumbnail(inputPath.relativize(thumbnail).toString().replace('\\', '/'));
+						}
+					}
+					if(map.get("image") != null) {
+						Path image = post.getPath().getParent().resolve(map.get("image").toString());
+						if(Files.exists(image)) {
+							post.setImage(inputPath.relativize(image).toString().replace('\\', '/'));
+						}
+					}
+					if(post.getThumbnail() == null || post.getImage() == null) {
+						String src = findFirstImageSrc(post.getPath().getParent(), content);
+						if(src != null) {
+							Path image = post.getPath().getParent().resolve(src);
+							if(Files.exists(image)) {
+								String relativePath = inputPath.relativize(image).toString().replace('\\', '/');
+								if(post.getThumbnail() == null) {
+									post.setThumbnail(relativePath);
+								}
+								if(post.getImage() == null) {
+									post.setImage(relativePath);
+								}
+							}
+						}
+					}
+					if(post.getThumbnail() == null && DEFAULT_THUMBNAIL_DATA_URI != null) {
+						post.setThumbnail(DEFAULT_THUMBNAIL_DATA_URI);
+					}
 					
 					if(map.containsKey("draft")) {
 						Object obj = map.get("draft");
@@ -585,5 +637,19 @@ public class BlogAddOn implements AddOn {
 				.replaceAll("\n", "")
 				.replaceAll(" ", "");
 		return text.length();
+	}
+	
+	public static String findFirstImageSrc(Path dir, String content) {
+		Matcher m = IMAGE_PATTERN.matcher(content);
+		int start = 0;
+		while(m.find(start)) {
+			int group = m.start(1) != -1 ? 1 : 2;
+			String src = m.group(group);
+			if(Files.exists(dir.resolve(src))) {
+				return src;
+			}
+			start = m.start(group);
+		}
+		return null;
 	}
 }

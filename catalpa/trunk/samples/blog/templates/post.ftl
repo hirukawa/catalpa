@@ -15,7 +15,7 @@
 	<meta property="og:url" content="${siteurl!}/${blog.post.url}">
 	<meta property="og:title" content="${blog.post.title}">
 	<meta property="og:description" content="${(description!)?replace('\n', '')}">
-	<!-- <meta property="og:image" content=""> -->
+	<#if blog.post.image?has_content><meta property="og:image" content="${siteurl!}/${blog.post.image}"></#if>
 </head>
 <body class="blog post">
 	<div class="body-center">

@@ -24,6 +24,7 @@ public class Toast extends StackPane {
 	public static final Color GREEN = Color.rgb(166, 226, 46);
 	public static final Color BLUE  = Color.rgb(102, 217, 239);
 	
+	public static final Duration SHORT_PERSISTENT = Duration.millis(2001);
 	public static final Duration SHORT = Duration.millis(2000);
 	public static final Duration LONG  = Duration.millis(3500);
 	
@@ -104,7 +105,8 @@ public class Toast extends StackPane {
 				Data data = currentData;
 				new Timeline(new KeyFrame(data.duration, onFinished -> {
 					if(data == currentData) {
-						hide();
+						//hide
+						show(null, null, null, null);
 					}
 				})).play();
 			}
@@ -145,6 +147,9 @@ public class Toast extends StackPane {
 	}
 	
 	public void hide() {
+		if(currentData != null && currentData.isPersistent) {
+			return;
+		}
 		show(null, null, null, null);
 	}
 
@@ -222,6 +227,7 @@ public class Toast extends StackPane {
 		public String message;
 		public Duration duration;
 		public boolean isEmpty;
+		public boolean isPersistent;
 		
 		public Data(Color color, String title, String message, Duration duration) {
 			this.color = color;
@@ -229,6 +235,7 @@ public class Toast extends StackPane {
 			this.message = message;
 			this.duration = duration;
 			this.isEmpty = (title == null || title.isEmpty()) && (message == null || message.isEmpty());
+			this.isPersistent = (duration == SHORT_PERSISTENT);
 		}
 	}
 }

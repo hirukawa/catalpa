@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.skin.*?>
+<?import javafx.scene.layout.*?>
+<?import net.osdn.catalpa.ui.javafx.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<BorderPane xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
+	stylesheets="@BlogWizard.css">
+	<padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+	<top>
+		<Label text="新しい記事を作成しますか？">
+			<padding><Insets top="0" right="0" bottom="10" left="3"/></padding>
+		</Label>
+	</top>
+	<left>
+		<Calendar fx:id="calendar" />
+	</left>
+	<center>
+		<VBox spacing="10">
+			<padding><Insets top="0" right="0" bottom="0" left="10"/></padding>
+			
+			<TextField fx:id="tfFilename"
+				promptText="ここにファイル名を入力します" />
+
+			<ScrollPane fitToWidth="true" prefHeight="64" prefWidth="280" VBox.vgrow="ALWAYS">
+				<content>
+					<FlowPane fx:id="categories" />
+				</content>
+			</ScrollPane>
+
+			<HBox spacing="10">
+				<Region HBox.hgrow="ALWAYS"/>
+			
+				<Button fx:id="btnSkip"
+					text=" スキップ "
+					onAction="#btnSkip_onAction" />
+				<Button fx:id="btnCreate"
+					disable="false"
+					text="記事を作成する"
+					onAction="#btnCreate_onAction">
+					<graphic><FontIcon iconLiteral="mdi-file-document"/></graphic>
+				</Button>
+			</HBox>
+		</VBox>
+	</center>
+</BorderPane>
