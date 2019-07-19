@@ -29,22 +29,35 @@
 	-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,1.0), 4,0.75,0,0);
 }
 
+#lblCheatSheet {
+	-fx-graphic: url("/img/markdown.png");
+}
+#lblCheatSheet:hover {
+	-fx-graphic: url("/img/markdown-hover.png");
+}
 
-#lblShowCheatSheet {
-	-fx-padding: 0 0 0 0;
-	-fx-text-fill: #2573b8;
-	-fx-graphic-text-gap: 0;
-	-fx-content-display: right;
+#lblVSCode {
+	-fx-graphic: url("/img/vscode.png");
 }
-#menuShowCheatSheet:hover Label {
-	-fx-text-fill: #F2F2F2;
+#lblVSCode:hover {
+	-fx-graphic: url("/img/vscode-hover.png");
 }
-#menuShowCheatSheet FontIcon {
-	-fx-icon-size: 21;
-	-fx-icon-color: #2573b8;
+#lblVSCode:disabled {
+	-fx-graphic: url("/img/vscode-disabled.png");
 }
-#menuShowCheatSheet:hover FontIcon {
-	-fx-icon-color: #F2F2F2;
+
+.menu-label {
+	-fx-opacity: 1;
+	-fx-alignment: center;
+	-fx-min-width: 42px;
+	-fx-max-height: 100px;
+}
+.menu-label:hover {
+	-fx-background-color:
+		linear-gradient(to bottom, derive(-fx-base,75%) 0%, -fx-outer-border 90%),
+		-fx-selection-bar;
+	-fx-background-insets: 0 0 0 0, 1 0 1 0;
+	-fx-background-radius: 0, 0 ;
 }
 
 FontIcon {

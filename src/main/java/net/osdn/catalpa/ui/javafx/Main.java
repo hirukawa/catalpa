@@ -45,7 +45,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -144,6 +143,10 @@ public class Main extends Application implements Initializable, ProgressObserver
 		
 		fileWatchService = new FileWatchService();
 		fileWatchService.setOnSucceeded(event -> {
+			// 更新や保存処理中は更新が検出されても無視します。
+			if(busy.get()) {
+				return;
+			}
 			// htdocs以下のフォルダーで更新が検出されても無視します。
 			boolean isModified = false;
 			for(Path path : ((FileWatchService)event.getSource()).getValue()) {
@@ -201,7 +204,7 @@ public class Main extends Application implements Initializable, ProgressObserver
 		
 		Scene scene = new Scene(root);
 		scene.setOnDragOver(event -> {
-			if(DragboardHelper.hasOneDirectory(event.getDragboard())) {
+			if(!busy.get() && DragboardHelper.hasOneDirectory(event.getDragboard())) {
 				event.acceptTransferModes(TransferMode.COPY);
 			} else {
 				event.consume();
@@ -209,14 +212,20 @@ public class Main extends Application implements Initializable, ProgressObserver
 		});
 		scene.setOnDragDropped(event -> {
 			boolean success = false;
-			if(DragboardHelper.hasOneDirectory(event.getDragboard())) {
+			if(!busy.get() && DragboardHelper.hasOneDirectory(event.getDragboard())) {
 				success = true;
 				Path dir = DragboardHelper.getDirectory(event.getDragboard());
-				try {
-					open(dir);
-				} catch (IOException e) {
-					showException(e);
-				}
+				Platform.runLater(() -> {
+					toast.hide();
+					
+					try {
+						if(prepareOpening(dir)) {
+							open(dir);
+						}
+					} catch (IOException e) {
+						showException(e);
+					}
+				});
 			}
 			event.setDropCompleted(success);
 			event.consume();
@@ -236,6 +245,32 @@ public class Main extends Application implements Initializable, ProgressObserver
 		preferences.putDouble("stageHeight", primaryStage.getHeight());
 		
 		Main.latch.countDown();
+	}
+	
+	protected boolean prepareOpening(Path inputPath) throws IOException {
+		try {
+			if(BlogWizard.isApplicable(inputPath)) {
+				BlogWizard wizard = new BlogWizard(primaryStage, inputPath);
+				wizard.showAndWait();
+				BlogWizard.InputData data = wizard.getInputData();
+				if(data != null) {
+					if(Files.exists(data.file)) {
+						toast.show(Toast.RED, "指定したファイルは既に存在しています", data.file.toString(), null);
+						return false;
+					} else {
+						wizard.createNewPost(data);
+						fileWatchService.restart(inputPath);
+						String relativePath = inputPath.relativize(data.file).toString();
+						toast.show(Toast.GREEN, "記事ファイルを作成しました", relativePath, Toast.SHORT_PERSISTENT);
+					}
+				}
+			}
+		} catch(Exception e) {
+			showException(e);
+			return false;
+		}
+
+		return true;
 	}
 	
 	protected void open(Path path) throws IOException {
@@ -366,7 +401,9 @@ public class Main extends Application implements Initializable, ProgressObserver
 		}
 		File dir = dc.showDialog(primaryStage);
 		if(dir != null) {
-			open(dir.toPath());
+			if(prepareOpening(dir.toPath())) {
+				open(dir.toPath());
+			}
 			preferences.put("lastOpenFolder", dir.getAbsolutePath());
 		}
 	}
@@ -450,9 +487,12 @@ public class Main extends Application implements Initializable, ProgressObserver
 		for(String p : recentFiles) {
 			MenuItem item = new MenuItem(p);
 			item.setOnAction(event -> {
+				toast.hide();
 				String text = ((MenuItem)event.getSource()).getText();
 				try {
-					open(Paths.get(text));
+					if(prepareOpening(Paths.get(text))) {
+						open(Paths.get(text));
+					}
 				} catch (IOException e) {
 					showException(e);
 				}
@@ -549,8 +589,8 @@ public class Main extends Application implements Initializable, ProgressObserver
 	@FXML Menu      menuFile;
 	@FXML MenuItem  menuFileOpen;
 	@FXML MenuItem  menuFileSaveAs;
-	@FXML Menu      menuShowCheatSheet;
-	@FXML Label     lblShowCheatSheet;
+	@FXML Label     lblCheatSheet;
+	@FXML Label     lblVSCode;
 	@FXML Node      body;
 	@FXML TextField tfInputPath;
 	@FXML Button    btnOpen;
@@ -601,16 +641,17 @@ public class Main extends Application implements Initializable, ProgressObserver
 		
 		menuBar.disableProperty().bind(busy);
 		menuFileSaveAs.disableProperty().bind(Bindings.isNull(inputPath));
-		
-		Tooltip tooltip = new Tooltip("Markdown早見表をブラウザーで表示します。");
-		tooltip.setFont(Font.font("Meiryo", 12.0));
-		tooltip.setShowDelay(Duration.millis(100));
-		tooltip.setOnShowing(event-> {
-			Bounds bounds = lblShowCheatSheet.localToScreen(lblShowCheatSheet.getBoundsInLocal());
-			tooltip.setX(bounds.getMinX() - tooltip.getWidth() - 5.0);
-			tooltip.setY(bounds.getMinY());
-	    });
-		lblShowCheatSheet.setTooltip(tooltip);
+
+		Tooltip ttCheatSheet = new Tooltip("Markdown早見表をブラウザーで表示します。");
+		ttCheatSheet.setFont(Font.font("Meiryo", 12.0));
+		ttCheatSheet.setShowDelay(Duration.millis(200));
+		lblCheatSheet.setTooltip(ttCheatSheet);
+
+		Tooltip ttVSCode = new Tooltip("Visual Studio Codeでフォルダーを開きます。");
+		ttVSCode.setFont(Font.font("Meiryo", 12.0));
+		ttVSCode.setShowDelay(Duration.millis(200));
+		lblVSCode.setTooltip(ttVSCode);
+		lblVSCode.disableProperty().bind(inputPath.isNull().or(new SimpleBooleanProperty(!VSCode.isInstalled())));
 		
 		body.disableProperty().bind(busy);
 		body.disabledProperty().addListener((observable, oldValue, newValue)-> {
@@ -651,6 +692,8 @@ public class Main extends Application implements Initializable, ProgressObserver
 	
 	@FXML
 	void menuFileOpen_onAction(ActionEvent event) {
+		toast.hide();
+		
 		try {
 			openFolder();
 		} catch(Exception e) {
@@ -660,6 +703,8 @@ public class Main extends Application implements Initializable, ProgressObserver
 	
 	@FXML
 	void menuFileSaveAs_onAction(ActionEvent event) {
+		toast.hide();
+		
 		saveAs(inputPath.getValue());
 	}
 	
@@ -670,6 +715,8 @@ public class Main extends Application implements Initializable, ProgressObserver
 	
 	@FXML
 	void btnOpen_onAction(ActionEvent event) {
+		toast.hide();
+		
 		try {
 			openFolder();
 		} catch(Exception e) {
@@ -679,6 +726,8 @@ public class Main extends Application implements Initializable, ProgressObserver
 	
 	@FXML
 	void btnReload_onAction(ActionEvent event) {
+		toast.hide();
+		
 		String text = tfInputPath.getText();
 		if(text.length() == 0) {
 			return;
@@ -714,10 +763,22 @@ public class Main extends Application implements Initializable, ProgressObserver
 	}
 	
 	@FXML
-	void lblShowCheatSheet_onMouseClicked(MouseEvent event) {
+	void lblCheatSheet_onMouseClicked(MouseEvent event) {
 		try {
 			showCheatSheet();
-		} catch (IOException | URISyntaxException e) {
+		} catch (Exception e) {
+			showException(e);
+		}
+	}
+	
+	@FXML
+	void lblVSCode_onMouseClicked(MouseEvent event) {
+		try {
+			Path dir = inputPath.get();
+			if(dir != null && Files.isDirectory(dir) && VSCode.isInstalled()) {
+				VSCode.open(dir);
+			}
+		} catch(Exception e) {
 			showException(e);
 		}
 	}

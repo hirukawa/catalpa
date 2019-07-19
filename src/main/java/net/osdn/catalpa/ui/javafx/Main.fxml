@@ -45,20 +45,12 @@
 					</menus>
 				</MenuBar>
 				<Region styleClass="menu-bar" HBox.hgrow="ALWAYS"/>
-				<MenuBar>
-					<padding><Insets top="0" right="0" bottom="0" left="0"/></padding>
-					<menus>
-						<Menu fx:id="menuShowCheatSheet">
-							<graphic>
-								<Label fx:id="lblShowCheatSheet"
-									text=" "
-									onMouseClicked="#lblShowCheatSheet_onMouseClicked">
-									<graphic><FontIcon iconLiteral="mdi-markdown"/></graphic>
-								</Label>
-							</graphic>
-						</Menu>
-					</menus>
-				</MenuBar>
+				<Label fx:id="lblVSCode"
+					styleClass="menu-bar, menu-label"
+					onMouseClicked="#lblVSCode_onMouseClicked" />
+				<Label fx:id="lblCheatSheet"
+					styleClass="menu-bar, menu-label"
+					onMouseClicked="#lblCheatSheet_onMouseClicked" />
 			</HBox>
 		</top>
 		<center>
