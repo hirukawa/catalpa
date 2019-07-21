@@ -22,7 +22,7 @@
 	<meta property="og:url" content="${siteurl!}">
 	<meta property="og:title" content="${blog.title!}">
 	<meta property="og:description" content="${(description!)?replace('\n', '')}">
-	<!-- <meta property="og:image" content=""> -->
+	<#if image?has_content><meta property="og:image" content="${siteurl!}/${image}"></#if>
 </head>
 <body class="blog page">
 	<div class="body-center">
