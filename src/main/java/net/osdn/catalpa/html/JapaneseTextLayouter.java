@@ -54,6 +54,10 @@ public class JapaneseTextLayouter {
 		if(isReplaceBackslashToYensign) {
 			input = input.toString().replace("\\", "&yen;");
 		}
+		//独自の行頭禁則で<span>を挿入すると<H1>等のヘッダーで自動生成されるスクロールマーカーの
+		//<A>タグにも<span>を含むnameが出力されてしまい、ヘッダー前の行間が広くなってしまいました。
+		//独自の行頭禁則処理はひとまず無効化します。
+		//input = applyLineHeadWrap(input);
 		List<Token> tokens = tokenize(input);
 		removeSpaces(tokens);
 		addLetterSpacing(getFirstChar(tokens));
@@ -85,6 +89,42 @@ public class JapaneseTextLayouter {
 		}
 		return sb.toString();
 	}
+	
+	/** 行頭禁則処理を適用します。
+	 * CSS の line-break: strict; を指定しても中点（・）の行頭禁則が行われないため、独自に中点（・）が行頭に来ないように対処します。
+	 * なお、句読点等の文字については line-break: strict; で行頭禁則されるので独自処理の対象とはしていません。
+	 * 
+	 * @param input
+	 * @return
+	 */
+	/*
+	private static CharSequence applyLineHeadWrap(CharSequence input) {
+		StringBuilder sb = new StringBuilder(input);
+		for(int i = 1; i < sb.length(); i++) {
+			if(sb.charAt(i) == '・' && sb.charAt(i - 1) != '・') {
+				char prev = sb.charAt(i - 1);
+				if(('0' <= prev && prev <= '9')
+					|| ('a' <= prev && prev <= 'z')
+					|| ('A' <= prev && prev <= 'Z')
+					|| (prev == 0x3005) // 3005 々 (漢字の踊り字)
+					|| (prev == 0x3007) // 3007 〇 (漢数字のゼロ)
+					|| (prev == 0x303B) // 303B 〻 (漢字の踊り字)
+					|| (0x3040 <= prev && prev <= 0x309F) // Hiragana / 平仮名
+					|| (0x30A0 <= prev && prev <= 0x30FF) // Katakana / 片仮名
+					|| (0x31F0 <= prev && prev <= 0x31FF) // Katakana Phonetic Extensions / 片仮名拡張
+					|| (0x4E00 <= prev && prev <= 0x9FEF) // CJK Unified Ideographs / CJK統合漢字
+					|| (0x3400 <= prev && prev <= 0x4DB5) // CJK Unified Ideographs Extension A / CJK統合漢字拡張A
+					|| (0xF900 <= prev && prev <= 0xFAFF) // CJK Compatibillity Ideographs / CJK互換漢字
+				) {
+					sb.insert(i + 1, "</span>");
+					sb.insert(i - 1, "<span style=\"white-space:nowrap\">");
+					i += 40;
+				}
+			}
+		}
+		return sb;
+	}
+	*/
 	
 	private static List<Token> tokenize(CharSequence input) {
 		List<Token> tokens = new LinkedList<Token>();
