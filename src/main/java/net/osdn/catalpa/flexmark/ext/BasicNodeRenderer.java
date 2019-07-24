@@ -7,6 +7,7 @@ import com.vladsch.flexmark.ast.Code;
 import com.vladsch.flexmark.ast.HardLineBreak;
 import com.vladsch.flexmark.ast.Heading;
 import com.vladsch.flexmark.ast.Image;
+import com.vladsch.flexmark.ast.ImageRef;
 import com.vladsch.flexmark.ast.Paragraph;
 import com.vladsch.flexmark.ast.SoftLineBreak;
 import com.vladsch.flexmark.ext.attributes.AttributesNode;
@@ -52,6 +53,10 @@ public class BasicNodeRenderer implements NodeRenderer {
 		int count = 0;
 		for(Node child : node.getChildren()) {
 			if(child instanceof Image) {
+				count++;
+				continue;
+			}
+			if(child instanceof ImageRef) {
 				count++;
 				continue;
 			}
