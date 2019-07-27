@@ -57,7 +57,9 @@ public class BlogAddOn implements AddOn {
 	private static final String IMAGE_PATTERN_MD = "!\\[[^\\]]*\\]\\(([^\\)\\s\\t\"']+)\\)";
 	private static final String IMAGE_PATTERN_TAG = "<img[^>]+src\\s*=\\s*[\"']([^>\"']+)[\"']";
 	private static final Pattern IMAGE_PATTERN = Pattern.compile(IMAGE_PATTERN_MD + "|" + IMAGE_PATTERN_TAG, Pattern.CASE_INSENSITIVE);
-	private static final String DEFAULT_THUMBNAIL_FILENAME = "thumbnail.png";
+	private static final String DEFAULT_THUMBNAIL_BASENAME = "thumbnail";
+	private static final String DEFAULT_IMAGE_BASENAME = "image";
+	private static final String[] IMAGE_EXTENSIONS = new String[] { ".png", ".webp", ".jpg", ".jpeg", ".gif" };
 	
 	private static String DEFAULT_THUMBNAIL_DATA_URI = null;
 	
@@ -568,15 +570,36 @@ public class BlogAddOn implements AddOn {
 						}
 					}
 					if(post.getThumbnail() == null) {
-						Path thumbnail = post.getPath().getParent().resolve(DEFAULT_THUMBNAIL_FILENAME);
-						if(Files.exists(thumbnail)) {
-							post.setThumbnail(inputPath.relativize(thumbnail).toString().replace('\\', '/'));
+						for(String ext : IMAGE_EXTENSIONS) {
+							Path thumbnail = post.getPath().getParent().resolve(DEFAULT_THUMBNAIL_BASENAME + ext);
+							if(Files.exists(thumbnail)) {
+								post.setThumbnail(inputPath.relativize(thumbnail).toString().replace('\\', '/'));
+								break;
+							}
+						}
+					}
+					if(post.getThumbnail() == null) {
+						for(String ext : IMAGE_EXTENSIONS) {
+							Path thumbnail = post.getPath().getParent().resolve(DEFAULT_IMAGE_BASENAME + ext);
+							if(Files.exists(thumbnail)) {
+								post.setThumbnail(inputPath.relativize(thumbnail).toString().replace('\\', '/'));
+								break;
+							}
 						}
 					}
 					if(map.get("image") != null) {
 						Path image = post.getPath().getParent().resolve(map.get("image").toString());
 						if(Files.exists(image)) {
 							post.setImage(inputPath.relativize(image).toString().replace('\\', '/'));
+						}
+					}
+					if(post.getImage() == null) {
+						for(String ext : IMAGE_EXTENSIONS) {
+							Path image = post.getPath().getParent().resolve(DEFAULT_IMAGE_BASENAME + ext);
+							if(Files.exists(image)) {
+								post.setImage(inputPath.relativize(image).toString().replace('\\', '/'));
+								break;
+							}
 						}
 					}
 					if(post.getThumbnail() == null || post.getImage() == null) {
