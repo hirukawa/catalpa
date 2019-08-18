@@ -143,10 +143,6 @@ public class Main extends Application implements Initializable, ProgressObserver
 		
 		fileWatchService = new FileWatchService();
 		fileWatchService.setOnSucceeded(event -> {
-			// 更新や保存処理中は更新が検出されても無視します。
-			if(busy.get()) {
-				return;
-			}
 			// htdocs以下のフォルダーで更新が検出されても無視します。
 			boolean isModified = false;
 			for(Path path : ((FileWatchService)event.getSource()).getValue()) {
@@ -155,6 +151,11 @@ public class Main extends Application implements Initializable, ProgressObserver
 				}
 			}
 			if(isModified) {
+				// 更新や保存処理中は更新が検出されても無視します。
+				if(busy.get()) {
+					dirty.setValue(true);
+					return;
+				}
 				LocalDateTime t = this.lastModified = LocalDateTime.now();
 				new Timeline(new KeyFrame(Duration.millis(600), onFinished -> {
 					if(t.equals(lastModified) && inputPath.getValue() != null) {
@@ -582,6 +583,7 @@ public class Main extends Application implements Initializable, ProgressObserver
 	private ObjectProperty<Path> previewOutputPath = new SimpleObjectProperty<Path>();
 	private ObjectProperty<UploadConfig> uploadConfig = new SimpleObjectProperty<UploadConfig>();
 	private BooleanProperty busy = new SimpleBooleanProperty();
+	private BooleanProperty dirty = new SimpleBooleanProperty();
 	private BooleanProperty draft = new SimpleBooleanProperty();
 	private StringProperty defaultUrl = new SimpleStringProperty();
 
@@ -686,6 +688,19 @@ public class Main extends Application implements Initializable, ProgressObserver
 				.when(cbAutoReload.selectedProperty())
 				.then(inputPath)
 				.otherwise((Path)null));
+		
+		busy.addListener((observable, oldValue, newValue) -> {
+			if(newValue == false && dirty.getValue() == true) {
+				dirty.setValue(false);
+				if(inputPath.getValue() != null) {
+					try {
+						update(inputPath.getValue());
+					} catch (IOException e) {
+						showException(e);
+					}
+				}
+			}
+		});
 		
 		updateRecentFile(null);
 	}
