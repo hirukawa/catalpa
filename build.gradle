@@ -1,7 +1,7 @@
 apply plugin: 'eclipse'
 apply plugin: 'java'
 
-version = '0.7.1'
+version = '0.7.2'
 
 def defaultEncoding = 'UTF-8'
 tasks.withType(AbstractCompile).each { it.options.encoding = defaultEncoding }
@@ -40,7 +40,7 @@ dependencies {
 	
 	compile 'com.github.luccappellaro:jzopfli:0.0.4'
 	
-	compile 'net.osdn.blogs.flexmark.ext:flexmark-ext-highlight:0.2.1'
+	compile 'net.osdn.blogs.flexmark.ext:flexmark-ext-highlight:0.2.2'
 	compile 'net.osdn.blogs.flexmark.ext:flexmark-ext-inline-tags:0.1.3'
 	compile 'net.osdn.util.io:auto-detect-reader:0.1.1'
 }
