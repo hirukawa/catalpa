@@ -250,7 +250,7 @@ public class Char implements Token {
 				}
 			}
 			if(letterSpacing != 0.0) {
-				sb.append(String.format("<span style=\"font-family:monospace;margin-right:%.2fem;\"> </span>", (letterSpacing - 0.5)));
+				sb.append(String.format("<span style=\"font-family:monospace;font-size:%d%%;\"> </span>", (int)Math.min(200 * letterSpacing, 100)));
 			}
 			return sb.toString();
 		}
