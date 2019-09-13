@@ -17,8 +17,17 @@
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
-本ソフトウェアの配布物には以下の著作物が含まれています。
-これらのソフトウェアに貢献されたすべての方々に心から感謝します。
+本ソフトウェアの配布物には、本ソフトウェアとは別のライセンス条件で再配布される
+以下の著作物が含まれています。これらのソフトウェアに貢献されたすべての方々に心
+から感謝します。
+
+
+* Liberica JDK
+  https://bell-sw.com/java11
+
+  Liberica JDK is distribution of the OpenJDK built by BellSoft LTD.
+  OpenJDK code itself is licensed under GPL v2 with Classpath Exception.
+  https://openjdk.java.net/legal/gplv2+ce.html
 
 
 * flexmark

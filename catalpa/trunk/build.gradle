@@ -7,12 +7,6 @@ def defaultEncoding = 'UTF-8'
 tasks.withType(AbstractCompile).each { it.options.encoding = defaultEncoding }
 tasks.withType(GroovyCompile).each { it.groovyOptions.encoding = defaultEncoding }
 
-javadoc {
-	options.charSet = defaultEncoding
-	options.encoding = defaultEncoding
-	options.memberLevel = JavadocMemberLevel.PUBLIC
-}
-
 repositories {
 	jcenter()
 }
@@ -49,7 +43,7 @@ defaultTasks 'clean', 'build', 'exewrap'
 
 jar {
 	manifest {
-		attributes "Specification-Version": "${version}"
+		attributes "Specification-Version": "${project.version}"
 		attributes "Main-Class": "net.osdn.catalpa.ui.javafx.Main"
 		attributes "Splashscreen-Image": "img/splash.gif"
 		attributes "Class-Path": configurations.runtime.collect { "lib/$it.name" }.join(' ')
@@ -61,6 +55,7 @@ jar {
 	exclude('img/*.psd', 'ico/**', 'psd/**')
 }
 
+
 task copyLibraries(type: Copy) {
 	setGroup("build")
 	setDescription("Copy dependency libraries.")
@@ -71,6 +66,13 @@ task copyLibraries(type: Copy) {
 		include '*.dll'
 	}
 	into "${buildDir}/package/lib/"
+}
+
+task createJavaRuntime(type: Exec, dependsOn: ['jar', 'copyLibraries']) {
+	setGroup("build")
+	setDescription("Create Java Runtime.")
+	workingDir "${buildDir}/package/"
+	commandLine 'cmd', '/c', 'CreateJRE.bat', "${jar.archiveFile.get()}", "lib"
 }
 
 task exewrap(type: Exec, dependsOn: 'jar') {
@@ -85,30 +87,10 @@ task exewrap(type: Exec, dependsOn: 'jar') {
 		"-e", "SHARED",
 		"-j", "${jar.archiveFile.get()}",
 		"-i", "src/main/resources/ico/app.ico",
-		"-o", "${buildDir}/package/${jar.baseName}.exe",
+		"-o", "${buildDir}/package/${archivesBaseName}.exe",
 		"-d", "Catalpa",
 		"-p", "Catalpa",
 		"-c", "(C) 2019 HIRUKAWA Ryo",
 		"-V", "${version}",
 		"-v", "${version}"
 }
-
-task createJavaRuntime(type: Exec, dependsOn: ['jar', 'copyLibraries']) {
-	setGroup("build")
-	setDescription("Create Java Runtime.")
-	workingDir "${buildDir}/package/"
-	commandLine 'cmd', '/c', 'CreateJRE.bat', "${jar.archiveFile.get()}", "lib"
-}
-
-task initializeProjectFiles {
-	doLast {
-		if(file('src/main/java/Library.java').exists()) {
-			file('lib').mkdir()
-			delete "src/test"
-			delete "src/main/java/Library.java"
-		}
-	}
-}
-tasks.eclipseClasspath.dependsOn(cleanEclipseClasspath)
-tasks.eclipseClasspath.dependsOn(initializeProjectFiles)
-tasks.cleanEclipseClasspath.mustRunAfter(initializeProjectFiles)
