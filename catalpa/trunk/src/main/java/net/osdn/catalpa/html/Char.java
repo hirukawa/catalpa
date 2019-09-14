@@ -250,7 +250,12 @@ public class Char implements Token {
 				}
 			}
 			if(letterSpacing != 0.0) {
-				sb.append(String.format("<span style=\"font-family:monospace;font-size:%d%%;\"> </span>", (int)Math.min(200 * letterSpacing, 100)));
+				if(letterSpacing <= 0.5) {
+					sb.append(String.format("<span style=\"font-family:monospace;font-size:%d%%;\"> </span>", (int)(200 * letterSpacing)));
+				} else {
+					//letterSpacingが0.5よりも大きい場合、font-sizeが100%を超えます。この場合、行間が広くならないようにline-height:0.1;を付加します。
+					sb.append(String.format("<span style=\"font-family:monospace;font-size:%d%%;line-height:0.1;\"> </span>", (int)(200 * letterSpacing)));
+				}
 			}
 			return sb.toString();
 		}
