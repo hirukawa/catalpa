@@ -33,12 +33,6 @@ public class BasicNodeRenderer implements NodeRenderer {
 				BasicNodeRenderer.this.render(node, context, html);
 			}
 		}));
-		set.add(new NodeRenderingHandler<Code>(Code.class, new CustomNodeRenderer<Code>() {
-			@Override
-			public void render(Code node, NodeRendererContext context, HtmlWriter html) {
-				BasicNodeRenderer.this.render(node, context, html);
-			}
-		}));
 		set.add(new NodeRenderingHandler<Heading>(Heading.class, new CustomNodeRenderer<Heading>() {
 			@Override
 			public void render(Heading node, NodeRendererContext context, HtmlWriter html) {
@@ -77,12 +71,7 @@ public class BasicNodeRenderer implements NodeRenderer {
 		}
 		context.delegateRender();
 	}
-	
-	protected void render(Code node, NodeRendererContext context, HtmlWriter html) {
-		html.attr("data-length", Integer.toString(node.getText().length()));
-		context.delegateRender();
-	}
-	
+
 	protected void render(Heading node, NodeRendererContext context, HtmlWriter html) {
 		if(2 <= node.getLevel() && node.getLevel() <= 5) {
 			String id = node.getAnchorRefId();
