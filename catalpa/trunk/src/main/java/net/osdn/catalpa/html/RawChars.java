@@ -20,11 +20,11 @@ public class RawChars implements Token {
 		this.value = value.toString();
 		this.type = type;
 	}
-	
+
 	public Type getType() {
 		return type;
 	}
-	
+
 	public double getLetterSpacing() {
 		return letterSpacing;
 	}
@@ -40,7 +40,12 @@ public class RawChars implements Token {
 		} else {
 			StringBuilder sb = new StringBuilder();
 			sb.append(value);
-			sb.append(String.format("<span style=\"font-family:monospace;margin-right:%.2fem;\"> </span>", (letterSpacing - 0.5)));
+			if(letterSpacing <= 0.5) {
+				sb.append(String.format("<span style=\"font-family:monospace;font-size:%d%%;\"> </span>", (int)(200 * letterSpacing)));
+			} else {
+				//letterSpacingが0.5よりも大きい場合、font-sizeが100%を超えます。この場合、行間が広くならないようにline-height:0.1;を付加します。
+				sb.append(String.format("<span style=\"font-family:monospace;font-size:%d%%;line-height:0.1;\"> </span>", (int)(200 * letterSpacing)));
+			}
 			return sb.toString();
 		}
 	}

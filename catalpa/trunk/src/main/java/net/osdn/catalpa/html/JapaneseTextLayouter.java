@@ -51,13 +51,21 @@ public class JapaneseTextLayouter {
 			"A", "BIG", "EM", "I", "SMALL", "SPAN", "STRONG"));
 	
 	public static String layout(CharSequence input, boolean isReplaceBackslashToYensign) {
+		//プログラミング言語のキャメルケースやファイルパス記述でも折り返しできるように、ゼロ幅スペース（&#8203;）を挿入します。
+		//<wbr>ではなく&#8203;を挿入するのは、<wbr>だと<pre><code>内で折り返し可能となってしまうためです。
+		//挿入位置は canWrap で決まります。
+		input = addZeroWidthSpace(input);
+
+		//円マークを &yen; に置き換えます。
 		if(isReplaceBackslashToYensign) {
 			input = input.toString().replace("\\", "&yen;");
 		}
+
 		//独自の行頭禁則で<span>を挿入すると<H1>等のヘッダーで自動生成されるスクロールマーカーの
 		//<A>タグにも<span>を含むnameが出力されてしまい、ヘッダー前の行間が広くなってしまいました。
 		//独自の行頭禁則処理はひとまず無効化します。
 		//input = applyLineHeadWrap(input);
+
 		List<Token> tokens = tokenize(input);
 		removeSpaces(tokens);
 		addLetterSpacing(getFirstChar(tokens));
@@ -125,7 +133,68 @@ public class JapaneseTextLayouter {
 		return sb;
 	}
 	*/
-	
+
+	private static CharSequence addZeroWidthSpace(CharSequence input) {
+		StringBuilder output = new StringBuilder(input.length());
+
+		char previousChar = 0;
+		char currentChar = 0;
+
+		Matcher m = HTML_TAG_PATTERN.matcher(input);
+		int index = 0;
+		while(m.find(index)) {
+			String tagName = m.group(1).toUpperCase();
+			if (tagName.charAt(0) == '/') {
+				tagName = tagName.substring(1);
+			}
+			if (HTML_TAGS.contains(tagName)) {
+				// ADD CHARS BEFORE TAG
+				previousChar = 0;
+				for (int i = index; i < m.start(); i++) {
+					currentChar = input.charAt(i);
+					if(canWrap(previousChar, currentChar)) {
+						output.append("&#8203;");
+					}
+					output.append(currentChar);
+					previousChar = currentChar;
+				}
+				output.append(m.group(0));
+			} else {
+				previousChar = 0;
+				for (int i = index; i < m.end(); i++) {
+					currentChar = input.charAt(i);
+					if(canWrap(previousChar, currentChar)) {
+						output.append("&#8203;");
+					}
+					output.append(currentChar);
+					previousChar = currentChar;
+				}
+			}
+			index = m.end();
+		}
+		// ADD CHARS AFTER LAST TAG
+		previousChar = 0;
+		for(int i = index; i < input.length(); i++) {
+			previousChar = currentChar;
+			currentChar = input.charAt(i);
+			if(canWrap(previousChar, currentChar)) {
+				output.append("&#8203;");
+			}
+			output.append(currentChar);
+		}
+		return output;
+	}
+
+	private static boolean canWrap(char previousChar, char currentChar) {
+		if(Character.isLowerCase(previousChar) && Character.isUpperCase(currentChar)) {
+			return true;
+		}
+		if("\\/.".indexOf(currentChar) >= 0 && (Character.isLowerCase(previousChar) || Character.isUpperCase(previousChar))) {
+			return true;
+		}
+		return false;
+	}
+
 	private static List<Token> tokenize(CharSequence input) {
 		List<Token> tokens = new LinkedList<Token>();
 		Char previousChar = null;
@@ -285,7 +354,7 @@ public class JapaneseTextLayouter {
 			}
 		}
 	}
-	
+
 	private static void addLetterSpacing(Char firstChar) {
 		Char currentChar = firstChar;
 		while(currentChar != null) {
