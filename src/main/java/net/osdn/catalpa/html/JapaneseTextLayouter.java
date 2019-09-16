@@ -189,7 +189,7 @@ public class JapaneseTextLayouter {
 		if(Character.isLowerCase(previousChar) && Character.isUpperCase(currentChar)) {
 			return true;
 		}
-		if("\\/.".indexOf(currentChar) >= 0 && (Character.isLowerCase(previousChar) || Character.isUpperCase(previousChar))) {
+		if("\\/.<".indexOf(currentChar) >= 0 && (Character.isLowerCase(previousChar) || Character.isUpperCase(previousChar))) {
 			return true;
 		}
 		return false;
