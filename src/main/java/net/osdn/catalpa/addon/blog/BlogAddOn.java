@@ -33,8 +33,8 @@ import com.esotericsoftware.yamlbeans.YamlReader;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Document;
-import com.vladsch.flexmark.util.options.MutableDataSet;
 
+import com.vladsch.flexmark.util.data.MutableDataSet;
 import freemarker.core.ParseException;
 import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.Template;

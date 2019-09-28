@@ -26,6 +26,7 @@ import java.util.regex.Matcher;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -59,7 +60,7 @@ public class BlogWizard extends Stage implements Initializable {
 	
 	private Path inputPath;
 	private boolean isCreateRequested;
-	
+
 	public BlogWizard(Stage owner, Path inputPath) throws IOException {
 		this.inputPath = inputPath;
 		
@@ -74,16 +75,6 @@ public class BlogWizard extends Stage implements Initializable {
 		loader.setController(this);
 		Parent root = (Parent)loader.load();
 
-		String css = getClass().getResource("BlogWizard.css").toExternalForm();
-		for(Category category : getCategories(inputPath)) {
-			ToggleButton tb = new ToggleButton(category.name);
-			tb.setUserData(category.id);
-			tb.getStylesheets().add(css);
-			tb.getStyleClass().clear();
-			tb.getStyleClass().add("category-button");
-			categories.getChildren().add(tb);
-		}
-		
 		Scene scene = new Scene(root);
 		root.layoutBoundsProperty().addListener(new ChangeListener<Bounds>() {
 			@Override
@@ -119,6 +110,32 @@ public class BlogWizard extends Stage implements Initializable {
 		tfFilename.requestFocus();
 		setScene(scene);
 		setOnShowing(event -> Platform.runLater(() -> BlogWizard.this.sizeToScene()));
+		setOnShown(windowEvent -> {
+			Task<Set<Category>> task = new Task<Set<Category>>() {
+				@Override
+				protected Set<Category> call() throws Exception {
+					return getCategories(inputPath);
+				}
+			};
+			task.setOnSucceeded(workerStateEvent -> {
+				categories.getChildren().clear();
+
+				@SuppressWarnings("unchecked")
+				Set<Category> result = (Set<Category>)workerStateEvent.getSource().getValue();
+				if(result != null) {
+					String css = getClass().getResource("BlogWizard.css").toExternalForm();
+					for(Category category : result) {
+						ToggleButton tb = new ToggleButton(category.name);
+						tb.setUserData(category.id);
+						tb.getStylesheets().add(css);
+						tb.getStyleClass().clear();
+						tb.getStyleClass().add("category-button");
+						categories.getChildren().add(tb);
+					}
+				}
+			});
+			new Thread(task).start();
+		});
 	}
 	
 	public InputData getInputData() throws IOException {
@@ -214,16 +231,16 @@ public class BlogWizard extends Stage implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		btnSkip.setOnAction(this::btnSkip_onAction);
+		btnCreate.setOnAction(this::btnCreate_onAction);
 		btnCreate.disableProperty().bind(tfFilename.textProperty().isEmpty());
 	}
 	
-	@FXML
-	void btnSkip_onAction(ActionEvent event) {
+	protected void btnSkip_onAction(ActionEvent event) {
 		close();
 	}
 	
-	@FXML
-	void btnCreate_onAction(ActionEvent event) {
+	protected void btnCreate_onAction(ActionEvent event) {
 		isCreateRequested = true;
 		close();
 	}

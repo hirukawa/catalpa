@@ -24,33 +24,28 @@
 								<MenuItem fx:id="menuFileOpen"
 									text="フォルダーを開く"
 									mnemonicParsing="false"
-									accelerator="Shortcut+O"
-									onAction="#menuFileOpen_onAction">
+									accelerator="Shortcut+O">
 									<graphic><FontIcon iconLiteral="mdi-folder"/></graphic>
 								</MenuItem>
 								<MenuItem fx:id="menuFileSaveAs"
 									text="名前を付けて保存..."
 									mnemonicParsing="false"
-									accelerator="Shortcut+S"
-									onAction="#menuFileSaveAs_onAction">
+									accelerator="Shortcut+S">
 									<graphic><FontIcon iconLiteral="mdi-content-save"/></graphic>
 								</MenuItem>
 								<SeparatorMenuItem  />
 								<MenuItem fx:id="menuFileExit"
 									text="終了"
-									mnemonicParsing="false"
-									onAction="#menuFileExit_onAction"/>
+									mnemonicParsing="false"/>
 							</items>
 						</Menu>
 					</menus>
 				</MenuBar>
 				<Region styleClass="menu-bar" HBox.hgrow="ALWAYS"/>
 				<Label fx:id="lblVSCode"
-					styleClass="menu-bar, menu-label"
-					onMouseClicked="#lblVSCode_onMouseClicked" />
+					styleClass="menu-bar, menu-label" />
 				<Label fx:id="lblCheatSheet"
-					styleClass="menu-bar, menu-label"
-					onMouseClicked="#lblCheatSheet_onMouseClicked" />
+					styleClass="menu-bar, menu-label" />
 			</HBox>
 		</top>
 		<center>
@@ -64,8 +59,7 @@
 						HBox.hgrow="ALWAYS" />
 					<Button fx:id="btnOpen"
 						styleClass="flat-border-left"
-						text="開く..."
-						onAction="#btnOpen_onAction">
+						text="開く...">
 						<graphic><FontIcon iconLiteral="mdi-folder"/></graphic>
 					</Button>
 				</HBox>
@@ -74,8 +68,7 @@
 					<Button fx:id="btnReload"
 						text="更新"
 						HBox.hgrow="ALWAYS" maxWidth="$MAX_INT"
-						disable="true"
-						onAction="#btnReload_onAction">
+						disable="true">
 						<graphic><FontIcon iconLiteral="mdi-refresh"/></graphic>
 					</Button>
 					<CheckBox fx:id="cbAutoReload"
@@ -90,22 +83,19 @@
 					<Button fx:id="btnOpenBrowser"
 						text="ブラウザーで開く"
 						disable="true"
-						HBox.hgrow="ALWAYS" maxWidth="$MAX_INT"
-						onAction="#btnOpenBrowser_onAction">
+						HBox.hgrow="ALWAYS" maxWidth="$MAX_INT">
 						<graphic><FontIcon iconLiteral="mdi-earth"/></graphic>
 					</Button>
 					<Button fx:id="btnSaveAs"
 						text="名前を付けて保存..."
 						disable="true"
-						HBox.hgrow="ALWAYS" maxWidth="$MAX_INT"
-						onAction="#btnSaveAs_onAction">
+						HBox.hgrow="ALWAYS" maxWidth="$MAX_INT">
 						<graphic><FontIcon iconLiteral="mdi-content-save"/></graphic>
 					</Button>
 					<Button fx:id="btnUpload"
 						text="アップロード"
 						disable="true"
-						HBox.hgrow="ALWAYS" maxWidth="$MAX_INT"
-						onAction="#btnUpload_onAction">
+						HBox.hgrow="ALWAYS" maxWidth="$MAX_INT">
 						<graphic><FontIcon iconLiteral="mdi-cloud-upload"/></graphic>
 					</Button>
 				</HBox>
