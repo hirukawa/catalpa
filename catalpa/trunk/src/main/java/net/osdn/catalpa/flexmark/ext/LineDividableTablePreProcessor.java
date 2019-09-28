@@ -10,7 +10,7 @@ import com.vladsch.flexmark.ext.tables.internal.TableParagraphPreProcessor;
 import com.vladsch.flexmark.parser.block.ParagraphPreProcessor;
 import com.vladsch.flexmark.parser.block.ParagraphPreProcessorFactory;
 import com.vladsch.flexmark.parser.block.ParserState;
-import com.vladsch.flexmark.util.options.DataHolder;
+import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
 
 public class LineDividableTablePreProcessor implements ParagraphPreProcessor {
@@ -108,7 +108,7 @@ public class LineDividableTablePreProcessor implements ParagraphPreProcessor {
 		}
 
 		@Override
-		public ParagraphPreProcessor create(ParserState state) {
+		public ParagraphPreProcessor apply(ParserState state) {
 			return new LineDividableTablePreProcessor(state.getProperties());
 		}
 	}

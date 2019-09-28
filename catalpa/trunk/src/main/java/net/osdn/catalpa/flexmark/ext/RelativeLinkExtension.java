@@ -4,12 +4,12 @@ import java.util.Set;
 
 import com.vladsch.flexmark.html.LinkResolver;
 import com.vladsch.flexmark.html.LinkResolverFactory;
-import com.vladsch.flexmark.Extension;
 import com.vladsch.flexmark.html.HtmlRenderer.Builder;
 import com.vladsch.flexmark.html.HtmlRenderer.HtmlRendererExtension;
 import com.vladsch.flexmark.html.renderer.LinkResolverContext;
-import com.vladsch.flexmark.util.options.DataKey;
-import com.vladsch.flexmark.util.options.MutableDataHolder;
+import com.vladsch.flexmark.util.builder.Extension;
+import com.vladsch.flexmark.util.data.DataKey;
+import com.vladsch.flexmark.util.data.MutableDataHolder;
 
 public class RelativeLinkExtension implements HtmlRendererExtension {
     public static final DataKey<String> RELATIVE_URL_PREFIX = new DataKey<String>("RELATIVE_URL_PREFIX", "");
@@ -48,7 +48,7 @@ public class RelativeLinkExtension implements HtmlRendererExtension {
 		}
 
 		@Override
-		public LinkResolver create(LinkResolverContext context) {
+		public LinkResolver apply(LinkResolverContext context) {
 			return new RelativeLinkResolver(context);
 		}
 	}

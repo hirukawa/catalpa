@@ -30,7 +30,9 @@
 
 			<ScrollPane fitToWidth="true" prefHeight="64" prefWidth="280" VBox.vgrow="ALWAYS">
 				<content>
-					<FlowPane fx:id="categories" />
+					<FlowPane fx:id="categories">
+						<ProgressIndicator fx:id="progressIndicator"/>
+					</FlowPane>
 				</content>
 			</ScrollPane>
 
@@ -38,12 +40,10 @@
 				<Region HBox.hgrow="ALWAYS"/>
 			
 				<Button fx:id="btnSkip"
-					text=" スキップ "
-					onAction="#btnSkip_onAction" />
+					text=" スキップ " />
 				<Button fx:id="btnCreate"
 					disable="false"
-					text="記事を作成する"
-					onAction="#btnCreate_onAction">
+					text="記事を作成する">
 					<graphic><FontIcon iconLiteral="mdi-file-document"/></graphic>
 				</Button>
 			</HBox>

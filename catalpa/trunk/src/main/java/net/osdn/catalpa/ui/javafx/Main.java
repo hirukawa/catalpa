@@ -156,11 +156,14 @@ public class Main extends Application implements Initializable, ProgressObserver
 					dirty.setValue(true);
 					return;
 				}
+				// ファイル変更イベントは連続で発生するので
+				// 600ミリ秒以上連続でイベントが発生しなくなってから処理を開始します。
+				// （たとえばファイルを書き換えると DELETE + CREATE で2回ファイル変更イベントが連続発生することがあります。）
 				LocalDateTime t = this.lastModified = LocalDateTime.now();
 				new Timeline(new KeyFrame(Duration.millis(600), onFinished -> {
 					if(t.equals(lastModified) && inputPath.getValue() != null) {
 						try {
-						update(inputPath.getValue());
+							update(inputPath.getValue());
 						} catch (IOException e) {
 							showException(e);
 						}
@@ -591,6 +594,7 @@ public class Main extends Application implements Initializable, ProgressObserver
 	@FXML Menu      menuFile;
 	@FXML MenuItem  menuFileOpen;
 	@FXML MenuItem  menuFileSaveAs;
+	@FXML MenuItem  menuFileExit;
 	@FXML Label     lblCheatSheet;
 	@FXML Label     lblVSCode;
 	@FXML Node      body;
@@ -608,6 +612,17 @@ public class Main extends Application implements Initializable, ProgressObserver
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		menuFileOpen.setOnAction(this::menuFileOpen_onAction);
+		menuFileSaveAs.setOnAction(this::menuFileSaveAs_onAction);
+		menuFileExit.setOnAction(this::menuFileExit_onAction);
+		lblVSCode.setOnMouseClicked(this::lblVSCode_onMouseClicked);
+		lblCheatSheet.setOnMouseClicked(this::lblCheatSheet_onMouseClicked);
+		btnOpen.setOnAction(this::btnOpen_onAction);
+		btnReload.setOnAction(this::btnReload_onAction);
+		btnOpenBrowser.setOnAction(this::btnOpenBrowser_onAction);
+		btnSaveAs.setOnAction(this::btnSaveAs_onAction);
+		btnUpload.setOnAction(this::btnUpload_onAction);
+
 		primaryStage.setX(preferences.getDouble("stageX", 50.0));
 		primaryStage.setY(preferences.getDouble("stageY", 50.0));
 		primaryStage.addEventHandler(WindowEvent.WINDOW_SHOWN, event -> {
@@ -705,8 +720,7 @@ public class Main extends Application implements Initializable, ProgressObserver
 		updateRecentFile(null);
 	}
 	
-	@FXML
-	void menuFileOpen_onAction(ActionEvent event) {
+	protected void menuFileOpen_onAction(ActionEvent event) {
 		toast.hide();
 		
 		try {
@@ -716,20 +730,18 @@ public class Main extends Application implements Initializable, ProgressObserver
 		}
 	}
 	
-	@FXML
-	void menuFileSaveAs_onAction(ActionEvent event) {
+	protected void menuFileSaveAs_onAction(ActionEvent event) {
 		toast.hide();
 		
 		saveAs(inputPath.getValue());
 	}
 	
-	@FXML
-	void menuFileExit_onAction(ActionEvent event) {
+
+	protected void menuFileExit_onAction(ActionEvent event) {
 		primaryStage.close();
 	}
 	
-	@FXML
-	void btnOpen_onAction(ActionEvent event) {
+	protected void btnOpen_onAction(ActionEvent event) {
 		toast.hide();
 		
 		try {
@@ -739,8 +751,7 @@ public class Main extends Application implements Initializable, ProgressObserver
 		}
 	}
 	
-	@FXML
-	void btnReload_onAction(ActionEvent event) {
+	protected void btnReload_onAction(ActionEvent event) {
 		toast.hide();
 		
 		String text = tfInputPath.getText();
@@ -758,8 +769,7 @@ public class Main extends Application implements Initializable, ProgressObserver
 		}
 	}
 	
-	@FXML
-	void btnOpenBrowser_onAction(ActionEvent event) {
+	protected void btnOpenBrowser_onAction(ActionEvent event) {
 		try {
 			openBrowser();
 		} catch (IOException | URISyntaxException e) {
@@ -767,18 +777,15 @@ public class Main extends Application implements Initializable, ProgressObserver
 		}
 	}
 	
-	@FXML
-	void btnSaveAs_onAction(ActionEvent event) {
+	protected void btnSaveAs_onAction(ActionEvent event) {
 		saveAs(inputPath.getValue());
 	}
 	
-	@FXML
-	void btnUpload_onAction(ActionEvent event) {
+	protected void btnUpload_onAction(ActionEvent event) {
 		upload(inputPath.getValue());
 	}
 	
-	@FXML
-	void lblCheatSheet_onMouseClicked(MouseEvent event) {
+	protected void lblCheatSheet_onMouseClicked(MouseEvent event) {
 		try {
 			showCheatSheet();
 		} catch (Exception e) {
@@ -786,8 +793,7 @@ public class Main extends Application implements Initializable, ProgressObserver
 		}
 	}
 	
-	@FXML
-	void lblVSCode_onMouseClicked(MouseEvent event) {
+	protected void lblVSCode_onMouseClicked(MouseEvent event) {
 		try {
 			Path dir = inputPath.get();
 			if(dir != null && Files.isDirectory(dir) && VSCode.isInstalled()) {

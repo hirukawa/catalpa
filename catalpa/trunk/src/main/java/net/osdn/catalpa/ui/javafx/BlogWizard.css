@@ -33,6 +33,12 @@
 #btnCreate {
 }
 
+#progressIndicator {
+	-fx-pref-width: 20px;
+	-fx-pref-height: 20px;
+	-fx-progress-color: #202020;
+}
+
 FontIcon {
 	-fx-icon-size: 17;
 	-fx-icon-color: #97bf13;
