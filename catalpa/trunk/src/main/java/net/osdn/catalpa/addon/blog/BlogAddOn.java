@@ -13,6 +13,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ import net.osdn.catalpa.AddOn;
 import net.osdn.catalpa.Catalpa;
 import net.osdn.catalpa.CatalpaException;
 import net.osdn.catalpa.Context;
+import net.osdn.catalpa.SearchIndex;
 import net.osdn.catalpa.SitemapItem;
 import net.osdn.catalpa.SitemapItem.ChangeFreq;
 import net.osdn.catalpa.URLEncoder;
@@ -195,13 +197,14 @@ public class BlogAddOn implements AddOn {
 	}
 	
 	@Override
-	public void postExecute(Path inputPath, Path outputPath, Map<String, Object> options, Context context, List<SitemapItem> sitemap) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
+	public void postExecute(Path inputPath, Path outputPath, Map<String, Object> options, Context context, List<SitemapItem> sitemap, List<SearchIndex> searchIndexes) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
 		Map<String, Object> dataModel = context.getDataModel();
-		
+
+		@SuppressWarnings("unchecked")
+		List<Post> posts = (List<Post>)blogDataModel.get("posts");
+
 		{ // create page html
-			@SuppressWarnings("unchecked")
-			List<Post> posts = (List<Post>)blogDataModel.get("posts");
-			
+
 			Template pageTemplate = context.getFreeMarker().getTemplate("page.ftl");
 			int pages = (posts.size() - 1) / paginate + 1;
 			int page = pages;
@@ -316,6 +319,20 @@ public class BlogAddOn implements AddOn {
 					// next page
 					page--;
 					fromIndex = toIndex;
+				}
+			}
+		}
+
+		if(searchIndexes != null) {
+			Map<String, LocalDate> map = new HashMap<String, LocalDate>();
+			for(Post post : posts) {
+				map.put(post.getUrl(), post.getDate());
+			}
+			for(SearchIndex index : searchIndexes) {
+				LocalDate date = map.get(index.getUrl());
+				if(date != null) {
+					FileTime lastModified = FileTime.from(date.atStartOfDay().toInstant(ZoneOffset.UTC));
+					index.setLastModifiedTime(lastModified);
 				}
 			}
 		}

@@ -2,6 +2,7 @@ package net.osdn.catalpa;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -46,6 +47,7 @@ public class SearchIndex {
 			return null;
 		}
 		text = sb.toString();
+		text = text.replaceAll("&#8203;", "");
 		text = text.replaceAll("</?(a|big|code|em|i|kbd|small|span|strong|tt).*?>", "");
 		text = text.replaceAll("<[^>]*>", "\n");
 		text = text.replaceAll("&amp;", "&");
@@ -76,6 +78,7 @@ public class SearchIndex {
 		if(title == null) {
 			title = relativeOutputPath.getFileName().toString();
 		}
+		title = title.replaceAll("&#8203;", "");
 		title = title.replaceAll("<span[^>]*> </span>", "");
 		title = title.replaceAll("</?(a|big|code|em|i|kbd|small|span|strong|tt).*?>", "");
 		title = title.replaceAll("<[^>]*>", " ");
@@ -97,12 +100,14 @@ public class SearchIndex {
 		searchIndex.title = Util.getJavaScriptString(title);
 		searchIndex.url = Util.getJavaScriptString(url);
 		searchIndex.text = Util.getJavaScriptString(text);
+		searchIndex.lastModifiedTime = context.getLastModifiedTime();
 		return searchIndex;
 	}
 
 	private String title;
 	private String url;
 	private String text;
+	private FileTime lastModifiedTime;
 	
 	private SearchIndex() {
 	}
@@ -117,5 +122,13 @@ public class SearchIndex {
 	
 	public String getText() {
 		return text;
+	}
+
+	public FileTime getLastModifiedTime() {
+	    return lastModifiedTime;
+    }
+
+    public void setLastModifiedTime(FileTime t) {
+		lastModifiedTime = t;
 	}
 }
