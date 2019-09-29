@@ -10,6 +10,6 @@ public interface AddOn {
 	public void setCatalpa(Catalpa catalpa);
 	public void prepare(Path inputPath, Path outputPath, Map<String, Object> config, Map<String, Object> options, Context context) throws Exception;
 	public void execute(Context context) throws Exception;
-	public void postExecute(Path inputPath, Path outputPath, Map<String, Object> options, Context context, List<SitemapItem> sitemap) throws Exception;
+	public void postExecute(Path inputPath, Path outputPath, Map<String, Object> options, Context context, List<SitemapItem> sitemap, List<SearchIndex> searchIndexes) throws Exception;
 
 }

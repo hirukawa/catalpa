@@ -131,12 +131,7 @@ public class Catalpa {
 				this.handlers.add(handler);
 			}
 		}
-		Collections.sort(this.handlers, new Comparator<Handler>() {
-			@Override
-			public int compare(Handler o1, Handler o2) {
-				return o1.getPriority() - o2.getPriority();
-			}
-		});
+		Collections.sort(this.handlers, (o1, o2) -> o1.getPriority() - o2.getPriority());
 		if(addons != null) {
 			for(AddOn addon : addons) {
 				this.addons.add(addon);
@@ -259,7 +254,7 @@ public class Catalpa {
 		retrieve(context);
 		
 		if(addon != null) {
-			addon.postExecute(inputPath, outputPath, options, context, sitemap);
+			addon.postExecute(inputPath, outputPath, options, context, sitemap, searchIndexes);
 		}
 		
 		createSitemap(context);
@@ -539,7 +534,9 @@ public class Catalpa {
 		}
 		
 		observer.setText("検索用インデックスを作成しています…");
-		
+
+        Collections.sort(searchIndexes, Comparator.comparing(SearchIndex::getLastModifiedTime).reversed());
+
 		StringBuilder db = new StringBuilder("\r\n");
 		for(int i = 0; i < searchIndexes.size(); i++) {
 			SearchIndex index = searchIndexes.get(i);
