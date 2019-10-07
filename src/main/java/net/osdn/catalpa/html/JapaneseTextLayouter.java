@@ -49,10 +49,11 @@ public class JapaneseTextLayouter {
 	
 	private static final Set<String> INLINE_TEXT_TAGS = new HashSet<String>(Arrays.asList(
 			"A", "BIG", "EM", "I", "SMALL", "SPAN", "STRONG"));
-	
+
 	public static String layout(CharSequence input, boolean isReplaceBackslashToYensign) {
-		//プログラミング言語のキャメルケースやファイルパス記述でも折り返しできるように、ゼロ幅スペース（&#8203;）を挿入します。
-		//<wbr>ではなく&#8203;を挿入するのは、<wbr>だと<pre><code>内で折り返し可能となってしまうためです。
+		//プログラミング言語のキャメルケースやファイルパス記述でも折り返しできるように、ゼロ幅スペースとして<wbr>を挿入します。
+		//&#8203;ではなく<wbr>を挿入するのは、&#8203;を含むテキストをクリップボードにコピーするとゼロ幅スペースが含まれ、
+		//ソースコードとしてビルドできなくなるなどの問題を引き起こすためです。<wbr>はクリップボードへのコピー時に取り除かれます。
 		//挿入位置は canWrap で決まります。
 		input = addZeroWidthSpace(input);
 
@@ -137,23 +138,32 @@ public class JapaneseTextLayouter {
 	private static CharSequence addZeroWidthSpace(CharSequence input) {
 		StringBuilder output = new StringBuilder(input.length());
 
+		boolean isInPreElement = false;
 		char previousChar = 0;
 		char currentChar = 0;
+		char nextChar = 0;
 
 		Matcher m = HTML_TAG_PATTERN.matcher(input);
 		int index = 0;
 		while(m.find(index)) {
+			boolean isEndTag = false;
 			String tagName = m.group(1).toUpperCase();
 			if (tagName.charAt(0) == '/') {
 				tagName = tagName.substring(1);
+				isEndTag = true;
+			}
+			// PRE要素内はゼロ幅スペースを挿入しないようにスキップします。
+			if(tagName.equals("PRE")) {
+				isInPreElement = !isEndTag;
 			}
 			if (HTML_TAGS.contains(tagName)) {
 				// ADD CHARS BEFORE TAG
 				previousChar = 0;
 				for (int i = index; i < m.start(); i++) {
 					currentChar = input.charAt(i);
-					if(canWrap(previousChar, currentChar)) {
-						output.append("&#8203;");
+					nextChar = (i + 1 < input.length()) ? input.charAt(i + 1) : 0;
+					if(!isInPreElement && canWrap(previousChar, currentChar, nextChar)) {
+						output.append("<wbr>");
 					}
 					output.append(currentChar);
 					previousChar = currentChar;
@@ -163,8 +173,9 @@ public class JapaneseTextLayouter {
 				previousChar = 0;
 				for (int i = index; i < m.end(); i++) {
 					currentChar = input.charAt(i);
-					if(canWrap(previousChar, currentChar)) {
-						output.append("&#8203;");
+					nextChar = (i + 1 < input.length()) ? input.charAt(i + 1) : 0;
+					if(!isInPreElement && canWrap(previousChar, currentChar, nextChar)) {
+						output.append("<wbr>");
 					}
 					output.append(currentChar);
 					previousChar = currentChar;
@@ -177,19 +188,30 @@ public class JapaneseTextLayouter {
 		for(int i = index; i < input.length(); i++) {
 			previousChar = currentChar;
 			currentChar = input.charAt(i);
-			if(canWrap(previousChar, currentChar)) {
-				output.append("&#8203;");
+			nextChar = (i + 1 < input.length()) ? input.charAt(i + 1) : 0;
+			if(!isInPreElement && canWrap(previousChar, currentChar, nextChar)) {
+				output.append("<wbr>");
 			}
 			output.append(currentChar);
 		}
 		return output;
 	}
 
-	private static boolean canWrap(char previousChar, char currentChar) {
+	private static boolean canWrap(char previousChar, char currentChar, char nextChar) {
+		// キャメルケース（前の文字が小文字、現在の文字が大文字）の場合、折り返し可能とします。
 		if(Character.isLowerCase(previousChar) && Character.isUpperCase(currentChar)) {
 			return true;
 		}
-		if("\\/.#<".indexOf(currentChar) >= 0 && (Character.isLowerCase(previousChar) || Character.isUpperCase(previousChar))) {
+		// ファイル区切りとして使われるバックスラッシュ、スラッシュの前が英数字で後が空白でなければ折り返し可能とします。
+		if("\\/".indexOf(currentChar) >= 0
+				&& (Character.isLowerCase(previousChar) || Character.isUpperCase(previousChar) || Character.isDigit(previousChar))
+				&& !Character.isSpaceChar(nextChar)) {
+			return true;
+		}
+		// メソッド呼び出し記述に使われるドット、シャープ、総称型仮型引数に使われる < の前が英数字で後が英字の場合、折り返し可能とします。
+		if(".#<".indexOf(currentChar) >= 0
+				&& (Character.isLowerCase(previousChar) || Character.isUpperCase(previousChar) || Character.isDigit(previousChar))
+				&& (Character.isLowerCase(nextChar) || Character.isUpperCase(nextChar))) {
 			return true;
 		}
 		return false;
