@@ -76,6 +76,7 @@ public class Context {
 	
 	public void setOutputPath(Path outputPath) {
 		this.outputPath = outputPath;
+		dataModel = null;
 	}
 	
 	public Path getOutputPath() {
