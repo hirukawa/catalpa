@@ -198,8 +198,6 @@ public class BlogAddOn implements AddOn {
 	
 	@Override
 	public void postExecute(Path inputPath, Path outputPath, Map<String, Object> options, Context context, List<SitemapItem> sitemap, List<SearchIndex> searchIndexes) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException, TemplateException {
-		Map<String, Object> dataModel = context.getDataModel();
-
 		@SuppressWarnings("unchecked")
 		List<Post> posts = (List<Post>)blogDataModel.get("posts");
 
@@ -222,10 +220,9 @@ public class BlogAddOn implements AddOn {
 					new Link("次のページ", getPageUrl(page, page + 1, pages))
 				));
 
-				String baseUrl = "";
 				Path path;
 				if(page == pages) {
-					path = context.getOutputPath().resolve("index.html");
+					path = outputPath.resolve("index.html");
 					SitemapItem item = new SitemapItem(
 							URLEncoder.encode(context.getUrl()),
 							FileTime.from(ZonedDateTime.now().toInstant()),
@@ -233,25 +230,25 @@ public class BlogAddOn implements AddOn {
 							1.0);
 					sitemap.add(item);
 				} else {
-					baseUrl = "../";
-					path = context.getOutputPath().resolve("page").resolve(page + ".html");
+					path = outputPath.resolve("page").resolve(page + ".html");
 					Files.createDirectories(path.getParent());
 				}
+				context.setOutputPath(path);
+
 				for(int i = fromIndex; i < toIndex; i++) {
 					Post post = posts.get(i);
 					String relativePath = inputPath.relativize(post.getPath().getParent()).toString();
-					String relativeUrlPrefix = baseUrl + relativePath.replace('\\', '/');
+					String relativeUrlPrefix = context.getBaseUrl() + relativePath.replace('\\', '/');
 					if(relativeUrlPrefix.length() > 0) {
 						relativeUrlPrefix += '/';
 					}
 					post.setRelativeUrlPrefix(relativeUrlPrefix);
 				}
-				dataModel.put("baseurl", baseUrl);
-				
+
 				try(ByteArrayOutputStream out = new ByteArrayOutputStream();
 						BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8))) {
 					synchronized (context.getFreeMarker()) {
-						pageTemplate.process(dataModel, writer);
+						pageTemplate.process(context.getDataModel(), writer);
 					}
 					writer.flush();
 					catalpa.write(path, out.toByteArray());
@@ -271,7 +268,7 @@ public class BlogAddOn implements AddOn {
 			for(Category category : categories) {
 				catalpa.getProgressObserver().setText(String.format("カテゴリーページ（%s）を作成しています…", category.getName()));
 				
-				Files.createDirectories(context.getOutputPath().resolve("category").resolve(category.getId()));
+				Files.createDirectories(outputPath.resolve("category").resolve(category.getId()));
 				blogDataModel.put("category", category);
 
 				int pages = (category.getPosts().size() - 1) / paginate + 1;
@@ -287,30 +284,29 @@ public class BlogAddOn implements AddOn {
 						new Link("前のページ", getCategoryPageUrl(page - 1, pages)),
 						new Link("次のページ", getCategoryPageUrl(page + 1, pages))
 					));
-					
-					String baseUrl = "../../";
+
+					Path path;
+					if(page == pages) {
+						path = outputPath.resolve("category").resolve(category.getId()).resolve("index.html");
+					} else {
+						path = outputPath.resolve("category").resolve(category.getId()).resolve(page + ".html");
+					}
+					context.setOutputPath(path);
+
 					for(int i = fromIndex; i < toIndex; i++) {
 						Post post = category.getPosts().get(i);
 						String relativePath = inputPath.relativize(post.getPath().getParent()).toString();
-						String relativeUrlPrefix = baseUrl + relativePath.replace('\\', '/');
+						String relativeUrlPrefix = context.getBaseUrl() + relativePath.replace('\\', '/');
 						if(relativeUrlPrefix.length() > 0) {
 							relativeUrlPrefix += '/';
 						}
 						post.setRelativeUrlPrefix(relativeUrlPrefix);
 					}
-					dataModel.put("baseurl", baseUrl);
-					
-					Path path;
-					if(page == pages) {
-						path = context.getOutputPath().resolve("category").resolve(category.getId()).resolve("index.html");
-					} else {
-						path = context.getOutputPath().resolve("category").resolve(category.getId()).resolve(page + ".html");
-					}
 
 					try(ByteArrayOutputStream out = new ByteArrayOutputStream();
 							BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8))) {
 						synchronized (context.getFreeMarker()) {
-							categoryTemplate.process(dataModel, writer);
+							categoryTemplate.process(context.getDataModel(), writer);
 						}
 						writer.flush();
 						catalpa.write(path, out.toByteArray());
