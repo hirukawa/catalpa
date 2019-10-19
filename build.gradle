@@ -1,7 +1,7 @@
 apply plugin: 'eclipse'
 apply plugin: 'java'
 
-version = '0.7.5.1'
+version = '0.7.6'
 
 def defaultEncoding = 'UTF-8'
 tasks.withType(AbstractCompile).each { it.options.encoding = defaultEncoding }
@@ -34,7 +34,7 @@ dependencies {
 	
 	compile 'com.github.luccappellaro:jzopfli:0.0.4'
 
-	compile 'net.osdn.blogs.flexmark.ext:flexmark-ext-highlight:0.2.4'
+	compile 'net.osdn.blogs.flexmark.ext:flexmark-ext-highlight:0.2.5'
 	compile 'net.osdn.blogs.flexmark.ext:flexmark-ext-inline-tags:0.1.4'
 	compile 'net.osdn.util.io:auto-detect-reader:0.1.1'
 }
@@ -80,9 +80,11 @@ task exewrap(type: Exec, dependsOn: 'jar') {
 	setDescription('Assembles the executable.')
 	executable "${projectDir}/exewrap.exe"
 	args "-A", "x64",
-		"-g",
 		"-t", "11",
-		"-a", "-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:+UseSerialGC -XX:CICompilerCount=1 -Xverify:none -Xms128m",
+		//for ClientVM
+		"-a", "-XX:TieredStopAtLevel=1 -XX:+UseSerialGC -XX:CICompilerCount=1 -Xverify:none -Xms128m",
+		//for ServerVM
+		//"-a", "-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:+UseSerialGC -XX:CICompilerCount=1 -Xverify:none -Xms128m",
 		"-L", "lib",
 		"-e", "SHARED",
 		"-j", "${jar.archiveFile.get()}",
