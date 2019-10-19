@@ -80,6 +80,7 @@ task exewrap(type: Exec, dependsOn: 'jar') {
 	setDescription('Assembles the executable.')
 	executable "${projectDir}/exewrap.exe"
 	args "-A", "x64",
+        "-g",
 		"-t", "11",
 		//for ClientVM
 		"-a", "-XX:TieredStopAtLevel=1 -XX:+UseSerialGC -XX:CICompilerCount=1 -Xverify:none -Xms128m",
