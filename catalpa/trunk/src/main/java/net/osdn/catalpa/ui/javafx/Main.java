@@ -15,8 +15,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -538,7 +538,7 @@ public class Main extends Application implements Initializable, ProgressObserver
 			String s = System.getProperty("java.application.startup");
 			if(s != null) {
 				try {
-					startup = LocalDateTime.parse(s).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+					startup = Instant.parse(s).toEpochMilli();
 				} catch(DateTimeParseException e) {}
 			}
 			long elapsed = System.currentTimeMillis() - startup;
