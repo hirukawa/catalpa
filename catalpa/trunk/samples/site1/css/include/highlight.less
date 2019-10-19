@@ -79,7 +79,7 @@
 	color: #e0e0e0;
 }
 .markdown pre > div.title > span.copy-button:active {
-	border: 1px solid #606060;
+	border: 1px solid #e0e0e0;
 	color: #e0e0e0;
 	background-color: #606060;
 }
@@ -188,16 +188,141 @@
 }
 
 /*
- *  light (still only `nohighlight`)
+ * light
  */
+.markdown pre.light.line-number > code:before {
+	color: #3394B2;
+	border-right: 1px solid #C0C0C0;
+}
+.markdown pre.light {
+	background: #FCFCFC;
+}
 .markdown pre.light > code {
+	color: #383A42;
+	background: #FCFCFC;
+}
+.markdown pre.light > div.title {
+	color: #303030;
+	background: #E9E9E9;
+}
+.markdown pre.light > div.title > span.copy-button {
+	border: 1px solid #C0C0C0;
+	color: #A0A0A0;
+}
+.markdown pre.light > div.title > span.copy-button:hover {
+	border: 1px solid #808080;
+	color: #303030;
+}
+.markdown pre.light > div.title > span.copy-button:active {
+	border: 1px solid #808080;
+	color: #202020;
+	background-color: #F2F2F2;
+}
+
+.markdown pre.light > code.nohighlight,
+.markdown pre.light > code.language-raw {
 	color: #303030;
 	background: #F2F2F2;
 }
-
-.markdown pre.light > code.nohighlight {
-	color: #303030;
+.markdown pre.light > code.language-java {
+	.hljs-meta {
+		color: #E45649;
+	}
+	.hljs-class .hljs-title {
+		color: #50A14F;
+		text-decoration: underline;
+	}
 }
+
+.markdown pre.light > code.yaml {
+	.hljs-bullet,
+	.hljs-number,
+	.hljs-string {
+		color: #383A42;
+	}
+	.hljs-array {
+		color: #50A14F;
+	}
+	.hljs-object {
+		color: #C18401;
+	}
+	.hljs-attr {
+		color: #50A14F;
+	}
+}
+.markdown pre.light {
+	.hljs,
+	.hljs-tag,
+	.hljs-subst {
+		color: #383A42;
+	}
+
+	.hljs-strong,
+	.hljs-emphasis {
+		color: #202020;
+	}
+
+	.hljs-bullet,
+	.hljs-quote,
+	.hljs-number,
+	.hljs-regexp,
+	.hljs-literal,
+	.hljs-link {
+		color: #986801;
+	}
+
+	.hljs-code,
+	.hljs-title,
+	.hljs-section,
+	.hljs-selector-class,
+	.hljs-attr {
+		color: #4078F2;
+	}
+
+	.hljs-strong {
+		font-weight: bold;
+	}
+
+	.hljs-emphasis {
+		font-style: italic;
+	}
+
+	.hljs-keyword,
+	.hljs-selector-tag,
+	.hljs-name {
+		color: #A626A4;
+	}
+
+	.hljs-symbol,
+	.hljs-attribute {
+		color: #C18401;
+	}
+
+	.hljs-params,
+	.hljs-class .hljs-title {
+		color: #383A42;
+	}
+
+	.hljs-string,
+	.hljs-type,
+	.hljs-built_in,
+	.hljs-builtin-name,
+	.hljs-selector-id,
+	.hljs-selector-attr,
+	.hljs-selector-pseudo,
+	.hljs-addition,
+	.hljs-variable,
+	.hljs-template-variable {
+		color: #50A14F;
+	}
+
+	.hljs-comment,
+	.hljs-deletion,
+	.hljs-meta {
+		color: #A0A1A7;
+	}
+}
+
 
 /*
  * smaller
@@ -228,6 +353,9 @@
 .markdown pre.scroll::-webkit-scrollbar-corner {
 	display: none;
 }
+/*
+ * scroll (dark)
+ */
 .markdown pre.scroll::-webkit-scrollbar-track {
 	border-top: 1px solid #3F403C;
 	background-color: #272822;
@@ -241,4 +369,21 @@
 }
 .markdown pre.scroll::-webkit-scrollbar-thumb:active {
 	background-color: #636460;
+}
+/*
+ * scroll (light)
+ */
+.markdown pre.light.scroll::-webkit-scrollbar-track {
+	border-top: 1px solid #E0E0E0;
+	background-color: #F2F2F2;
+}
+.markdown pre.light.scroll::-webkit-scrollbar-thumb {
+	border-top: 1px solid #b8b8b8;
+	background-color: #c1c1c1;
+}
+.markdown pre.light.scroll::-webkit-scrollbar-thumb:hover {
+	background-color: #a8a8a8;
+}
+.markdown pre.light.scroll::-webkit-scrollbar-thumb:active {
+	background-color: #787878;
 }
