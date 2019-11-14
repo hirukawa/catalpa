@@ -30,24 +30,23 @@ ul.pager > li.right {
 }
 // no icon
 ul.pager > li > a {
-	display: inline-block;
+	display: inline-table;
 	position: relative;
 	z-index: 1;
-	padding-top:     0.5em;
-	padding-bottom:  0.5em;
+	padding-top:     0.25em;
+	padding-bottom:  0.25em;
 	padding-left:    1.0em;
 	padding-right:   1.0em;
 	font-size: 92%;
-	line-height: 1rem;
-	border-radius: 1em;
+	line-height: 1.8;
+	border-radius: 1.2em;
 	color: @text-variant-color;
 	background-color: @secondary-color;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 	transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 }
 ul.pager > li > a > span.title {
-	display: inline-block;
-	vertical-align: middle;
+	display: table-cell;
 	text-align: left;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -73,7 +72,6 @@ ul.pager > li > a.previous:active {
 }
 ul.pager > li > a.previous::before {
 	content: '\276E\2002';
-	vertical-align: middle;
 }
 // next
 ul.pager > li > a.next {
@@ -88,7 +86,6 @@ ul.pager > li > a.next:active {
 }
 ul.pager > li > a.next::after {
 	content: '\2002\276F';
-	vertical-align: middle;
 }
 
 /*
@@ -101,6 +98,54 @@ ul.pager > li > a.next::after {
 }
 .default-button:hover {
 	color: @text-color;
+}
+
+
+/*
+ * SNS share button
+ */
+.sns-share a {
+	display: inline-block;
+	font-family: "Meiryo";
+	font-weight: bold;
+	font-size: 10px;
+	height: 20px;
+	line-height: 21px;
+	color: #FFFFFF;
+	border-radius: 3px;
+	background-repeat: no-repeat;
+	background-position: 6px center;
+	padding: 0 6px 0 22px;
+}
+.sns-share .hatena {
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAKCAYAAACALL/6AAAAQUlEQVR4AWP4jx0ccC/wYUDGMHEgAzcgpKEBKtFAkgYQJlbDARCmvR9AGNUmhBgJGhAYmx8OYBpC2A8HYIrRnQQAxQ9kGLI+CuYAAAAASUVORK5CYII=');
+	background-color: #00A4DE;
+}
+.sns-share .hatena:hover {
+	background-color: #0091C5;
+}
+.sns-share .hatena:after {
+	content: 'ブックマーク';
+}
+.sns-share .facebook {
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAR0lEQVR4AWNwL/Bh+P///4H/hMEBkFo0xYQ1MRAyEYZhgjg1gBSRoQHhP+I1oAEG7AoxMaUaCDuJIg0HSNBwAB50+DUgIhIAhj7TTxYmPB0AAAAASUVORK5CYII=');
+	background-color: #4267B2;
+}
+.sns-share .facebook:hover {
+	background-color: #365899;
+}
+.sns-share .facebook:after {
+	content: 'シェア'
+}
+.sns-share .twitter {
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAKCAYAAACALL/6AAAAUUlEQVR4AWJwL/ABNEIGKACDMAzc0/u0/CyjbIHSzZCDoGhOxWNIgs0zVud6JzDlCbQpMIQPve5Os0ICJKS31BYcUC/6mdlRsZKyhC1B7/3LDW/mUQIKxfEnAAAAAElFTkSuQmCC');
+	background-color: #1B95E0;
+}
+.sns-share .twitter:hover {
+	background-color: #0C7ABF;
+}
+.sns-share .twitter:after {
+	content: 'ツイート';
 }
 
 /*
