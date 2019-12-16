@@ -1,11 +1,15 @@
 apply plugin: 'eclipse'
 apply plugin: 'java'
 
-version = '0.7.6'
+version = '0.7.7'
 
 def defaultEncoding = 'UTF-8'
 tasks.withType(AbstractCompile).each { it.options.encoding = defaultEncoding }
 tasks.withType(GroovyCompile).each { it.groovyOptions.encoding = defaultEncoding }
+
+sourceSets.main.resources {
+	srcDirs = ['src/main/resources', 'src/main/java' ]
+}
 
 repositories {
 	jcenter()
@@ -39,20 +43,15 @@ dependencies {
 	compile 'net.osdn.util.io:auto-detect-reader:0.1.1'
 }
 
-defaultTasks 'clean', 'build', 'exewrap'
+defaultTasks 'clean', 'build', 'exewrap_x64'
 
 jar {
 	manifest {
 		attributes "Specification-Version": "${project.version}"
 		attributes "Main-Class": "net.osdn.catalpa.ui.javafx.Main"
 		attributes "Splashscreen-Image": "img/splash.gif"
-		attributes "Class-Path": configurations.runtime.collect { "lib/$it.name" }.join(' ')
+		attributes "Class-Path": sourceSets.main.runtimeClasspath.collect { "lib/$it.name" }.join(' ')
 	}
-	from('src/main/java') {
-		include '**/*.fxml'
-		include '**/*.css'
-	}
-	exclude('img/*.psd', 'ico/**', 'psd/**')
 }
 
 
@@ -75,7 +74,7 @@ task createJavaRuntime(type: Exec, dependsOn: ['jar', 'copyLibraries']) {
 	commandLine 'cmd', '/c', 'CreateJRE.bat', "${jar.archiveFile.get()}", "lib", "-client"
 }
 
-task exewrap(type: Exec, dependsOn: 'jar') {
+task exewrap_x64(type: Exec, dependsOn: 'jar') {
 	setGroup("build")
 	setDescription('Assembles the executable.')
 	executable "${projectDir}/exewrap.exe"
@@ -89,7 +88,7 @@ task exewrap(type: Exec, dependsOn: 'jar') {
 		"-L", "lib",
 		"-e", "SHARED",
 		"-j", "${jar.archiveFile.get()}",
-		"-i", "src/main/resources/ico/app.ico",
+		"-i", "etc/ico/app.ico",
 		"-o", "${buildDir}/package/${archivesBaseName}.exe",
 		"-d", "Catalpa",
 		"-p", "Catalpa",
