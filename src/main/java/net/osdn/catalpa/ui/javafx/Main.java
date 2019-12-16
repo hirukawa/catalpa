@@ -195,11 +195,8 @@ public class Main extends Application implements Initializable, ProgressObserver
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
 		
-		Image icon64 = new Image(getClass().getResourceAsStream("/img/app-icon-64px.png"));
-		//Image icon48 = new Image(getClass().getResourceAsStream("/img/app-icon-48px.png"));
-		//Image icon32 = new Image(getClass().getResourceAsStream("/img/app-icon-32px.png"));
-		//Image icon16 = new Image(getClass().getResourceAsStream("/img/app-icon-16px.png"));
-		primaryStage.getIcons().addAll(icon64);
+		Image icon48 = new Image(getClass().getResourceAsStream("/img/app-icon-48px.png"));
+		primaryStage.getIcons().addAll(icon48);
 		primaryStage.setTitle(getTitle());
 		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));

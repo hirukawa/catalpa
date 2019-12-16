@@ -139,6 +139,8 @@ public class JapaneseTextLayouter {
 		StringBuilder output = new StringBuilder(input.length());
 
 		boolean isInPreElement = false;
+		boolean isInScriptElement = false;
+		boolean isWordBreakable = false;
 		char previousChar = 0;
 		char currentChar = 0;
 		char nextChar = 0;
@@ -152,29 +154,37 @@ public class JapaneseTextLayouter {
 				tagName = tagName.substring(1);
 				isEndTag = true;
 			}
-			// PRE要素内はゼロ幅スペースを挿入しないようにスキップします。
+			// PRE要素内、SCRIPT要素内はゼロ幅スペースを挿入しないようにスキップします。
 			if(tagName.equals("PRE")) {
 				isInPreElement = !isEndTag;
 			}
-			if (HTML_TAGS.contains(tagName)) {
+			if(tagName.equals("SCRIPT")) {
+				isInScriptElement = !isEndTag;
+			}
+			boolean isHtmlTag = HTML_TAGS.contains(tagName);
+			if(isHtmlTag) {
 				// ADD CHARS BEFORE TAG
 				previousChar = 0;
 				for (int i = index; i < m.start(); i++) {
 					currentChar = input.charAt(i);
 					nextChar = (i + 1 < input.length()) ? input.charAt(i + 1) : 0;
-					if(!isInPreElement && canWrap(previousChar, currentChar, nextChar)) {
+					if(isWordBreakable && canWrap(previousChar, currentChar, nextChar)) {
 						output.append("<wbr>");
 					}
 					output.append(currentChar);
 					previousChar = currentChar;
 				}
 				output.append(m.group(0));
-			} else {
+			}
+
+			isWordBreakable = !isInPreElement && !isInScriptElement;
+
+			if (!isHtmlTag) {
 				previousChar = 0;
 				for (int i = index; i < m.end(); i++) {
 					currentChar = input.charAt(i);
 					nextChar = (i + 1 < input.length()) ? input.charAt(i + 1) : 0;
-					if(!isInPreElement && canWrap(previousChar, currentChar, nextChar)) {
+					if(isWordBreakable && canWrap(previousChar, currentChar, nextChar)) {
 						output.append("<wbr>");
 					}
 					output.append(currentChar);
@@ -189,7 +199,7 @@ public class JapaneseTextLayouter {
 			previousChar = currentChar;
 			currentChar = input.charAt(i);
 			nextChar = (i + 1 < input.length()) ? input.charAt(i + 1) : 0;
-			if(!isInPreElement && canWrap(previousChar, currentChar, nextChar)) {
+			if(isWordBreakable && canWrap(previousChar, currentChar, nextChar)) {
 				output.append("<wbr>");
 			}
 			output.append(currentChar);
