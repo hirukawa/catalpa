@@ -1,4 +1,4 @@
-.root {
+.dialog-pane > .content {
 	-fx-font-family: "Meiryo";
 	-fx-font-size: 12px;
 }
