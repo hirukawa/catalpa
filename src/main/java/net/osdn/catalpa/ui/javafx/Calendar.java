@@ -15,7 +15,6 @@ public class Calendar extends StackPane {
 		skin = new DatePickerSkin(datePicker);
 		Region node = (Region)skin.getPopupContent();
 		node.setEffect(null);
-		//node.setBackground(null);
 		getChildren().add(node);
 	}
 	

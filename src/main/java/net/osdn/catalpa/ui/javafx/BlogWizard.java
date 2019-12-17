@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -19,130 +18,114 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.regex.Matcher;
 
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogEvent;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.FlowPane;
-import javafx.stage.Modality;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
+import javafx.stage.Window;
 import net.osdn.catalpa.Catalpa;
 import net.osdn.catalpa.Context;
 import net.osdn.catalpa.addon.blog.BlogAddOn;
 import net.osdn.catalpa.addon.blog.Post;
 import net.osdn.catalpa.handler.YamlFrontMatterHandler;
 import net.osdn.util.io.AutoDetectReader;
+import net.osdn.util.javafx.fxml.Fxml;
+import net.osdn.util.javafx.scene.control.DialogEx;
 
-public class BlogWizard extends Stage implements Initializable {
+public class BlogWizard extends DialogEx<BlogWizard.InputData> {
 	public static char[] ILLEGAL_CHARACTERS = new char[] { '\\', '/', ':', '*', '?', '"', '<', '>', '|' };
 	
-	@FXML private Calendar  calendar;
-	@FXML private FlowPane  categories;
-	@FXML private TextField tfFilename;
-	@FXML private Button    btnSkip;
-	@FXML private Button    btnCreate;
-	
+	@FXML Calendar  calendar;
+	@FXML FlowPane  categories;
+	@FXML TextField tfFilename;
+	@FXML Button    btnSkip;
+	@FXML Button    btnCreate;
+	@FXML Toast     toast;
+
 	private Path inputPath;
-	private boolean isCreateRequested;
 
-	public BlogWizard(Stage owner, Path inputPath) throws IOException {
+	public BlogWizard(Window owner, Path inputPath) {
+
+		super(owner);
 		this.inputPath = inputPath;
-		
-		initModality(Modality.WINDOW_MODAL);
-		initOwner(owner);
-		setResizable(false);
-		
-		getIcons().addAll(owner.getIcons());
-		setTitle(inputPath + " - " + Main.getTitle());
 
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("BlogWizard.fxml"));
-		loader.setController(this);
-		Parent root = (Parent)loader.load();
+		Node content = Fxml.load(this);
+		getDialogPane().setContent(content);
 
-		Scene scene = new Scene(root);
-		root.layoutBoundsProperty().addListener(new ChangeListener<Bounds>() {
+		calendar.getDatePicker().setValue(LocalDate.now());
+		tfFilename.requestFocus();
+		btnSkip.setOnAction(wrap(this::btnSkip_onAction));
+		btnCreate.setOnAction(wrap(this::btnCreate_onAction));
+		btnCreate.disableProperty().bind(tfFilename.textProperty().isEmpty());
+		setResultConverter(param -> { return getResult(); });
+		setOnShown(wrap(this::dialog_onShown));
+
+		// ButtonTypes に何もボタンが追加されていないと、
+		// ダイアログ右上の×ボタンを押してもダイアログを閉じることができなくなります。
+		// ダイアログ右上の×ボタンでダイアログを閉じるためには
+		// ButtonType.CANCEL または ButtonType.CLOSE を追加する必要があります。
+		// しかし、ButtonTypes にボタンを追加すると、そのボタンがダイアログ下部に表示されてしまいます。
+		// 今回は ButtonTypes によって作成される既定のダイアログボタンを表示したくないので、
+		// ボタンバー（.button-barスタイルクラスで探すことができる）を取り除いてしまいます。
+		getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+		Node buttonBar = getDialogPane().lookup(".button-bar");
+		if(buttonBar != null) {
+			getDialogPane().getChildren().remove(buttonBar);
+		}
+	}
+
+	void dialog_onShown(DialogEvent event) {
+
+		Task<Set<Category>> task = new Task<Set<Category>>() {
 			@Override
-			public void changed(ObservableValue<? extends Bounds> observable,
-					Bounds oldValue, Bounds newValue) {
-				
-				final int X_END_MARGIN = 8;
-				final int Y_END_MARGIN = 40;
-				if(newValue.getWidth() > 0 && newValue.getHeight() > 0) {
-					double x = (owner.getX() + owner.getWidth() / 2) - ((newValue.getWidth() + X_END_MARGIN) / 2);
-					double y = (owner.getY() + owner.getHeight() / 2) - ((newValue.getHeight() + Y_END_MARGIN) / 2);
-					Rectangle2D workarea = Screen.getPrimary().getVisualBounds();
-					if(x + (newValue.getWidth() + X_END_MARGIN) > workarea.getMaxX()) {
-						x = workarea.getMaxX() - (newValue.getWidth() + X_END_MARGIN);
-					}
-					if(x < workarea.getMinX()) {
-						x = workarea.getMinX();
-					}
-					if(y + (newValue.getHeight() + Y_END_MARGIN) > workarea.getMaxY()) {
-						y = workarea.getMaxY() - (newValue.getHeight() + Y_END_MARGIN);
-					}
-					if(y < workarea.getMinY()) {
-						y = workarea.getMinY();
-					}
-					BlogWizard.this.setX(x);
-					BlogWizard.this.setY(y);
-					root.layoutBoundsProperty().removeListener(this);
+			protected Set<Category> call() throws Exception {
+				return getCategories(inputPath);
+			}
+		};
+		task.setOnSucceeded(workerStateEvent -> {
+			categories.getChildren().clear();
+
+			@SuppressWarnings("unchecked")
+			Set<Category> result = (Set<Category>)workerStateEvent.getSource().getValue();
+			if(result != null) {
+				String css = getClass().getResource("BlogWizard.css").toExternalForm();
+				for(Category category : result) {
+					ToggleButton tb = new ToggleButton(category.name);
+					tb.setUserData(category.id);
+					tb.getStylesheets().add(css);
+					tb.getStyleClass().clear();
+					tb.getStyleClass().add("category-button");
+					categories.getChildren().add(tb);
 				}
 			}
 		});
-		
-		calendar.getDatePicker().setValue(LocalDate.now());
-		tfFilename.requestFocus();
-		setScene(scene);
-		setOnShowing(event -> Platform.runLater(() -> BlogWizard.this.sizeToScene()));
-		setOnShown(windowEvent -> {
-			Task<Set<Category>> task = new Task<Set<Category>>() {
-				@Override
-				protected Set<Category> call() throws Exception {
-					return getCategories(inputPath);
-				}
-			};
-			task.setOnSucceeded(workerStateEvent -> {
-				categories.getChildren().clear();
-
-				@SuppressWarnings("unchecked")
-				Set<Category> result = (Set<Category>)workerStateEvent.getSource().getValue();
-				if(result != null) {
-					String css = getClass().getResource("BlogWizard.css").toExternalForm();
-					for(Category category : result) {
-						ToggleButton tb = new ToggleButton(category.name);
-						tb.setUserData(category.id);
-						tb.getStylesheets().add(css);
-						tb.getStyleClass().clear();
-						tb.getStyleClass().add("category-button");
-						categories.getChildren().add(tb);
-					}
-				}
-			});
-			new Thread(task).start();
-		});
+		new Thread(task).start();
 	}
-	
-	public InputData getInputData() throws IOException {
-		if(!isCreateRequested) {
-			return null;
+
+	void btnSkip_onAction(ActionEvent event) {
+		close();
+	}
+
+	void btnCreate_onAction(ActionEvent event) {
+		try {
+			setResult(getInputData());
+			close();
+		} catch(IOException e) {
+			tfFilename.requestFocus();
+			toast.show(Toast.RED, "エラー", e.getMessage(), Toast.SHORT);
 		}
-		
+	}
+
+	public InputData getInputData() throws IOException {
 		InputData data = new InputData();
 		
 		data.date = calendar.getDatePicker().getValue();
@@ -157,7 +140,7 @@ public class BlogWizard extends Stage implements Initializable {
 		}
 		for(char c : ILLEGAL_CHARACTERS) {
 			if(filename.indexOf(c) != -1) {
-				throw new IOException("ファイル名に使用できない文字 " + c + " が含まれています");
+				throw new IOException("ファイル名に使用できない文字 " + c + " が含まれています。");
 			}
 		}
 		data.file = inputPath.resolve(subdir).resolve(filename);
@@ -178,7 +161,7 @@ public class BlogWizard extends Stage implements Initializable {
 		return data;
 	}
 	
-	public void createNewPost(InputData data) throws Exception {
+	public void createNewPost(InputData data) throws IOException {
 		StringWriter writer = new StringWriter();
 		writer.write("---\n");
 		writer.write("draft:\r\n");
@@ -229,22 +212,6 @@ public class BlogWizard extends Stage implements Initializable {
 		Files.writeString(data.file, writer.toString(), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
 	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		btnSkip.setOnAction(this::btnSkip_onAction);
-		btnCreate.setOnAction(this::btnCreate_onAction);
-		btnCreate.disableProperty().bind(tfFilename.textProperty().isEmpty());
-	}
-	
-	protected void btnSkip_onAction(ActionEvent event) {
-		close();
-	}
-	
-	protected void btnCreate_onAction(ActionEvent event) {
-		isCreateRequested = true;
-		close();
-	}
-	
 	public static boolean isApplicable(Path inputPath) throws IOException {
 		boolean isApplicable = false;
 		

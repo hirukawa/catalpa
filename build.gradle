@@ -1,4 +1,3 @@
-apply plugin: 'eclipse'
 apply plugin: 'java'
 
 version = '0.7.7'
@@ -51,6 +50,11 @@ jar {
 		attributes "Main-Class": "net.osdn.catalpa.ui.javafx.Main"
 		attributes "Splashscreen-Image": "img/splash.gif"
 		attributes "Class-Path": sourceSets.main.runtimeClasspath.collect { "lib/$it.name" }.join(' ')
+	}
+	into('net/osdn/catalpa/ui/javafx') {
+		from("${projectDir}") {
+			include('LICENSE.txt')
+		}
 	}
 }
 

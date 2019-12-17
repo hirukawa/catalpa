@@ -39,6 +39,14 @@
 									mnemonicParsing="false"/>
 							</items>
 						</Menu>
+						<Menu fx:id="menuHelp" text="ヘルプ">
+							<MenuItem
+								fx:id="menuHelpAbout"
+								text="このソフトウェアについて..."
+								mnemonicParsing="false">
+								<graphic><FontIcon iconLiteral="mdi-information"/></graphic>
+							</MenuItem>
+						</Menu>
 					</menus>
 				</MenuBar>
 				<Region styleClass="menu-bar" HBox.hgrow="ALWAYS"/>
