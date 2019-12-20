@@ -1,11 +1,9 @@
 package net.osdn.catalpa.ui.javafx;
 
 import java.awt.Desktop;
-import java.awt.SplashScreen;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.BindException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,25 +14,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.prefs.Preferences;
 
 import freemarker.template.TemplateException;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -47,9 +35,7 @@ import javafx.beans.property.StringProperty;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -70,9 +56,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import net.osdn.catalpa.Catalpa;
 import net.osdn.catalpa.ProgressObserver;
@@ -82,6 +66,7 @@ import net.osdn.catalpa.upload.UploadConfigFactory;
 import net.osdn.util.javafx.application.FxApplicationThread;
 import net.osdn.util.javafx.application.SingletonApplication;
 import net.osdn.util.javafx.concurrent.Async;
+import net.osdn.util.javafx.event.SilentEventHandler;
 import net.osdn.util.javafx.fxml.Fxml;
 import net.osdn.util.javafx.stage.StageUtil;
 
@@ -633,17 +618,13 @@ public class Main extends SingletonApplication implements Initializable, Progres
 		int i = menuFile.getItems().size() - 1;
 		for(String p : recentFiles) {
 			MenuItem item = new MenuItem(p);
-			item.setOnAction(event -> {
+			item.setOnAction(SilentEventHandler.wrap(event -> {
 				toast.hide();
 				String text = ((MenuItem)event.getSource()).getText();
-				try {
-					if(prepareOpening(Paths.get(text))) {
-						open(Paths.get(text));
-					}
-				} catch (IOException e) {
-					showException(e);
+				if(prepareOpening(Paths.get(text))) {
+					open(Paths.get(text));
 				}
-			});
+			}));
 			item.setUserData("RECENT_FILES");
 			menuFile.getItems().add(i++, item);
 		}
