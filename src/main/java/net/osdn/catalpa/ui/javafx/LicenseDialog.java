@@ -44,6 +44,11 @@ public class LicenseDialog extends DialogEx<Void> {
 
 		Node[] nodes = build(license);
 		textFlow.getChildren().addAll(nodes);
+
+		// ダイアログが表示されるまで「閉じる」ボタンを無効にしておきます。
+		// これでtextFlowに初期フォーカスが当たるようになります。
+		getDialogPane().lookupButton(ButtonType.CLOSE).disableProperty().bind(
+				getDialogPane().getContent().opacityProperty().isEqualTo(0.0, 0));
 	}
 
 	@FXML ScrollPane scrollPane;
