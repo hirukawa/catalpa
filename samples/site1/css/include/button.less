@@ -92,11 +92,29 @@ ul.pager > li > a.next::after {
  * default button
  */
 .default-button {
-	appearance: button; -webkit-appearance: button; -moz-appearance: button;
+	display: inline-flex;
+	position: relative;
+	z-index: 1;
+	align-items: center;
 	padding: 0.5em 1.0em;
-	color: @text-color;
+	font-size: 1.0rem;
+	line-height: 1.4;
+	border: 1px solid #a5a5a5;
+	border-radius: 0.2em;
+	background: linear-gradient(to bottom, #fafafa, #efefef);
+	box-shadow: -1px -1px 0px 0px rgba(0, 0, 0, 0.12) inset, 1px 1px 1px 0px white inset;
 }
 .default-button:hover {
+	border: 1px solid #787878;
+	box-shadow: -1px -1px 0px 0px rgba(0, 0, 0, 0.12) inset, 1px 1px 1px 0px white inset, 0 1px 3px rgba(0,0,0,0.24);
+}
+.default-button:active {
+	background: linear-gradient(to top, #fafafa, #efefef);
+	box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.5) inset;
+}
+.default-button,
+.default-button:hover,
+.default-button:visited {
 	color: @text-color;
 }
 
