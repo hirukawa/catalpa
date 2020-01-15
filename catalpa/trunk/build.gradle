@@ -1,6 +1,12 @@
 apply plugin: 'java'
 
-version = '0.7.7'
+version = '0.8'
+
+tasks.withType(JavaCompile) {
+	sourceCompatibility = 11
+	targetCompatibility = 11
+	options.compilerArgs << '-Xlint:all'
+}
 
 def defaultEncoding = 'UTF-8'
 tasks.withType(AbstractCompile).each { it.options.encoding = defaultEncoding }
@@ -19,14 +25,14 @@ dependencies {
 		includes: ['**/*.jar'],
 		excludes: ['**/*-sources.jar', '**/*-javadoc.jar'])
 		
-	compile 'com.vladsch.flexmark:flexmark:0.50.40'
-	compile 'com.vladsch.flexmark:flexmark-ext-attributes:0.50.40'
-	compile 'com.vladsch.flexmark:flexmark-ext-definition:0.50.40'
-	compile 'com.vladsch.flexmark:flexmark-ext-tables:0.50.40'
-	compile 'com.vladsch.flexmark:flexmark-ext-typographic:0.50.40'
-	compile 'com.vladsch.flexmark:flexmark-ext-wikilink:0.50.40'
-	compile 'com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.50.40'
-	compile 'com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.50.40'
+	compile 'com.vladsch.flexmark:flexmark:0.50.48'
+	compile 'com.vladsch.flexmark:flexmark-ext-attributes:0.50.48'
+	compile 'com.vladsch.flexmark:flexmark-ext-definition:0.50.48'
+	compile 'com.vladsch.flexmark:flexmark-ext-tables:0.50.48'
+	compile 'com.vladsch.flexmark:flexmark-ext-typographic:0.50.48'
+	compile 'com.vladsch.flexmark:flexmark-ext-wikilink:0.50.48'
+	compile 'com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.50.48'
+	compile 'com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.50.48'
 	
 	compile 'com.github.sommeri:less4j:1.17.2'
 	compile 'org.freemarker:freemarker:2.3.29'
@@ -37,9 +43,10 @@ dependencies {
 	
 	compile 'com.github.luccappellaro:jzopfli:0.0.4'
 
-	compile 'net.osdn.blogs.flexmark.ext:flexmark-ext-highlight:0.2.5'
-	compile 'net.osdn.blogs.flexmark.ext:flexmark-ext-inline-tags:0.1.4'
+	compile 'net.osdn.blogs.flexmark.ext:flexmark-ext-highlight:0.2.6'
+	compile 'net.osdn.blogs.flexmark.ext:flexmark-ext-inline-tags:0.1.5'
 	compile 'net.osdn.util.io:auto-detect-reader:0.1.1'
+	compile 'net.osdn.util.rest.client:rest-client-util:0.2.7'
 }
 
 defaultTasks 'clean', 'build', 'exewrap_x64'

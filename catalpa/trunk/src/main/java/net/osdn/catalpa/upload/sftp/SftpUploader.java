@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,12 +42,12 @@ public class SftpUploader {
 		
 		jsch = new JSch();
 		
-		String prvkey = config.getPrivateKeyFilePath();
+		Path prvkey = config.getPrivateKeyFilePath();
 		String passphrase = config.getPassphrase();
 		if(prvkey != null && passphrase != null) {
-			jsch.addIdentity(prvkey, passphrase);
+			jsch.addIdentity(prvkey.toString(), passphrase);
 		} else if(prvkey != null) {
-			jsch.addIdentity(prvkey);
+			jsch.addIdentity(prvkey.toString());
 		}
 		
 		session = jsch.getSession(config.getUsername(), config.getHost(), config.getPort());
@@ -83,9 +84,7 @@ public class SftpUploader {
 		this.observer.setText("アップロードの準備をしています…");
 		
 		int uploadCount = 0;
-		System.out.println("localDirectory=" + localDirectory.getAbsolutePath());
-		System.out.println("remoteDirectory=" + remoteDirectory);
-		
+
 		int localDirectoryLength = (localDirectory.getAbsolutePath() + "\\").length();
 		
 		Map<String, Long> index = getUploadIndex(remoteDirectory);
@@ -115,17 +114,15 @@ public class SftpUploader {
 		maxProgress = entries.size() + 1;
 		
 		for(FileEntry entry : entries) {
-			observer.setProgress(++progress / (double)maxProgress);
-			observer.setText(entry.remoteFile.substring(remoteDirectory.length()));
-			
-			System.out.println(entry.localFile + " -> " + entry.remoteFile);
+			this.observer.setProgress(++progress / (double)maxProgress);
+			this.observer.setText(entry.remoteFile.substring(remoteDirectory.length()));
 			put(entry.localFile, entry.remoteFile);
 			uploadCount++;
 			index.put(entry.remoteFile, entry.localHash);
 		}
 		
-		observer.setProgress(++progress / (double)maxProgress);
-		observer.setText("アップロード管理用インデックスを更新しています…");
+		this.observer.setProgress(++progress / (double)maxProgress);
+		this.observer.setText("アップロード管理用インデックスを更新しています…");
 		putUploadIndex(remoteDirectory, index);
 		
 		return uploadCount;

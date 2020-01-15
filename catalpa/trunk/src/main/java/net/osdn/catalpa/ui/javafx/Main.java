@@ -3,17 +3,20 @@ package net.osdn.catalpa.ui.javafx;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.math.BigInteger;
 import java.net.BindException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -136,12 +139,8 @@ public class Main extends SingletonApplication implements Initializable, Progres
 			}
 			@Override
 			protected String computeValue() {
-				try {
-					return (inputPath.get() != null ? inputPath.get().toRealPath() + " - " : "")
+				return (inputPath.get() != null ? inputPath.get().getFileName() + " - " : "")
 							+ APPLICATION_NAME + " " + APPLICATION_VERSION;
-				} catch(IOException e) {
-					throw new UncheckedIOException(e);
-				}
 			}
 		});
 
@@ -153,6 +152,12 @@ public class Main extends SingletonApplication implements Initializable, Progres
 
 		StageUtil.setRestorable(primaryStage, Preferences.userNodeForPackage(getClass()));
 
+		primaryStage.showingProperty().addListener((observable, oldValue, newValue) -> {
+			if (oldValue == true && newValue == false) {
+				Platform.exit();
+				System.exit(0);
+			}
+		});
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.show();
@@ -180,6 +185,10 @@ public class Main extends SingletonApplication implements Initializable, Progres
 		Platform.runLater(()-> {
 			String title = e.getClass().getName();
 			String message = e.getLocalizedMessage();
+
+			if(e instanceof ToastMessage) {
+				title = ((ToastMessage)e).getTitle();
+			}
 
 			if(e instanceof TemplateException) {
 				int i = message.indexOf("\n----\n");
@@ -361,7 +370,15 @@ public class Main extends SingletonApplication implements Initializable, Progres
 
 		DirectoryChooser dc = new DirectoryChooser();
 		dc.setTitle("名前を付けて保存");
-		String s = preferences.get("lastSaveDirectory_" + inputPath, null);
+
+		String key = inputPath.get().getFileName().toString();
+		try {
+			key = String.format("%032X", new BigInteger(1,	MessageDigest.getInstance("MD5").digest(
+					inputPath.get().toString().getBytes(StandardCharsets.UTF_8))));
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		String s = preferences.get("lastSaveDirectory_" + key, null);
 		if(s == null) {
 			File defaultDirectory = inputPath.get().resolve("htdocs").toFile();
 			if(defaultDirectory.exists() && defaultDirectory.isDirectory()) {
@@ -379,7 +396,7 @@ public class Main extends SingletonApplication implements Initializable, Progres
 		}
 		File dir = dc.showDialog(getPrimaryStage());
 		if(dir != null) {
-			preferences.put("lastSaveDirectory_" + inputPath, dir.getAbsolutePath());
+			preferences.put("lastSaveDirectory_" + key, dir.getAbsolutePath());
 			save(inputPath.get(), dir.toPath());
 		}
 	}
