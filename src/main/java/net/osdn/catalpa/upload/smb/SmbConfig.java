@@ -1,12 +1,9 @@
 package net.osdn.catalpa.upload.smb;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.util.Map;
 
 import net.osdn.catalpa.ProgressObserver;
 import net.osdn.catalpa.upload.UploadConfig;
-import net.osdn.catalpa.upload.UploadType;
 
 /*
  * config.yml には以下のような接続設定を記述します。
@@ -22,47 +19,16 @@ import net.osdn.catalpa.upload.UploadType;
  * 
  */
 
-public class SmbConfig implements UploadConfig {
+public class SmbConfig extends UploadConfig {
 	
 	private String path;
 	private String domain;
 	private String username;
 	private String password;
 
-	public SmbConfig(File dir, Map<?, ?> map, Path mydataPath) {
-		Object object;
-		
-		object = map.get("path");
-		if(object instanceof String) {
-			this.path = (String)object;
-			this.path = this.path.replace('\\', '/');
-			
-			if(!this.path.endsWith("/")) {
-				this.path += "/";
-			}
-		}
-		
-		object = map.get("domain");
-		if(object instanceof String) {
-			this.domain = (String)object;
-		}
-		
-		object = map.get("username");
-		if(object instanceof String) {
-			this.username = (String)object;
-		}
-		
-		object = map.get("password");
-		if(object instanceof String) {
-			this.password = (String)object;
-		}
+	public SmbConfig() {
 	}
-	
-	@Override
-	public UploadType getType() {
-		return UploadType.Smb;
-	}
-	
+
 	public String getPath() {
 		return this.path;
 	}
@@ -79,8 +45,38 @@ public class SmbConfig implements UploadConfig {
 		return this.password;
 	}
 
+	private void initialize() {
+		String s;
+
+		s = getValueAsString("path");
+		if(s == null) {
+			throw new RuntimeException("path not found");
+		}
+		this.path = s;
+		if(!this.path.endsWith("/")) {
+			this.path = "/";
+		}
+
+		s = getValueAsString("domain");
+		if(s != null) {
+			this.domain = s;
+		}
+
+		s = getValueAsString("username");
+		if(s != null) {
+			this.username = s;
+		}
+
+		s = getValueAsString("password");
+		if(s != null) {
+			this.password = s;
+		}
+	}
+
 	@Override
 	public int upload(File dir, ProgressObserver observer) throws Exception {
+		initialize();
+
 		int count = 0;
 		SmbUploader uploader = new SmbUploader(this);
 		count = uploader.upload(dir, observer);

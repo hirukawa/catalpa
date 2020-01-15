@@ -23,7 +23,7 @@ import javafx.concurrent.Task;
 
 public class FileWatchService extends ScheduledService<Path[]> {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	private static final Kind<Path>[] events = new Kind[] {
 		StandardWatchEventKinds.ENTRY_CREATE,
 		StandardWatchEventKinds.ENTRY_DELETE,

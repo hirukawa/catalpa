@@ -1,4 +1,4 @@
-(C) 2019 HIRUKAWA Ryo
+(C) 2019-2020 HIRUKAWA Ryo
 
 本ソフトウェアおよび関連するドキュメント（以下「本ソフトウェア」）のコピーを取
 得するすべての人に、本ソフトウェアを無制限に扱うことを無償で許可します。これに
@@ -112,6 +112,25 @@
   https://www.mozilla.org/en-US/MPL/
 
 
+* jzopfli
+  https://github.com/LucCappellaro/jzopfli
+
+  Copyright 2011 Google Inc. All Rights Reserved.
+
+  Licensed under the Apache License, Version 2.0
+  http://www.apache.org/licenses/LICENSE-2.0
+
+
+* brotli
+  https://github.com/google/brotli
+
+
+  Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors.
+  
+  google/brotli is licensed under the MIT License.
+  https://github.com/google/brotli/blob/master/LICENSE
+
+
 * jcifs
   https://www.jcifs.org/
 
@@ -129,4 +148,24 @@
 
   JSch is licensed under BSD style license.
   http://www.jcraft.com/jsch/LICENSE.txt
+
+
+* Jackson  databind, annotations, core
+  https://github.com/FasterXML/jackson-databind
+  https://github.com/FasterXML/jackson-annotations
+  https://github.com/FasterXML/jackson-core
+
+  Licensed under Apache License 2.0.
+  https://github.com/FasterXML/jackson-databind/blob/master/LICENSE
+  https://github.com/FasterXML/jackson-annotations/blob/master/LICENSE
+  https://github.com/FasterXML/jackson-core/blob/master/LICENSE
+
+
+* okhttp
+  https://square.github.io/okhttp/
+
+  Copyright 2019 Square, Inc.
+  
+  Licensed under the Apache License, Version 2.0
+  https://square.github.io/okhttp/#license
 

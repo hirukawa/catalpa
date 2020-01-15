@@ -1,11 +1,12 @@
 package net.osdn.catalpa.upload.sftp;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
@@ -13,81 +14,21 @@ import com.jcraft.jsch.UserInfo;
 
 import net.osdn.catalpa.ProgressObserver;
 import net.osdn.catalpa.upload.UploadConfig;
-import net.osdn.catalpa.upload.UploadType;
 
-public class SftpConfig implements UploadConfig {
+public class SftpConfig extends UploadConfig {
 	
 	private String host;
-	private int port = 22;
+	private int    port = 22;
 	private String path;
-	private String privateKeyFilePath;
+	private Path   privateKeyFilePath;
 	private String passphrase;
 	private String username;
 	private String password;
 	private UserInfo userInfo;
 
-	public SftpConfig(File dir, Map<?, ?> map, Path mydataPath) {
-		Object object;
-		
-		object = map.get("host");
-		if(object instanceof String) {
-			this.host = (String)object;
-		}
-		
-		object = map.get("port");
-		if(object != null) {
-			try {
-				this.port = Integer.parseInt(object.toString());
-			} catch(Exception e) {}
-		}
-		
-		object = map.get("path");
-		if(object instanceof String) {
-			this.path = (String)object;
-			if(!this.path.endsWith("/")) {
-				this.path += "/";
-			}
-		}
+	public SftpConfig() {
+	}
 
-		object = map.get("privatekey");
-		if(object instanceof String) {
-			String privatekey = ((String)object).replace('/', '\\');
-			if(privatekey.length() >= 3 && privatekey.substring(1, 3).equals(":\\")) {
-				this.privateKeyFilePath = privatekey;
-			} else {
-				this.privateKeyFilePath = dir.getAbsolutePath() + "\\" + privatekey;
-				
-				if(mydataPath != null) {
-					if(!Files.exists(Paths.get(this.privateKeyFilePath))) {
-						Path p = mydataPath.resolve(privatekey);
-						if(Files.exists(p)) {
-							this.privateKeyFilePath = p.toString();
-						}
-					}
-				}
-			}
-		}
-		
-		object = map.get("passphrase");
-		if(object instanceof String) {
-			this.passphrase = (String)object;
-		}
-		
-		object = map.get("username");
-		if(object instanceof String) {
-			this.username = (String)object;
-		}
-		
-		object = map.get("password");
-		if(object instanceof String) {
-			this.password = (String)object;
-		}
-	}
-	
-	public UploadType getType() {
-		return UploadType.Sftp;
-	}
-	
 	public String getHost() {
 		return this.host;
 	}
@@ -100,7 +41,7 @@ public class SftpConfig implements UploadConfig {
 		return this.path;
 	}
 	
-	public String getPrivateKeyFilePath() {
+	public Path getPrivateKeyFilePath() {
 		return this.privateKeyFilePath;
 	}
 	
@@ -123,12 +64,66 @@ public class SftpConfig implements UploadConfig {
 		return this.userInfo;
 	}
 
+	private void initialize() {
+		String s;
+		Integer i;
+
+		s = getValueAsString("host");
+		if(s == null) {
+			throw new RuntimeException("host not found");
+		}
+		this.host = s;
+
+		i = getValueAsInteger("port");
+		if(i != null) {
+			this.port = i;
+		}
+
+		s = getValueAsString("path");
+		if(s == null) {
+			throw new RuntimeException("path not found");
+		}
+		this.path = s;
+		if(!this.path.endsWith("/")) {
+			this.path += "/";
+		}
+
+		s = getValueAsString("privateKey");
+		if(s != null) {
+			String privatekey = s.replace('/', '\\');
+			if(privatekey.length() >= 3 && privatekey.substring(1, 3).equals(":\\")) {
+				this.privateKeyFilePath = Paths.get(privatekey).toAbsolutePath();
+			} else {
+				Path p = getFolderPath("privateKey");
+				this.privateKeyFilePath = p.resolve(privatekey).toAbsolutePath();
+			}
+			if(!Files.exists(this.privateKeyFilePath)) {
+				throw new UncheckedIOException(new FileNotFoundException(this.privateKeyFilePath.toString()));
+			}
+		}
+
+		s = getValueAsString("passphrase");
+		if(s != null) {
+			this.passphrase = s;
+		}
+
+		s = getValueAsString("username");
+		if(s != null) {
+			this.username = s;
+		}
+
+		s = getValueAsString("password");
+		if(s != null) {
+			this.password = s;
+		}
+	}
+
 	@Override
 	public int upload(File dir, ProgressObserver observer) throws JSchException, SftpException, IOException {
-		System.out.println("upload: " + dir);
-		
-		int count = 0;
+		initialize();
+
 		SftpUploader uploader = new SftpUploader(this);
+		int count = 0;
 		try {
 			uploader.connect();
 			count = uploader.upload(dir, observer);

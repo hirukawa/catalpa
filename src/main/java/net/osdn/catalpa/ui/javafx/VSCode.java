@@ -19,7 +19,7 @@ public class VSCode {
 	}
 	
 	public interface Shlwapi extends Library {
-		Shlwapi INSTANCE = (Shlwapi)Native.load("shlwapi", Shlwapi.class);
+		Shlwapi INSTANCE = Native.load("shlwapi", Shlwapi.class);
 		
 		boolean PathFindOnPathW(char[] pszPath, Pointer ppszOtherDirs);
     }
