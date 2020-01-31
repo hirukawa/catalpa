@@ -37,6 +37,17 @@ public abstract class UploadConfig {
 			if(obj != null) {
 				return entry.getKey();
 			}
+			// 大文字小文字が異なるキーも対象として検索します。
+			if(name != null) {
+				for(String key : map.keySet()) {
+					if(name.equalsIgnoreCase(key)) {
+						obj = map.get(key);
+						if(obj != null) {
+							return entry.getKey();
+						}
+					}
+				}
+			}
 		}
 		return null;
 	}
