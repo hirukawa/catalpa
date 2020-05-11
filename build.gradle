@@ -1,6 +1,6 @@
 apply plugin: 'java'
 
-version = '0.8'
+version = '0.8.1'
 
 tasks.withType(JavaCompile) {
 	sourceCompatibility = 11
@@ -48,7 +48,7 @@ dependencies {
 	compile 'net.osdn.util.rest.client:rest-client-util:0.2.7'
 }
 
-defaultTasks 'clean', 'build', 'exewrap_x64'
+defaultTasks 'clean', 'build', 'exewrap'
 
 jar {
 	manifest {
@@ -84,17 +84,14 @@ task createJavaRuntime(type: Exec, dependsOn: ['jar', 'copyLibraries']) {
 	commandLine 'cmd', '/c', 'CreateJRE.bat', "${jar.archiveFile.get()}", "lib", "-client"
 }
 
-task exewrap_x64(type: Exec, dependsOn: 'jar') {
+task exewrap(type: Exec, dependsOn: 'jar') {
 	setGroup("build")
 	setDescription('Assembles the executable.')
-	executable "${projectDir}/exewrap.exe"
+	executable "${projectDir}/etc/exewrap.exe"
 	args "-A", "x64",
 		"-g",
 		"-t", "11",
-		//for ClientVM
-		"-a", "-XX:TieredStopAtLevel=1 -XX:+UseSerialGC -XX:CICompilerCount=1 -Xverify:none -Xms128m",
-		//for ServerVM
-		//"-a", "-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:+UseSerialGC -XX:CICompilerCount=1 -Xverify:none -Xms128m",
+		"-a", "-XX:TieredStopAtLevel=1 -XX:+UseSerialGC -XX:CICompilerCount=1 -Xverify:none -Xms128m -Xmx1024m",
 		"-L", "lib",
 		"-e", "SHARED",
 		"-j", "${jar.archiveFile.get()}",
@@ -102,7 +99,7 @@ task exewrap_x64(type: Exec, dependsOn: 'jar') {
 		"-o", "${buildDir}/package/${archivesBaseName}.exe",
 		"-d", "Catalpa",
 		"-p", "Catalpa",
-		"-c", "(C) 2019 HIRUKAWA Ryo",
+		"-c", "(C) 2019-2020 HIRUKAWA Ryo",
 		"-V", "${version}",
 		"-v", "${version}"
 }

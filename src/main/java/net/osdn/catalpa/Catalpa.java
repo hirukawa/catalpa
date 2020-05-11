@@ -105,10 +105,16 @@ public class Catalpa {
 	private List<String> excludePrefixes = Arrays.asList(new String[] {
 		"_"
 	});
-	private List<String> execludeSuffixes = Arrays.asList(new String[] {
+	private List<String> excludeSuffixes = Arrays.asList(new String[] {
 		".ppk"	
 	});
-	
+	/** 出力フォルダーに必ずファイル名のリストです。
+	 * ここに記載されているファイルは excludePrefixes, excludeSuffixes よりも優先されます。
+	 */
+	private List<String> includeFileNames = new ArrayList<>(Arrays.asList(new String[] {
+		"_redirects" // Netlifyのリダイレクト定義ファイル
+	}));
+
 	private AddOn addon;
 	private Configuration freeMarker;
 	private List<SitemapItem> sitemap = new ArrayList<SitemapItem>();
@@ -387,6 +393,11 @@ public class Catalpa {
 			return true;
 		}
 		String name = path.getFileName().toString().toLowerCase();
+		for(String i : includeFileNames) {
+			if(name.equals(i)) {
+				return false;
+			}
+		}
 		for(String d : excludeFileNames) {
 			if(name.equals(d)) {
 				return true;
@@ -397,7 +408,7 @@ public class Catalpa {
 				return true;
 			}
 		}
-		for(String s : execludeSuffixes) {
+		for(String s : excludeSuffixes) {
 			if(name.endsWith(s)) {
 				return true;
 			}
