@@ -21,31 +21,31 @@ repositories {
 }
 
 dependencies {
-	compile fileTree(dir: 'lib',
+	implementation fileTree(dir: 'lib',
 		includes: ['**/*.jar'],
 		excludes: ['**/*-sources.jar', '**/*-javadoc.jar'])
-		
-	compile 'com.vladsch.flexmark:flexmark:0.50.50'
-	compile 'com.vladsch.flexmark:flexmark-ext-attributes:0.50.50'
-	compile 'com.vladsch.flexmark:flexmark-ext-definition:0.50.50'
-	compile 'com.vladsch.flexmark:flexmark-ext-tables:0.50.50'
-	compile 'com.vladsch.flexmark:flexmark-ext-typographic:0.50.50'
-	compile 'com.vladsch.flexmark:flexmark-ext-wikilink:0.50.50'
-	compile 'com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.50.50'
-	compile 'com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.50.50'
-	
-	compile 'com.github.sommeri:less4j:1.17.2'
-	compile 'org.freemarker:freemarker:2.3.29'
-	compile 'org.nanohttpd:nanohttpd:2.3.1'
-	compile 'net.java.dev.jna:jna:5.5.0'
-	compile 'org.kordamp.ikonli:ikonli-javafx:11.1.0'
-	compile 'org.kordamp.ikonli:ikonli-materialdesign-pack:11.1.0'
-	compile 'com.github.luccappellaro:jzopfli:0.0.4'
 
-	compile 'net.osdn.blogs.flexmark.ext:flexmark-ext-highlight:0.2.7'
-	compile 'net.osdn.blogs.flexmark.ext:flexmark-ext-inline-tags:0.1.6'
-	compile 'net.osdn.util.io:auto-detect-reader:0.1.1'
-	compile 'net.osdn.util.rest.client:rest-client-util:0.2.7'
+	implementation 'com.vladsch.flexmark:flexmark:0.50.50'
+	implementation 'com.vladsch.flexmark:flexmark-ext-attributes:0.50.50'
+	implementation 'com.vladsch.flexmark:flexmark-ext-definition:0.50.50'
+	implementation 'com.vladsch.flexmark:flexmark-ext-tables:0.50.50'
+	implementation 'com.vladsch.flexmark:flexmark-ext-typographic:0.50.50'
+	implementation 'com.vladsch.flexmark:flexmark-ext-wikilink:0.50.50'
+	implementation 'com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.50.50'
+	implementation 'com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.50.50'
+
+	implementation 'com.github.sommeri:less4j:1.17.2'
+	implementation 'org.freemarker:freemarker:2.3.29'
+	implementation 'org.nanohttpd:nanohttpd:2.3.1'
+	implementation 'net.java.dev.jna:jna:5.5.0'
+	implementation 'org.kordamp.ikonli:ikonli-javafx:11.1.0'
+	implementation 'org.kordamp.ikonli:ikonli-materialdesign-pack:11.1.0'
+	implementation 'com.github.luccappellaro:jzopfli:0.0.4'
+
+	implementation 'net.osdn.blogs.flexmark.ext:flexmark-ext-highlight:0.2.7'
+	implementation 'net.osdn.blogs.flexmark.ext:flexmark-ext-inline-tags:0.1.6'
+	implementation 'net.osdn.util.io:auto-detect-reader:0.1.1'
+	implementation 'net.osdn.util.rest.client:rest-client-util:0.2.7'
 }
 
 defaultTasks 'clean', 'build', 'exewrap'
