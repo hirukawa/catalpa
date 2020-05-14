@@ -78,7 +78,7 @@ public class Main extends SingletonApplication implements Initializable, Progres
 	public static final String APPLICATION_NAME = "Catalpa";
 	public static final String APPLICATION_VERSION;
 
-	private static final String MARKDOWN_CHEAT_SHEET_URL = "https://catalpa.osdn.jp/markdown.html";
+	private static final String MARKDOWN_CHEAT_SHEET_URL = "https://catalpa.oss.onl/markdown.html";
 
 	static {
 		System.setProperty("org.freemarker.loggerLibrary", "none");
