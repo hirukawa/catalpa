@@ -90,13 +90,13 @@ public class LineDividableTablePreProcessor implements ParagraphPreProcessor {
 	public static class Factory implements ParagraphPreProcessorFactory {
 
 		@Override
-		public Set<? extends Class<? extends ParagraphPreProcessorFactory>> getAfterDependents() {
+		public Set<Class<?>> getAfterDependents() {
 			return null;
 		}
 
 		@Override
-		public Set<? extends Class<? extends ParagraphPreProcessorFactory>> getBeforeDependents() {
-            Set<Class<? extends ParagraphPreProcessorFactory>> set = new HashSet<Class<? extends ParagraphPreProcessorFactory>>();
+		public Set<Class<?>> getBeforeDependents() {
+            Set<Class<?>> set = new HashSet<>();
             ParagraphPreProcessorFactory pf = TableParagraphPreProcessor.Factory();
             set.add(pf.getClass());
             return set;
