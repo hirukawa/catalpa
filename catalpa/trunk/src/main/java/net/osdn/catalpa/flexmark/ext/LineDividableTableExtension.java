@@ -2,8 +2,8 @@ package net.osdn.catalpa.flexmark.ext;
 
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.parser.Parser.Builder;
-import com.vladsch.flexmark.util.builder.Extension;
 import com.vladsch.flexmark.util.data.MutableDataHolder;
+import com.vladsch.flexmark.util.misc.Extension;
 
 public class LineDividableTableExtension implements Parser.ParserExtension {
 

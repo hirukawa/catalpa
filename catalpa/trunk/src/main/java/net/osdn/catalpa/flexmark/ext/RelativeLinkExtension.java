@@ -6,10 +6,10 @@ import com.vladsch.flexmark.html.LinkResolver;
 import com.vladsch.flexmark.html.LinkResolverFactory;
 import com.vladsch.flexmark.html.HtmlRenderer.Builder;
 import com.vladsch.flexmark.html.HtmlRenderer.HtmlRendererExtension;
-import com.vladsch.flexmark.html.renderer.LinkResolverContext;
-import com.vladsch.flexmark.util.builder.Extension;
+import com.vladsch.flexmark.html.renderer.LinkResolverBasicContext;
 import com.vladsch.flexmark.util.data.DataKey;
 import com.vladsch.flexmark.util.data.MutableDataHolder;
+import com.vladsch.flexmark.util.misc.Extension;
 
 public class RelativeLinkExtension implements HtmlRendererExtension {
     public static final DataKey<String> RELATIVE_URL_PREFIX = new DataKey<String>("RELATIVE_URL_PREFIX", "");
@@ -33,12 +33,12 @@ public class RelativeLinkExtension implements HtmlRendererExtension {
 	private static class RelativeLinkResolverFactory implements LinkResolverFactory {
 
 		@Override
-		public Set<Class<? extends LinkResolverFactory>> getAfterDependents() {
+		public Set<Class<?>> getAfterDependents() {
 			return null;
 		}
 
 		@Override
-		public Set<Class<? extends LinkResolverFactory>> getBeforeDependents() {
+		public Set<Class<?>> getBeforeDependents() {
 			return null;
 		}
 
@@ -48,7 +48,7 @@ public class RelativeLinkExtension implements HtmlRendererExtension {
 		}
 
 		@Override
-		public LinkResolver apply(LinkResolverContext context) {
+		public LinkResolver apply(LinkResolverBasicContext context) {
 			return new RelativeLinkResolver(context);
 		}
 	}

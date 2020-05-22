@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Document;
 
+import com.vladsch.flexmark.util.data.DataHolder;
+import com.vladsch.flexmark.util.data.DataValueFactory;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import freemarker.core.Environment;
 import freemarker.template.TemplateBooleanModel;
@@ -25,13 +28,21 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 	
 	private static final String PARAM_RELATIVE_URL_PREFIX = "relative_url_prefix";
 	private static final String PARAM_REPLACE_BACKSLASH_TO_YENSIGN = "replace_backslash_to_yensign";
-	
+
+	private static final DataValueFactory<Object> NULL_VALUE_FACTORY = new DataValueFactory<Object>() {
+		@Override
+		public Object apply(DataHolder dataHolder) {
+			return null;
+		}
+	};
+
+	private MutableDataSet options;
 	private Parser parser;
 	private HtmlRenderer renderer;
-	
+
 	public MarkdownDirective(MutableDataSet options) {
-		parser = Parser.builder(options).build();
-		renderer = HtmlRenderer.builder(options).build();
+		this.options = options;
+		this.parser = Parser.builder(options).build();
 	}
 
 	@Override
@@ -57,19 +68,29 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 			}
 		}
 
-		MutableDataSet options = null;
-		if(relativeUrlPrefix != null) {
-			if(options == null) {
-				options = new MutableDataSet();
-			}
-			options.set(RelativeLinkExtension.RELATIVE_URL_PREFIX, relativeUrlPrefix);
-		}
-		
 		StringWriter input = new StringWriter();
 		body.render(input);
 		Document document = parser.parse(input.toString());
-		String output = renderer.withOptions(options).render(document);
+
+		String previousRelativeUrlPrefix = null;
+		if(options.contains(RelativeLinkExtension.RELATIVE_URL_PREFIX)) {
+			previousRelativeUrlPrefix = (String)options.getOrCompute(RelativeLinkExtension.RELATIVE_URL_PREFIX, NULL_VALUE_FACTORY);
+		}
+		if(!Objects.equals(relativeUrlPrefix, previousRelativeUrlPrefix)) {
+			if(options.contains(RelativeLinkExtension.RELATIVE_URL_PREFIX)) {
+				options.remove(RelativeLinkExtension.RELATIVE_URL_PREFIX);
+			}
+			if(relativeUrlPrefix != null) {
+				options.set(RelativeLinkExtension.RELATIVE_URL_PREFIX, relativeUrlPrefix);
+			}
+			renderer = null;
+		}
+		if(renderer == null) {
+			renderer = HtmlRenderer.builder(options).build();
+		}
+		String output = renderer.render(document);
 		String japaneseTextLayouted = JapaneseTextLayouter.layout(output, isReplaceBackslashToYensign);
 		env.getOut().write(japaneseTextLayouted);
 	}
+
 }

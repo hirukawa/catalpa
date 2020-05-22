@@ -10,7 +10,6 @@ import com.vladsch.flexmark.ast.ImageRef;
 import com.vladsch.flexmark.ast.Paragraph;
 import com.vladsch.flexmark.ast.SoftLineBreak;
 import com.vladsch.flexmark.ext.attributes.AttributesNode;
-import com.vladsch.flexmark.html.CustomNodeRenderer;
 import com.vladsch.flexmark.html.HtmlWriter;
 import com.vladsch.flexmark.html.renderer.NodeRenderer;
 import com.vladsch.flexmark.html.renderer.NodeRendererContext;
@@ -26,13 +25,13 @@ public class BasicNodeRenderer implements NodeRenderer {
 	@Override
 	public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
 		Set<NodeRenderingHandler<?>> set = new HashSet<NodeRenderingHandler<?>>();
-		set.add(new NodeRenderingHandler<Paragraph>(Paragraph.class, new CustomNodeRenderer<Paragraph>() {
+		set.add(new NodeRenderingHandler<Paragraph>(Paragraph.class, new NodeRenderingHandler.CustomNodeRenderer<Paragraph>() {
 			@Override
 			public void render(Paragraph node, NodeRendererContext context, HtmlWriter html) {
 				BasicNodeRenderer.this.render(node, context, html);
 			}
 		}));
-		set.add(new NodeRenderingHandler<Heading>(Heading.class, new CustomNodeRenderer<Heading>() {
+		set.add(new NodeRenderingHandler<Heading>(Heading.class, new NodeRenderingHandler.CustomNodeRenderer<Heading>() {
 			@Override
 			public void render(Heading node, NodeRendererContext context, HtmlWriter html) {
 				BasicNodeRenderer.this.render(node, context, html);
