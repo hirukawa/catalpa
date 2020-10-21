@@ -5,7 +5,7 @@ import net.osdn.catalpa.URLEncoder;
 import net.osdn.catalpa.ui.javafx.Main;
 import net.osdn.catalpa.ui.javafx.ToastMessage;
 import net.osdn.util.rest.client.HttpException;
-import net.osdn.util.rest.client.Server;
+import net.osdn.util.rest.client.RestClient;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
@@ -26,7 +26,7 @@ import java.util.Map;
 public class NetlifyUploader {
 
     private NetlifyConfig    config;
-    private Server.Instance  netlify;
+    private RestClient.Instance netlify;
     private MessageDigest    sha1;
     private Map<String, String> deployPathBySHA = new HashMap<String, String>();
 
@@ -45,7 +45,7 @@ public class NetlifyUploader {
 
         int uploadCount = 0;
 
-        netlify = Server.newInstance();
+        netlify = RestClient.newInstance();
         netlify.setUrl("https://api.netlify.com/api/v1");
         netlify.setAuthorization("Bearer " + config.getPersonalAccessToken());
 
