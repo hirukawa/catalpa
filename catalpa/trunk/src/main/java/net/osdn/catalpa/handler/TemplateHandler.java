@@ -75,37 +75,35 @@ public class TemplateHandler implements Handler {
 				context.setLastModifiedTime(entry.getValue());
 			}
 		}
-		
+
 		if(template != null) {
 			context.setLastModifiedTime(context.getConfigLastModifiedTime());
-			context.setContentLastModifiedTime(context.getLastModifiedTime());
-			if(template != null) {
-				try {
-					context.getDataModel().put("_INPUT_PATH", context.getInputPath());
-					context.getDataModel().put("_OUTPUT_PATH", context.getOutputPath());
+			context.setContentLastModifiedTime(Files.getLastModifiedTime(context.getInputPath()));
+			try {
+				context.getDataModel().put("_INPUT_PATH", context.getInputPath());
+				context.getDataModel().put("_OUTPUT_PATH", context.getOutputPath());
 
-					synchronized (context.getFreeMarker()) {
-						LastModifiedTracker.reset(context.getFreeMarker());
-						
-						StringWriter out = new StringWriter();
-						template.process(context.getDataModel(), out);
-						
-						context.setLastModifiedTime(FileTime.fromMillis(LastModifiedTracker.getLastModified()));
-						Matcher m = BLOCK_LAST_MODIFIED.matcher(out.toString());
-						int start = 0;
-						while(m.find(start)) {
-							context.setLastModifiedTime(
-								FileTime.from(Instant.from(DateTimeFormatter.ISO_INSTANT.parse(m.group(1)))));
-							start = m.end();
-						}
-						writer.write(m.replaceAll(""));
+				synchronized (context.getFreeMarker()) {
+					LastModifiedTracker.reset(context.getFreeMarker());
+
+					StringWriter out = new StringWriter();
+					template.process(context.getDataModel(), out);
+
+					context.setLastModifiedTime(FileTime.fromMillis(LastModifiedTracker.getLastModified()));
+					Matcher m = BLOCK_LAST_MODIFIED.matcher(out.toString());
+					int start = 0;
+					while(m.find(start)) {
+						context.setLastModifiedTime(
+							FileTime.from(Instant.from(DateTimeFormatter.ISO_INSTANT.parse(m.group(1)))));
+						start = m.end();
 					}
-				} finally {
-					context.getDataModel().remove("_OUTPUT_PATH");
-					context.getDataModel().remove("_INPUT_PATH");
+					writer.write(m.replaceAll(""));
 				}
-				return;
+			} finally {
+				context.getDataModel().remove("_OUTPUT_PATH");
+				context.getDataModel().remove("_INPUT_PATH");
 			}
+			return;
 		}
 
 		// template not found
