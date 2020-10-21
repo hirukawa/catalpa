@@ -89,7 +89,7 @@ public class Context {
 	
 	/** コンテンツ（通常は.md）の最終更新日時を設定します。
 	 * 
-	 * @param contentLastModifiedTime コンテンツの最終更新日時
+	 * @param t コンテンツの最終更新日時
 	 */
 	public void setContentLastModifiedTime(FileTime t) {
 		if(t != null) {
@@ -101,7 +101,7 @@ public class Context {
 	}
 	
 	/** コンテンツ（通常は.md）の最終更新日時を取得します。
-	 * この値は ${dateModified} で参照することができ、Webページ内で最終更新日時を表示する目的に適しています。
+	 * この値は ${contentLastModified} で参照することができ、Webページ内で最終更新日時を表示する目的に適しています。
 	 * 
 	 * @return コンテンツの最終更新日時
 	 */
@@ -111,12 +111,13 @@ public class Context {
 	
 	/** 設定ファイルの最終更新日時を設定します。
 	 * 
-	 * @param configLastModifiedTime 設定ファイルの最終更新日時
+	 * @param t 設定ファイルの最終更新日時
 	 */
 	public void setConfigLastModifiedTime(FileTime t) {
 		if(t != null) {
 			if(configLastModifiedTime == null || t.compareTo(configLastModifiedTime) > 0) {
 				configLastModifiedTime = t;
+				dataModel = null;
 			}
 		}
 	}
@@ -131,12 +132,13 @@ public class Context {
 	
 	/** 最終更新日時を設定します。
 	 * 
-	 * @param lastModifiedTime　最終更新日時
+	 * @param t　最終更新日時
 	 */
 	public void setLastModifiedTime(FileTime t) {
 		if(t != null) {
 			if(lastModifiedTime == null || t.compareTo(lastModifiedTime) > 0) {
 				lastModifiedTime = t;
+				dataModel = null;
 			}
 		}
 	}
@@ -144,7 +146,8 @@ public class Context {
 	/** 最終更新日時を取得します。
 	 * この値はコンテンツだけでなく関連するテンプレート・ファイルも含めもっとも新しい更新日時を表しています。
 	 * 出力するファイルのタイムスタンプに使用することを目的としています。
-	 * 
+	 * この値は ${dateModified} で参照することができます。
+	 *
 	 * @return 最終更新日時
 	 */
 	public FileTime getLastModifiedTime() {
@@ -189,8 +192,11 @@ public class Context {
 		if(dataModel == null) {
 			Map<String, Object> dm = new HashMap<String, Object>();
 			dm.put("baseurl", getBaseUrl());
+			if(lastModifiedTime != null) {
+				dm.put("dateModified", new Date(lastModifiedTime.toMillis()));
+			}
 			if(contentLastModifiedTime != null) {
-				dm.put("dateModified", new Date(contentLastModifiedTime.toMillis()));
+				dm.put("contentLastModified", new Date(contentLastModifiedTime.toMillis()));
 			}
 			if(systemDataModel != null) {
 				for(Entry<String, Object> entry : systemDataModel.entrySet()) {
@@ -209,6 +215,24 @@ public class Context {
 					}
 				}
 			}
+
+			Path relativeOutputPath = getRelativeOutputPath();
+			if(relativeOutputPath != null) {
+				String path = relativeOutputPath.toString().replace('\\', '/');
+				dm.put("path", path);
+
+				String siteurl = "";
+				Object obj = dm.get("siteurl");
+				if(obj instanceof String) {
+					siteurl = ((String)obj).trim();
+					if(siteurl.endsWith("/")) {
+						siteurl = siteurl.substring(0, siteurl.length() - 1);
+					}
+				}
+				String url = siteurl + "/" + URLEncoder.encode(path);
+				dm.put("url", url);
+			}
+
 			for(Entry<String, String> block : blocks.entrySet()) {
 				Template template = new Template(null, block.getValue(), getFreeMarker());
 				StringWriter out = new StringWriter();
