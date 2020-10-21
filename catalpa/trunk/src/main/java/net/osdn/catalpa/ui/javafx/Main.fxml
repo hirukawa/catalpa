@@ -8,11 +8,10 @@
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import net.osdn.catalpa.ui.javafx.Toast?>
 
-<StackPane xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
+<StackPane
+    xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
 	stylesheets="@Main.css">
-	<fx:define>
-		<Double fx:id="MAX_INT" fx:value="2147483647" />
-	</fx:define>
 
 	<BorderPane>
 		<top>
@@ -75,7 +74,7 @@
 					<padding><Insets top="10" right="17" bottom="10" left="10"/></padding>
 					<Button fx:id="btnReload"
 						text="更新"
-						HBox.hgrow="ALWAYS" maxWidth="$MAX_INT"
+						HBox.hgrow="ALWAYS" maxWidth="Infinity"
 						disable="true">
 						<graphic><FontIcon iconLiteral="mdi-refresh"/></graphic>
 					</Button>
@@ -91,19 +90,19 @@
 					<Button fx:id="btnOpenBrowser"
 						text="ブラウザーで開く"
 						disable="true"
-						HBox.hgrow="ALWAYS" maxWidth="$MAX_INT">
+						HBox.hgrow="ALWAYS" maxWidth="Infinity">
 						<graphic><FontIcon iconLiteral="mdi-earth"/></graphic>
 					</Button>
 					<Button fx:id="btnSaveAs"
 						text="名前を付けて保存..."
 						disable="true"
-						HBox.hgrow="ALWAYS" maxWidth="$MAX_INT">
+						HBox.hgrow="ALWAYS" maxWidth="Infinity">
 						<graphic><FontIcon iconLiteral="mdi-content-save"/></graphic>
 					</Button>
 					<Button fx:id="btnUpload"
 						text="アップロード"
 						disable="true"
-						HBox.hgrow="ALWAYS" maxWidth="$MAX_INT">
+						HBox.hgrow="ALWAYS" maxWidth="Infinity">
 						<graphic><FontIcon iconLiteral="mdi-cloud-upload"/></graphic>
 					</Button>
 				</HBox>

@@ -9,7 +9,9 @@
 <?import net.osdn.catalpa.ui.javafx.*?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<StackPane xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
+<StackPane
+    xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
 	stylesheets="@BlogWizard.css">
 
 	<BorderPane>
