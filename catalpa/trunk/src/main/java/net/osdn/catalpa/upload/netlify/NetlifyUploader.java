@@ -2,7 +2,7 @@ package net.osdn.catalpa.upload.netlify;
 
 import net.osdn.catalpa.ProgressObserver;
 import net.osdn.catalpa.URLEncoder;
-import net.osdn.catalpa.ui.javafx.Main;
+import net.osdn.catalpa.ui.javafx.MainApp;
 import net.osdn.catalpa.ui.javafx.ToastMessage;
 import net.osdn.util.rest.client.HttpException;
 import net.osdn.util.rest.client.RestClient;
@@ -92,7 +92,7 @@ public class NetlifyUploader {
         String json = createDeployFilesJson(localDirectory);
 
         CreateSiteDeployResult result = netlify.reset().path("/sites").path(siteId).path("/deploys")
-                .rawParam("title", "Uploaded from " + Main.APPLICATION_NAME + " " + Main.APPLICATION_VERSION)
+                .rawParam("title", "Uploaded from " + MainApp.APPLICATION_NAME + " " + MainApp.APPLICATION_VERSION)
                 .post("application/json", json.getBytes(StandardCharsets.UTF_8))
                 .get(CreateSiteDeployResult.class);
 
