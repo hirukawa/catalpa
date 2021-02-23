@@ -1,4 +1,4 @@
-(C) 2019-2020 HIRUKAWA Ryo
+(C) 2019-2021 HIRUKAWA Ryo
 
 本ソフトウェアおよび関連するドキュメント（以下「本ソフトウェア」）のコピーを取
 得するすべての人に、本ソフトウェアを無制限に扱うことを無償で許可します。これに
@@ -77,10 +77,11 @@
 
 
 * Icon packs for Java applications (ikonli)
-  https://aalmiray.github.io/ikonli/
+  https://github.com/kordamp/ikonli
+  https://kordamp.org/ikonli/
 
   licensed under the Apache License Version 2.0, January 2004
-  http://www.apache.org/licenses/
+  https://github.com/kordamp/ikonli/blob/master/LICENSE
 
 
 * codehighlight

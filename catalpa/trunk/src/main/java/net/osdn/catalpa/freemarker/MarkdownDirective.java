@@ -14,6 +14,7 @@ import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.DataValueFactory;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import freemarker.core.Environment;
+import freemarker.template.Template;
 import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
@@ -68,9 +69,21 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 			}
 		}
 
-		StringWriter input = new StringWriter();
-		body.render(input);
-		Document document = parser.parse(input.toString());
+		StringWriter sw = new StringWriter();
+		body.render(sw);
+		String input = sw.toString();
+
+		// relativeUrlPrefix が指定されている場合、Freemarker の変数展開を適用します。
+		// これはブログAddOnでページやカテゴリーで記事が表示されるときに該当します。
+		if(relativeUrlPrefix != null) {
+			StringWriter writer = new StringWriter();
+			Template template = new Template("", input, env.getConfiguration());
+			template.process(env.getDataModel(), writer);
+			writer.toString();
+			input = writer.toString();
+		}
+
+		Document document = parser.parse(input);
 
 		String previousRelativeUrlPrefix = null;
 		if(options.contains(RelativeLinkExtension.RELATIVE_URL_PREFIX)) {
