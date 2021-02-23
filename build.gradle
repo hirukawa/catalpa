@@ -35,11 +35,11 @@ dependencies {
 	implementation 'com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.62.2'
 
 	implementation 'com.github.sommeri:less4j:1.17.2'
-	implementation 'org.freemarker:freemarker:2.3.30'
+	implementation 'org.freemarker:freemarker:2.3.31'
 	implementation 'org.nanohttpd:nanohttpd:2.3.1'
 	implementation 'net.java.dev.jna:jna:5.6.0'
-	implementation 'org.kordamp.ikonli:ikonli-javafx:11.5.0'
-	implementation 'org.kordamp.ikonli:ikonli-materialdesign-pack:11.5.0'
+	implementation 'org.kordamp.ikonli:ikonli-javafx:12.2.0'
+	implementation 'org.kordamp.ikonli:ikonli-materialdesign-pack:12.2.0'
 	implementation 'com.github.luccappellaro:jzopfli:0.0.4'
 	implementation 'com.esotericsoftware.yamlbeans:yamlbeans:1.15'
 

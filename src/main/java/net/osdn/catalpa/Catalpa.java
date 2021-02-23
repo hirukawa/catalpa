@@ -195,7 +195,7 @@ public class Catalpa {
 	public void process(Path outputPath, Map<String, Object> options, ProgressObserver observer) throws Exception {
 		this.observer = (observer != null) ? observer : ProgressObserver.EMPTY;
 		
-		freeMarker = new Configuration(Configuration.VERSION_2_3_30);
+		freeMarker = new Configuration(Configuration.VERSION_2_3_31);
 		freeMarker.setDefaultEncoding("UTF-8");
 		freeMarker.setURLEscapingCharset("UTF-8");
 		freeMarker.setSharedVariable("baseurl", new BaseurlMethod());
