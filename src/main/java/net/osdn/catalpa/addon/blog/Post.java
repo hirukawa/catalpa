@@ -16,15 +16,17 @@ public class Post {
 	private String         relativeUrlPrefix;
 	private String         thumbnail;
 	private String         image;
+	private boolean        isMore;
 	private boolean        isDraft;
 	
-	protected Post(Path path, String url, LocalDate date, String title, Set<Category> categories, String leading) {
+	protected Post(Path path, String url, LocalDate date, String title, Set<Category> categories, String leading, boolean isMore) {
 		this.path = path;
 		this.url = url;
 		this.date = date;
 		this.title = title;
 		this.categories = categories;
 		this.leading = leading;
+		this.isMore = isMore;
 	}
 	
 	public Path getPath() {
@@ -74,7 +76,11 @@ public class Post {
 	public String getImage() {
 		return image;
 	}
-	
+
+	public boolean isMore() {
+		return isMore;
+	}
+
 	public void setDraft(boolean isDraft) {
 		this.isDraft = isDraft;
 	}
@@ -82,6 +88,8 @@ public class Post {
 	public boolean isDraft() {
 		return isDraft;
 	}
+
+
 	
 	protected static final String[] APPLICABLE_EXTENSIONS = new String[] {
 		".markdown",

@@ -1,6 +1,6 @@
 apply plugin: 'java'
 
-version = '0.8.3'
+version = '0.8.4'
 
 tasks.withType(JavaCompile) {
 	sourceCompatibility = 11
@@ -100,7 +100,7 @@ task exewrap(type: Exec, dependsOn: 'jar') {
 		"-o", "${buildDir}/package/${archivesBaseName}.exe",
 		"-d", "Catalpa",
 		"-p", "Catalpa",
-		"-c", "(C) 2019-2020 HIRUKAWA Ryo",
+		"-c", "(C) 2019-2021 HIRUKAWA Ryo",
 		"-V", "${version}",
 		"-v", "${version}"
 }
