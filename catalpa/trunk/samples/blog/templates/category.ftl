@@ -54,9 +54,11 @@
 						</div>
 					</header>
 					<div class="leading markdown"><@markdown replace_backslash_to_yensign=true relative_url_prefix="${post.relativeUrlPrefix}">${post.leading}</@markdown></div>
+					<#if post.more>
 					<footer>
 						<a class="more" href="${baseurl}${post.url}">続きを読む...</a>
 					</footer>
+					</#if>
 				</article>
 				</#list>
 

@@ -569,10 +569,11 @@ public class BlogAddOn implements AddOn {
 					String url = inputPath.relativize(Util.replaceFileExtension(path, TemplateHandler.APPLICABLE_EXTENSIONS, ".html")).toString().replace('\\', '/');
 					String leading = content;
 					Matcher m = LEADING_SEPARATOR.matcher(content);
-					if(m.find()) {
+					boolean isMore = m.find();
+					if(isMore) {
 						leading = content.substring(0, m.start(1));
 					}
-					post = new Post(path, url, date, title, categories, leading);
+					post = new Post(path, url, date, title, categories, leading, isMore);
 					for(Category category : categories) {
 						category.add(post);
 					}
