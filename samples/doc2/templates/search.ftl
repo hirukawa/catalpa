@@ -135,6 +135,7 @@
 			result.innerHTML = "";
 			window.scrollTo(0, 0);
 
+			keyword = keyword.replace("<", "&lt;").replace(">", "&gt;");
 			keyword = keyword.replace("%20", " ").trim();
 			if(keyword.length == 0) {
 				result.innerHTML = "<p class=\"markdown\">検索したい文字列を入力して <kbd>Enter</kbd></span> キーを押してください。</p>";
