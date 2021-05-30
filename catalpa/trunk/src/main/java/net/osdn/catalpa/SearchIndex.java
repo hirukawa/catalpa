@@ -51,8 +51,10 @@ public class SearchIndex {
 		text = text.replaceAll("</?(a|big|code|em|i|kbd|small|span|strong|tt).*?>", "");
 		text = text.replaceAll("<[^>]*>", "\n");
 		text = text.replaceAll("&amp;", "&");
+		/*
 		text = text.replaceAll("&lt;", "<");
 		text = text.replaceAll("&gt;", ">");
+		*/
 		text = text.replaceAll("&quot;", "\"");
 		text = text.replaceAll("&ldquo;", "\"");
 		text = text.replaceAll("&rdquo;", "\"");
