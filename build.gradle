@@ -1,6 +1,6 @@
 apply plugin: 'java'
 
-version = '0.8.5'
+version = '0.8.6'
 
 tasks.withType(JavaCompile) {
 	sourceCompatibility = 11
@@ -92,7 +92,7 @@ task createJavaRuntime(type: Exec, dependsOn: ['jar', 'copyLibraries']) {
 	setGroup("build")
 	setDescription("Create Java Runtime.")
 	workingDir "${buildDir}/package/"
-	commandLine 'cmd', '/c', 'CreateJRE.bat', "${jar.archiveFile.get()}", "lib", "-server"
+	commandLine 'cmd', '/c', 'CreateJRE.bat', "${jar.archiveFile.get()}", "lib", "-client"
 }
 
 task exewrap(type: Exec, dependsOn: 'jar') {
