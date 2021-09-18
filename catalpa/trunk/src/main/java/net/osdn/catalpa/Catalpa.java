@@ -259,9 +259,13 @@ public class Catalpa {
 		context.setInputPath(inputPath);
 		context.setOutputPath(outputPath);
 		retrieve(context);
-		
+
 		if(addon != null) {
-			addon.postExecute(inputPath, outputPath, options, context, sitemap, searchIndexes);
+			// addon.postExecute で context の baseUrl 等が書き換えらます。
+			// そのまま createSearchIndex を呼び出すと誤った baseUrl を元に search.html が作成されてしまうため、
+			// addon.postExecute には context の複製（subContext）を渡します。
+			Context subContext = context.clone();
+			addon.postExecute(inputPath, outputPath, options, subContext, sitemap, searchIndexes);
 		}
 		
 		createSitemap(context);

@@ -180,13 +180,16 @@ public class BlogAddOn implements AddOn {
 	 */
 	@Override
 	public void execute(Context context) throws IOException, TemplateException {
+		// 記事以外のファイルは処理せずに復帰します。（記事以外のファイルとは画像ファイルや記事ではない .md などです。）
 		if(!factory.containsPost(context.getInputPath())) {
 			if(Post.isApplicable(context.getInputPath())) {
-				context.setOutputPath(null);
+				// 記事として受理可能な拡張子のファイル（つまり記事ではない .md ということになります。）の場合は、
+				// 既定のテンプレートを post.ftl ではなく default.ftl に変更します。
+				context.getSystemDataModel().put("template", "default.ftl");
 			}
 			return;
 		}
-		
+
 		Post post = factory.getPostBy(context.getInputPath());
 
 		blogDataModel.put("post", post);

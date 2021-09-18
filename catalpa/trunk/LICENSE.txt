@@ -23,7 +23,7 @@
 
 
 * Liberica JDK
-  https://bell-sw.com/java11
+  https://bell-sw.com/pages/libericajdk/
 
   Liberica JDK is distribution of the OpenJDK built by BellSoft LTD.
   OpenJDK code itself is licensed under GPL v2 with Classpath Exception.
