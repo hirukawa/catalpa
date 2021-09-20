@@ -3,8 +3,8 @@ apply plugin: 'java'
 version = '0.8.6'
 
 tasks.withType(JavaCompile) {
-	sourceCompatibility = 11
-	targetCompatibility = 11
+	sourceCompatibility = 17
+	targetCompatibility = 17
 	options.compilerArgs << '-Xlint:all'
 }
 
@@ -101,8 +101,8 @@ task exewrap(type: Exec, dependsOn: 'jar') {
 	executable "${projectDir}/etc/exewrap.exe"
 	args "-A", "x64",
 		"-g",
-		"-t", "11",
-		"-a", "-Xms128m -Xmx1024m",
+		"-t", "17",
+		"-a", "-Xmx1024m",
 		"-L", "lib",
 		"-e", "SHARED",
 		"-j", "${jar.archiveFile.get()}",

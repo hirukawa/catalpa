@@ -26,3 +26,5 @@
 	</li>
 </#list>
 </ul>
+
+<a href="${baseurl}sample.html">▶ 固定ページ</a>
