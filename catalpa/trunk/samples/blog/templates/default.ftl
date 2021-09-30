@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 
 	<#if siteurl?has_content>
-	<link rel="canonical" href="${siteurl}/${blog.post.url}">
+	<link rel="canonical" href="${url!}">
 	</#if>
 
 	<link rel="stylesheet" href="${baseurl}css/main.css">
@@ -15,12 +15,12 @@
 	<meta name="description" content="${(description!)?replace('\n', '')}">
 
 	<!-- OGP -->
-	<meta property="og:site_name" content="${blog.title!}">
+	<meta property="og:site_name" content="${title!}">
 	<meta property="og:type" content="article">
-	<meta property="og:url" content="${siteurl!}/${blog.post.url}">
-	<meta property="og:title" content="${blog.post.title}">
+	<meta property="og:url" content="${url!}">
+	<meta property="og:title" content="${title!}">
 	<meta property="og:description" content="${(description!)?replace('\n', '')}">
-	<#if blog.post.image?has_content><meta property="og:image" content="${siteurl!}/${blog.post.image}"></#if>
+	<#if image?has_content><meta property="og:image" content="${siteurl!}/${image}"></#if>
 </head>
 <body class="blog post">
 	<div class="body-center">
@@ -28,9 +28,9 @@
 			<div class="header-title">
 				&nbsp;
 				<#if (_PREVIEW!false) == true>
-				<a href="/"><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>${blog.title!}</a>
+				<a href="/"><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>${title!}</a>
 				<#else>
-				<#if siteurl?has_content><a href="${siteurl}"></#if><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>${blog.title!}<#if siteurl?has_content></a></#if>
+				<#if siteurl?has_content><a href="${siteurl}"></#if><#if icon?has_content><img class="icon" src="${baseurl}${icon}">&nbsp;</#if>${title!}<#if siteurl?has_content></a></#if>
 				</#if>
 				<form style="float:right" method="GET" action="${baseurl}search.html?"
 					onsubmit="if(document.getElementById('search-keyword').value.length == 0) { return false; }">

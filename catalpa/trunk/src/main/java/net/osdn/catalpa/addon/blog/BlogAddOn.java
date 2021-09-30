@@ -118,11 +118,9 @@ public class BlogAddOn implements AddOn {
 		factory = createFactory(inputPath, outputPath);
 		if(factory.hasDraft) {
 			//draft template
-			context.getSystemDataModel().put("template", "draft.ftl");
 			options.put("_DRAFT", true);
 		} else {
 			//default template
-			context.getSystemDataModel().put("template", "post.ftl");
 			options.remove("_DRAFT");
 		}
 		options.remove("_DEFAULT_URL");
@@ -180,14 +178,24 @@ public class BlogAddOn implements AddOn {
 	 */
 	@Override
 	public void execute(Context context) throws IOException, TemplateException {
-		// 記事以外のファイルは処理せずに復帰します。（記事以外のファイルとは画像ファイルや記事ではない .md などです。）
 		if(!factory.containsPost(context.getInputPath())) {
 			if(Post.isApplicable(context.getInputPath())) {
-				// 記事として受理可能な拡張子のファイル（つまり記事ではない .md ということになります。）の場合は、
-				// 既定のテンプレートを post.ftl ではなく default.ftl に変更します。
-				context.getSystemDataModel().put("template", "default.ftl");
+				if(factory.getNonPosts().contains(context.getInputPath())) {
+					// 記事以外のファイルには default.ftl を適用します。
+					context.getSystemDataModel().put("template", "default.ftl");
+				} else {
+					// 記事に含まれていないファイルは出力しません。
+					// これには draft 記事を書いているときのその他の通常記事が該当します。
+					context.setOutputPath(null);
+				}
 			}
 			return;
+		}
+
+		if(factory.hasDraft) {
+			context.getSystemDataModel().put("template", "draft.ftl");
+		} else {
+			context.getSystemDataModel().put("template", "post.ftl");
 		}
 
 		Post post = factory.getPostBy(context.getInputPath());
@@ -424,6 +432,7 @@ public class BlogAddOn implements AddOn {
 		private Path inputPath;
 		private Map<String, Category> categories = new HashMap<String, Category>();
 		private Map<Path, Post> posts = new HashMap<Path, Post>();
+		private Set<Path> nonPosts = new LinkedHashSet<>();
 		private boolean hasDraft = false;
 
 		public Factory(Path inputPath) {
@@ -436,6 +445,10 @@ public class BlogAddOn implements AddOn {
 		
 		public List<Post> getPosts() {
 			return new ArrayList<Post>(posts.values());
+		}
+
+		public Set<Path> getNonPosts() {
+			return nonPosts;
 		}
 		
 		public boolean containsCategory(String text) {
@@ -537,7 +550,11 @@ public class BlogAddOn implements AddOn {
 					blocks.put("content", blocks.remove(null));
 				}
 				String content = blocks.get("content");
-				
+
+				// 日付（date）の指定されていないファイルは記事以外のファイルとして分類します。
+				if(map.get("date") == null) {
+					nonPosts.add(path);
+				}
 				//
 				if(map.get("date") != null && map.get("title") != null && content != null) {
 					LocalDate date;
