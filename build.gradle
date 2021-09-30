@@ -1,6 +1,6 @@
 apply plugin: 'java'
 
-version = '0.8.6'
+version = '0.8.7'
 
 tasks.withType(JavaCompile) {
 	sourceCompatibility = 17
@@ -51,9 +51,9 @@ dependencies {
 
 	// rest-client-util で必要です。
 	implementation 'com.squareup.okhttp3:okhttp:3.14.9'
-	implementation 'com.fasterxml.jackson.core:jackson-core:2.12.3'
-	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.3'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.12.5'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.5'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
 
 	// auto-detect-reader で必要です。
 	implementation 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
@@ -102,7 +102,7 @@ task exewrap(type: Exec, dependsOn: 'jar') {
 	args "-A", "x64",
 		"-g",
 		"-t", "17",
-		"-a", "-Xmx1024m",
+		"-a", "-Xmx1024m -Djdk.tls.client.protocols=TLSv1,TLSv1.1,TLSv1.2",
 		"-L", "lib",
 		"-e", "SHARED",
 		"-j", "${jar.archiveFile.get()}",
