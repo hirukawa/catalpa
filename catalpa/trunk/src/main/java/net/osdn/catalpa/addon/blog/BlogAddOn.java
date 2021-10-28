@@ -525,7 +525,15 @@ public class BlogAddOn implements AddOn {
 						}
 					}
 				}
-				
+
+				// draft: skip が指定されていた場合は 何もせずに null を返します。
+				if(map.containsKey("draft")) {
+					Object obj = map.get("draft");
+					if(obj instanceof String && ((String)obj).equalsIgnoreCase("skip")) {
+						return null;
+					}
+				}
+
 				// Blocks
 				LinkedHashMap<String, String> blocks = new LinkedHashMap<String, String>();
 				String blockName = null;
@@ -654,20 +662,15 @@ public class BlogAddOn implements AddOn {
 					if(post.getThumbnail() == null && DEFAULT_THUMBNAIL_DATA_URI != null) {
 						post.setThumbnail(DEFAULT_THUMBNAIL_DATA_URI);
 					}
-					
+
+					// draft: が指定されている場合の処理
+					// 事前に draft: skip の判定をしているので、ここに到達したときは draft: skip ではない draft: である。
 					if(map.containsKey("draft")) {
-						Object obj = map.get("draft");
-						if(obj instanceof String && ((String)obj).equalsIgnoreCase("skip")) {
-							post = null;
-						} else {
-							post.setDraft(true);
-							hasDraft = true;
-							characterCounts.put(post, countCharacters(content));
-						}
+						post.setDraft(true);
+						hasDraft = true;
+						characterCounts.put(post, countCharacters(content));
 					}
-					if(post != null) {
-						posts.put(path, post);
-					}
+					posts.put(path, post);
 				}
 			}
 			return post;
