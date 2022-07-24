@@ -1,6 +1,6 @@
 apply plugin: 'java'
 
-version = '0.8.8'
+version = '0.8.9'
 
 tasks.withType(JavaCompile) {
 	sourceCompatibility = 17
@@ -51,9 +51,9 @@ dependencies {
 
 	// rest-client-util で必要です。
 	implementation 'com.squareup.okhttp3:okhttp:3.14.9'
-	implementation 'com.fasterxml.jackson.core:jackson-core:2.12.5'
-	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.5'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
 
 	// auto-detect-reader で必要です。
 	implementation 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
@@ -93,6 +93,8 @@ task createJavaRuntime(type: Exec, dependsOn: ['jar', 'copyLibraries']) {
 	setDescription("Create Java Runtime.")
 	workingDir "${buildDir}/package/"
 	commandLine 'cmd', '/c', 'CreateJRE.bat', "${jar.archiveFile.get()}", "lib", "-client"
+	// ランタイムには jdk.crypto.ec モジュールも追加する必要があります。CreateJRE.bat 内で jdk.crypto.ec が追加されていることを確認してください。
+	// jdk.crypto.ec モジュールが追加されていないと、Netlify のアップロードが SSLHandshakeException で失敗します。
 }
 
 task exewrap(type: Exec, dependsOn: 'jar') {
@@ -102,7 +104,7 @@ task exewrap(type: Exec, dependsOn: 'jar') {
 	args "-A", "x64",
 		"-g",
 		"-t", "17",
-		"-a", "-Xmx1024m -Djdk.tls.client.protocols=TLSv1,TLSv1.1,TLSv1.2",
+		"-a", "-Xmx1024m",
 		"-L", "lib",
 		"-e", "SHARED",
 		"-j", "${jar.archiveFile.get()}",
@@ -110,7 +112,7 @@ task exewrap(type: Exec, dependsOn: 'jar') {
 		"-o", "${buildDir}/package/${archivesBaseName}.exe",
 		"-d", "Catalpa",
 		"-p", "Catalpa",
-		"-c", "(C) 2019-2021 HIRUKAWA Ryo",
+		"-c", "(C) 2019-2022 HIRUKAWA Ryo",
 		"-V", "${version}",
 		"-v", "${version}"
 }
