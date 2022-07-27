@@ -48,6 +48,20 @@ public class Post {
 	public Set<Category> getCategories() {
 		return categories;
 	}
+
+	/** 記事のカテゴリーから決定した色相を返します。
+	 *
+	 * @return 色相（0～359）
+	 */
+	public int getHue() {
+		int hue = 0;
+		int influence = 1;
+		for(Category category : categories) {
+			hue += (category.getHue() / influence);
+			influence++;
+		}
+		return hue % 360;
+	}
 	
 	public String getLeading() {
 		return leading;

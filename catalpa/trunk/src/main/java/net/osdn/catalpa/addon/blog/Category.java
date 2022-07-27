@@ -1,5 +1,7 @@
 package net.osdn.catalpa.addon.blog;
 
+import javafx.scene.paint.Color;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,14 @@ public class Category {
 	
 	public String getName() {
 		return name;
+	}
+
+	/** カテゴリー名から決定した色相を返します。
+	 *
+	 * @return 色相（0～359）
+	 */
+	public int getHue() {
+		return (name.hashCode() & 0x7FFF) % 360;
 	}
 	
 	public void add(Post post) {
