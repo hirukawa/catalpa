@@ -32,19 +32,29 @@ public class RawChars implements Token {
 	public void setLetterSpacing(double space) {
 		letterSpacing = space;
 	}
-	
+
 	@Override
 	public String getHtml() {
+		return getHtml(false);
+	}
+
+	@Override
+	public String getHtml(boolean useCatalpaFont) {
 		if(letterSpacing <= 0.0) {
 			return value;
 		} else {
 			StringBuilder sb = new StringBuilder();
 			sb.append(value);
-			if(letterSpacing <= 0.5) {
-				sb.append(String.format("<span style=\"font-family:monospace;font-size:%d%%;\"> </span>", (int)(200 * letterSpacing)));
+			if(useCatalpaFont) {
+				// catalpaフォントは半角スペースが四分アキになるように作られています。200% にすると二分アキになります。
+				sb.append("<span style=\"font-family:catalpa;font-size:" + (int)(400 * letterSpacing) + "%;line-height:0\"> </span>");
 			} else {
-				//letterSpacingが0.5よりも大きい場合、font-sizeが100%を超えます。この場合、行間が広くならないようにline-height:0.1;を付加します。
-				sb.append(String.format("<span style=\"font-family:monospace;font-size:%d%%;line-height:0.1;\"> </span>", (int)(200 * letterSpacing)));
+				if(letterSpacing <= 0.5) {
+					sb.append(String.format("<span style=\"font-family:monospace;font-size:%d%%;\"> </span>", (int)(200 * letterSpacing)));
+				} else {
+					//letterSpacingが0.5よりも大きい場合、font-sizeが100%を超えます。この場合、行間が広くならないようにline-height:0.1;を付加します。
+					sb.append(String.format("<span style=\"font-family:monospace;font-size:%d%%;line-height:0.1;\"> </span>", (int)(200 * letterSpacing)));
+				}
 			}
 			return sb.toString();
 		}

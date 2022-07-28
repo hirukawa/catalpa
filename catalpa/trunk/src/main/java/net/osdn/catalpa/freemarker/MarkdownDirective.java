@@ -29,6 +29,7 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 	
 	private static final String PARAM_RELATIVE_URL_PREFIX = "relative_url_prefix";
 	private static final String PARAM_REPLACE_BACKSLASH_TO_YENSIGN = "replace_backslash_to_yensign";
+	private static final String PARAM_USE_CATALPA_FONT = "use_catalpa_font";
 
 	private static final DataValueFactory<Object> NULL_VALUE_FACTORY = new DataValueFactory<Object>() {
 		@Override
@@ -51,6 +52,7 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 		// Processing the parameters
 		String relativeUrlPrefix = null;
 		boolean isReplaceBackslashToYensign = false;
+		boolean useCatalpaFont = false;
 		
 		@SuppressWarnings("unchecked")
 		Iterator<Map.Entry<String, TemplateModel>> it = params.entrySet().iterator();
@@ -66,6 +68,11 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 					throw new TemplateModelException("The \"" + PARAM_REPLACE_BACKSLASH_TO_YENSIGN + "\" parameter must be a boolean.");
 				}
 				isReplaceBackslashToYensign = ((TemplateBooleanModel)param.getValue()).getAsBoolean();
+			} else if(param.getKey().equals(PARAM_USE_CATALPA_FONT)) {
+				if(!((param.getValue()) instanceof TemplateBooleanModel)) {
+					throw new TemplateModelException("The \"" + PARAM_USE_CATALPA_FONT + "\" parameter must be a boolean.");
+				}
+				useCatalpaFont = ((TemplateBooleanModel)param.getValue()).getAsBoolean();
 			}
 		}
 
@@ -102,7 +109,7 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 			renderer = HtmlRenderer.builder(options).build();
 		}
 		String output = renderer.render(document);
-		String japaneseTextLayouted = JapaneseTextLayouter.layout(output, isReplaceBackslashToYensign);
+		String japaneseTextLayouted = JapaneseTextLayouter.layout(output, isReplaceBackslashToYensign, useCatalpaFont);
 		env.getOut().write(japaneseTextLayouted);
 	}
 
