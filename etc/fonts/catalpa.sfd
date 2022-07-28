@@ -1,0 +1,69 @@
+SplineFontDB: 3.2
+FontName: catalpa
+FullName: catalpa
+FamilyName: catalpa
+Weight: Regular
+Copyright: Copyright (c) 2022, HIRUKAWA Ryo
+Version: 1.0
+ItalicAngle: 0
+UnderlinePosition: -256
+UnderlineWidth: 102
+Ascent: 1798
+Descent: 250
+InvalidEm: 0
+LayerCount: 2
+Layer: 0 0 "+gMyXYgAA" 1
+Layer: 1 0 "+Uk2XYgAA" 0
+XUID: [1021 681 1134081251 12966]
+StyleMap: 0x0000
+FSType: 0
+OS2Version: 0
+OS2_WeightWidthSlopeOnly: 0
+OS2_UseTypoMetrics: 1
+CreationTime: 1658974796
+ModificationTime: 1658980695
+PfmFamily: 17
+TTFWeight: 400
+TTFWidth: 5
+LineGap: 184
+VLineGap: 184
+OS2TypoAscent: 0
+OS2TypoAOffset: 1
+OS2TypoDescent: 0
+OS2TypoDOffset: 1
+OS2TypoLinegap: 184
+OS2WinAscent: 0
+OS2WinAOffset: 1
+OS2WinDescent: 0
+OS2WinDOffset: 1
+HheadAscent: 0
+HheadAOffset: 1
+HheadDescent: 0
+HheadDOffset: 1
+OS2Vendor: 'PfEd'
+MarkAttachClasses: 1
+DEI: 91125
+LangName: 1033
+Encoding: ISO8859-1
+UnicodeInterp: none
+NameList: AGL For New Fonts
+DisplaySize: -48
+AntiAlias: 1
+FitToEm: 0
+WinInfo: 32 16 4
+OnlyBitmaps: 1
+BeginPrivate: 0
+EndPrivate
+TeXData: 1 0 0 262144 131072 87381 0 -1048576 87381 783286 444596 497025 792723 393216 433062 380633 303038 157286 324010 404750 52429 2506097 1059062 262144
+BeginChars: 256 1
+
+StartChar: space
+Encoding: 32 32 0
+Width: 512
+Flags: W
+LayerCount: 2
+Fore
+Validated: 1
+EndChar
+EndChars
+EndSplineFont

@@ -50,7 +50,7 @@ public class JapaneseTextLayouter {
 	private static final Set<String> INLINE_TEXT_TAGS = new HashSet<String>(Arrays.asList(
 			"A", "BIG", "EM", "I", "SMALL", "SPAN", "STRONG"));
 
-	public static String layout(CharSequence input, boolean isReplaceBackslashToYensign) {
+	public static String layout(CharSequence input, boolean isReplaceBackslashToYensign, boolean useCatalpaFont) {
 		//プログラミング言語のキャメルケースやファイルパス記述でも折り返しできるように、ゼロ幅スペースとして<wbr>を挿入します。
 		//&#8203;ではなく<wbr>を挿入するのは、&#8203;を含むテキストをクリップボードにコピーするとゼロ幅スペースが含まれ、
 		//ソースコードとしてビルドできなくなるなどの問題を引き起こすためです。<wbr>はクリップボードへのコピー時に取り除かれます。
@@ -94,7 +94,7 @@ public class JapaneseTextLayouter {
 				}
 			}
 
-			sb.append(token.getHtml());
+			sb.append(token.getHtml(useCatalpaFont));
 		}
 		return sb.toString();
 	}
