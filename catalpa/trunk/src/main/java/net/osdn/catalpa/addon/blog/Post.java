@@ -3,6 +3,8 @@ package net.osdn.catalpa.addon.blog;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 public class Post {
@@ -18,6 +20,8 @@ public class Post {
 	private String         image;
 	private boolean        isMore;
 	private boolean        isDraft;
+
+	private List<Post>     related;
 	
 	protected Post(Path path, String url, LocalDate date, String title, Set<Category> categories, String leading, boolean isMore) {
 		this.path = path;
@@ -103,8 +107,14 @@ public class Post {
 		return isDraft;
 	}
 
+	public List<Post> getRelated() {
+		return related != null ? related : Collections.emptyList();
+	}
 
-	
+	/* package private */ void setRelated(List<Post> related) {
+		this.related = related;
+	}
+
 	protected static final String[] APPLICABLE_EXTENSIONS = new String[] {
 		".markdown",
 		".markdown.txt",

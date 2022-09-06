@@ -7,6 +7,8 @@ public class Link {
 	private LocalDate date;
 	private String title;
 	private String url;
+
+	private String thumbnail;
 	
 	public Link(String title, String url) {
 		this.title = title;
@@ -18,6 +20,14 @@ public class Link {
 		this.title = title;
 		this.url = url;
 	}
+
+	public Link(LocalDate date, String title, String url, String thumbnail) {
+		this.date = date;
+		this.title = title;
+		this.url = url;
+		this.thumbnail = thumbnail;
+	}
+
 	
 	public LocalDate getDate() {
 		return date;
@@ -29,5 +39,9 @@ public class Link {
 	
 	public String getUrl() {
 		return url;
+	}
+
+	public String getThumbnail() {
+		return thumbnail;
 	}
 }

@@ -16,6 +16,8 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Comparator;
@@ -23,6 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -98,7 +101,7 @@ public class BlogAddOn implements AddOn {
 	@Override
 	public void prepare(Path inputPath, Path outputPath, Map<String, Object> config, Map<String, Object> options, Context context) throws IOException {
 		if(options == null) {
-			options = new HashMap<String, Object>();
+			options = new HashMap<>();
 		}
 		Object obj;
 
@@ -155,7 +158,43 @@ public class BlogAddOn implements AddOn {
 				options.put("_DEFAULT_URL", post.getUrl());
 			}
 		}
-		
+
+		{ // create related posts
+			for(Post post : posts) {
+				List<Map.Entry<Long, Post>> list = new LinkedList<>();
+				for(Post other : posts) {
+					long score = 0;
+
+					if(other == post) {
+						continue;
+					}
+					for(Category category : post.getCategories()) {
+						for(Category otherCategory : other.getCategories()) {
+							if(category.getId().equals(otherCategory.getId())) {
+								score += 100000;
+							}
+						}
+					}
+					if(post.getDate() != null && other.getDate() != null) {
+						long days = ChronoUnit.DAYS.between(post.getDate(), other.getDate());
+						if(days > 0) {
+							score += days * (-2) + 1;
+						}
+						if(days < 0) {
+							score += days * 2;
+						}
+					}
+					list.add(new AbstractMap.SimpleEntry<>(score, other));
+				}
+				list.sort((o1, o2) -> { return (int)(o2.getKey().longValue() - o1.getKey().longValue()); });
+				List<Post> related = new ArrayList<>();
+				for(Entry<Long, Post> entry : list) {
+					related.add(entry.getValue());
+				}
+				post.setRelated(related);
+			}
+		}
+
 		obj = context.getDataModel().get("title");
 		if(obj instanceof String) {
 			blogDataModel.put("title", obj);
