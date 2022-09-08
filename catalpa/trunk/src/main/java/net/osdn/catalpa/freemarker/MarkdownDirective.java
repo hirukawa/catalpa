@@ -1,7 +1,10 @@
 package net.osdn.catalpa.freemarker;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
@@ -95,6 +98,39 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 			template.process(env.getDataModel(), writer);
 			writer.toString();
 			input = writer.toString();
+		}
+
+		// ブランク行（半角スペース・タブのみで構成されている行）を垂直スペース用の div に変換します。
+		// 最初の半角スペースで構成される行は高さ 0 の垂直余白になります。（マージン相殺が無効になるのでこれでも高さが増えます。）
+		// さらに半角スペースで構成される行が続くと半角スペース 1つごとに高さ 0.25em の垂直余白になります。
+		try(BufferedReader reader = new BufferedReader(new StringReader(input))) {
+			StringBuilder sb = new StringBuilder();
+			String line;
+			boolean isContinuousVerticalSpace = false;
+			while((line = reader.readLine()) != null) {
+				if(!line.isEmpty() && line.isBlank()) {
+					int space = 0;
+					for(int i = 0; i < line.length(); i++) {
+						if(line.charAt(i) == '\u0020') { // 半角スペース
+							space++;
+						}
+					}
+					if(space > 0) {
+						if(!isContinuousVerticalSpace) {
+							sb.append("\n<div class=\"vspace\" data-length=\"0\" style=\"margin-block-start:-1px;height:1px\"></div>\n");
+							isContinuousVerticalSpace = true;
+						} else {
+							String em = BigDecimal.valueOf(space).divide(BigDecimal.valueOf(4)).toPlainString() + "em";
+							sb.append("\n<div class=\"vspace\" data-length=\"" + space + "\" style=\"height:" + em + "\"></div>\n");
+						}
+					}
+				} else {
+					sb.append(line);
+					isContinuousVerticalSpace = false;
+				}
+				sb.append('\n');
+			}
+			input = sb.toString();
 		}
 
 		Document document = parser.parse(input);
