@@ -72,8 +72,15 @@ public class BasicNodeRenderer implements NodeRenderer {
 
 	protected void render(Heading node, NodeRendererContext context, HtmlWriter html) {
 		if(2 <= node.getLevel() && node.getLevel() <= 5) {
+			// id と name に含まれているタグとルビ記法は取り除きます。
 			String id = node.getAnchorRefId();
+			id = id.replaceAll("<.+?>", "");
+			id = id.replaceAll("｜", "");
+			id = id.replaceAll("《.+?》", "");
 			String name = node.getAnchorRefText().toString().trim().replace(' ', '+');
+			name = name.replaceAll("<.+?>", "");
+			name = name.replaceAll("｜", "");
+			name = name.replaceAll("《.+?》", "");
 			html.raw("<a class=\"h" + node.getLevel() + " anchor\" id=\"" + id + "\" name=\"" + name + "\"></a>");
 		}
 		context.delegateRender();
