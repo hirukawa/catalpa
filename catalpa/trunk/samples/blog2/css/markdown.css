@@ -1,0 +1,507 @@
+/*
+ *  Heading
+ */
+.markdown h1 {
+	margin-block-start: 3rem;
+	margin-block-end: 3rem;
+	font-size: 2rem; /* 16px -> 32px */
+	font-weight: bold;
+	line-height: 1.2;
+
+	text-align: center;
+}
+.markdown h2 {
+	margin-block-start: 2.5rem;
+	margin-block-end: 2.5rem;
+	font-size: 1.75rem; /* 16px -> 28px */
+	font-weight: bold;
+	line-height: 1.2;
+
+	text-align: center;
+	padding: 0.75em 0.5em;
+	background-color: #f8f8f8;
+	margin-inline-start: calc(0px - var(--main-padding-left) - var(--main-padding-left-adjust));
+	margin-inline-end: calc(0px - var(--main-padding-right) - var(--main-padding-right-adjust));
+}
+.markdown h3 {
+	margin-block-start: 2rem;
+	margin-block-end: 2rem;
+	font-size: 1.5rem; /* 16px -> 24px */
+	font-weight: bold;
+	line-height: 1.2;
+
+	padding: 0.25em 0.5em;
+	border-left: 0.5em solid #3e4750;
+}
+.markdown h4 {
+	margin-block-start: 1.5rem;
+	margin-block-end: 1.5rem;
+	font-size: 1.25rem; /* 16px -> 20px */
+	font-weight: bold;
+	line-height: 1.2;
+}
+.markdown h5 {
+	margin-block-start: 1.25rem;
+	margin-block-end: 1.25rem;
+	font-size: 1.125rem; /* 16px -> 18px */
+	font-weight: bold;
+	line-height: 1.2;
+}
+.markdown h6 {
+	margin-block-start: 1rem;
+	margin-block-end: 1rem;
+	font-size: 1.0rem; /* 16px -> 16px */
+	font-weight: bold;
+	line-height: 1.2;
+}
+
+
+/*
+ *  パラグラフ
+ */
+ .markdown p {
+	margin: 1rem 0;
+	line-height: 1.75;
+	text-align: justify;
+}
+
+
+/*
+ * `コード`
+ * <code>コード</code>
+ */
+ .markdown code {
+	padding: 0.15em 0.25em 0.15em 0.25em;
+	font-family: var(--font-family-monospace);
+	/*
+	font-size: 92%;
+	*/
+	letter-spacing: 0.06em;
+	color: #c7254e;
+	background-color: rgba(128, 0, 32, 0.05);
+	border-radius: 4px;
+	white-space: pre-wrap;
+}
+.markdown .monospace code {
+	font-family: var(--font-family-monospace);
+}
+
+
+/*
+ * ['Ctrl'] 
+ * <kbd data-length="4">Ctrl</kbd>
+ */
+ .markdown kbd {
+	vertical-align: middle;
+	margin: 0;
+	padding: 0.35em 0.5em;
+	font-family: var(--font-family-monospace);
+	font-size: 87.5%; /* 16px -> 14px */
+	line-height: 1.0;
+	color: #D0D0D0;
+	text-shadow: -1px -1px 0 rgba(0,0,0,0.5);
+	background-color: #202020;
+	border: 1px solid #000000;
+	border-radius: 3px;
+	box-shadow: 1px 1px 2px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.3) inset;
+	white-space: pre-wrap;
+}
+
+
+/*
+ * ["ファイル"] 
+ * <samp class="button" data-length="4">ファイル</samp>
+ */
+.markdown samp.button {
+	vertical-align: middle;
+	margin: 0;
+	padding: 0.35em 0.5em;
+	font-family: var(--font-family-monospace);
+	font-size: 87.5%; /* 16px -> 14px */
+	line-height: 1.0;
+	color: #202020;
+	background-color: #E0E0E0;
+	border: 1px solid #606060;
+	border-radius: 3px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,0.5), 1px 1px 2px #FFFFFF inset;
+	white-space: pre-wrap;
+}
+
+
+/*
+ * 箇条書きリスト・番号リスト・タスクリスト
+ */
+ .markdown ul,
+ .markdown ol {
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+	padding-inline-start: min(3em, 6vw);
+}
+.markdown li {
+	margin-block-start: 1em;
+	line-height: 1.25;
+}
+.markdown li > p {
+	margin: 0;
+}
+.markdown ul > li::marker {
+	content: "\25cf\2002";
+	color: var(--list-marker-color);
+}
+.markdown ul > li > ul > li::marker {
+	content: "\25a0\2002";
+}
+.markdown ul > li > ul > li > ul > li::marker {
+	content: "\25c6\2002";
+}
+.markdown ul > li > ul > li > ul > li > ul > li::marker {
+	content: "\2013\2002";
+	font-weight: bold;
+}
+.markdown ol > li::marker {
+	content: counter(list-item) ".\2002";
+	font-weight: bold;
+	color: var(--list-marker-color);
+}
+.markdown ul > li.task-list-item.checked::marker {
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(40,125,207);"/></g></g></svg>') "\2002";
+}
+.markdown ul > li.task-list-item.unchecked::marker {
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="checkbox"><path d="M448,160C448,142.339 433.661,128 416,128L96,128C78.339,128 64,142.339 64,160L64,480C64,497.661 78.339,512 96,512L416,512C433.661,512 448,497.661 448,480L448,160ZM416,168C416,163.585 412.415,160 408,160L104,160C99.585,160 96,163.585 96,168L96,472C96,476.415 99.585,480 104,480L408,480C412.415,480 416,476.415 416,472L416,168Z" style="fill:rgb(153,153,153);"/></g></svg>') "\2002";
+}
+
+
+/*
+ * ファイルツリー
+ * 箇条書きリスト先頭の * の次に {.tree} を付与するとファイルツリーになります。
+ */
+ .markdown ul.tree {
+	font-family: var(--font-family-monospace);
+}
+.markdown ul.tree ::marker {
+	content: "";
+}
+.markdown ul.tree,
+.markdown ul.tree ul {
+	margin-block-start: 0;
+	margin-block-end: 0;
+	margin-inline-start: 0.5em;
+	margin-inline-end: 0;
+	padding: 0;
+	list-style-type: none;
+}
+.markdown ul.tree ul {
+	position: relative;
+}
+.markdown ul.tree ul:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0.125em;
+	left: 0;
+	bottom: 0;
+	width: 0;
+	border-left: 0.125em solid #ccc;
+}
+.markdown ul.tree li {
+	position: relative;
+	margin: 0;
+	padding: 0.75em 0 0 1.5em;
+	line-height: 1.25em;
+}
+.markdown ul.tree ul li:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 1.25em;
+	left: 0;
+	width: 1em;
+	height: 0;
+	border-top: 0.125em solid #ccc;
+}
+.markdown ul.tree ul li:last-child:before {
+	bottom: 0;
+	height: auto;
+	background: var(--main-background-color);
+}
+
+
+/*
+ * 定義リスト
+ */
+.markdown dl {
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+}
+.markdown dt {
+	margin-block-start: 1em;
+	line-height: 1.25;
+}
+.markdown dd {
+	margin-inline-start: min(2em, 3vw);
+	line-height: 1.75;
+}
+
+
+/*
+ * 画像
+ */
+ .markdown img {
+	max-width: 100%;
+	border: 0;
+	vertical-align: middle;
+}
+.markdown img.border {
+	border: 1px solid #808080;
+}
+.markdown img.shadow {
+	box-shadow: 2px 2px 8px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.25);
+}
+.markdown p.images-only {
+	text-align: center;
+}
+.markdown p.images-only.right {
+	text-align: right;
+}
+
+
+/*
+ * 水平線
+ */
+.markdown hr {
+	margin-block-start: 2rem;
+	margin-block-end: 2rem;
+	margin-inline-start: calc(0px - var(--main-padding-left) - var(--main-padding-left-adjust));
+	margin-inline-end: calc(0px - var(--main-padding-right) - var(--main-padding-right-adjust));
+	border: 0;
+	border-top: 1px solid #ccc;
+}
+
+
+/*
+ * テーブル
+ */
+ .markdown table {
+	min-width:  60%;
+	max-width: 100%;
+	margin: 1rem auto;
+	border-spacing: 0;
+	border-collapse: collapse;
+	line-height: 1.25;
+}
+.markdown table > thead {
+	font-size: 93.75%; /* 16px -> 15px */
+}
+.markdown table > thead > tr > th {
+	padding: 0 0.5em;
+	vertical-align: bottom;
+	border-bottom: 2px solid var(--table-border-color);
+	white-space: nowrap;
+}
+.markdown table > thead > tr > th:not([align]) {
+	text-align: left;
+}
+.markdown table > tbody > tr:nth-of-type(odd) {
+	background-color: var(--table-background-color-odd);
+}
+.markdown table > tbody > tr > td {
+	vertical-align: baseline;
+	padding: 0.5em 0.5em;
+	border-top:    1px solid var(--table-border-color);
+	border-bottom: 1px solid var(--table-border-color);
+}
+.markdown table var {
+	font-style: normal;
+	white-space: nowrap;
+}
+.markdown table th::after,
+.markdown table td::after {
+	content: ' ';
+}
+.markdown table.left {
+	margin-left: 0;
+}
+.markdown table.right {
+	margin-right: 0;
+}
+
+
+/*
+ * 引用ブロック
+ */
+ .markdown blockquote {
+	margin-block-start:   1em;
+	margin-block-end:     1em;
+	margin-inline-start:  0.5em;
+	margin-inline-end:    0.5em;
+	padding-block-start:  1px;
+	padding-block-end:    1px;
+	padding-inline-start: 1em;
+	padding-inline-end:   0.625em;
+	font-family: var(--blockquote-font-family);
+	font-style: italic;
+	border-left: 0.375em solid var(--blockquote-color);
+}
+.markdown blockquote:empty {
+	margin: 3.0em 0 0 0;
+	padding: 0;
+	height: 0;
+	border: 0;
+}
+
+
+/*
+ * 付箋
+ */
+.markdown dl.note,
+.markdown dl.tip,
+.markdown dl.info,
+.markdown dl.warning,
+.markdown dl.caution {
+	position: relative;
+	display: inline-block;
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+}
+.markdown dl.note > dt,
+.markdown dl.tip > dt,
+.markdown dl.info > dt,
+.markdown dl.warning > dt,
+.markdown dl.caution > dt {
+	position: absolute;
+	display: inline-block;
+	margin-block-start: 1em;
+	padding: 0.5em 1.5em;
+	line-height: 1.25;
+	font-weight: bold;
+	box-shadow: 2px 2px 8px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.25);
+	transform-origin: left bottom;
+	transform: rotate(0);
+	top: -2.5em;
+	left: 1em;
+}
+.markdown dl.note > dt:empty,
+.markdown dl.tip > dt:empty,
+.markdown dl.info > dt:empty,
+.markdown dl.warning > dt:empty,
+.markdown dl.caution > dt:empty {
+	display: none;
+}
+.markdown dl.note > dd,
+.markdown dl.tip > dd,
+.markdown dl.info > dd,
+.markdown dl.warning > dd,
+.markdown dl.caution > dd {
+	margin: 0;
+	padding: 1.25em 1em 1em 1em;
+	line-height: 1.75;
+}
+.markdown dl.deg0,
+.markdown dl.deg1,
+.markdown dl.deg2,
+.markdown dl.deg3,
+.markdown dl.deg4,
+.markdown dl.deg5 {
+	margin-block-start: 2em;
+}
+.markdown dl.deg0 > dt {
+	transform: rotate(0);
+}
+.markdown dl.deg1 > dt {
+	transform: rotate(-1deg);
+}
+.markdown dl.deg2 > dt {
+	transform: rotate(-2deg);
+}
+.markdown dl.deg3 > dt {
+	transform: rotate(-3deg);
+}
+.markdown dl.deg4 > dt {
+	transform: rotate(-4deg);
+}
+.markdown dl.deg5 > dt {
+	transform: rotate(-5deg);
+}
+.markdown dl.note {
+	background-color: hsl(0, 0%, 96%);
+}
+.markdown dl.note dt {
+	color: white;
+	background-color: hsl(300, 48%, 32%);
+}
+.markdown dl.note > dt:empty + dd {
+	border-left: 0.5em solid hsl(300, 48%, 32%);
+	box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+.markdown dl.tip {
+	background-color: hsl(153, 99%, 96%);
+}
+.markdown dl.tip dt {
+	color: white;
+	background-color: hsl(153, 99%, 29%);
+}
+.markdown dl.tip > dt:empty + dd {
+	border-left: 0.5em solid hsl(153, 99%, 29%);
+	box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+.markdown dl.info {
+	background-color: hsl(210, 99%, 96%);
+}
+.markdown dl.info dt {
+	color: white;
+	background-color: hsl(210, 99%, 31%);
+}
+.markdown dl.info > dt:empty + dd {
+	border-left: 0.5em solid hsl(210, 99%, 31%);
+	box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+.markdown dl.warning {
+	background-color: hsl(36, 98%, 96%);
+}
+.markdown dl.warning dt {
+	color: white;
+	background-color: hsl(36, 98%, 51%);
+}
+.markdown dl.warning > dt:empty + dd {
+	border-left: 0.5em solid hsl(36, 98%, 51%);
+	box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+.markdown dl.caution {
+	background-color: hsl(344, 100%, 96%);
+}
+.markdown dl.caution dt {
+	color: white;
+	background-color: hsl(344, 100%, 45%);
+}
+.markdown dl.caution > dt:empty + dd {
+	border-left: 0.5em solid hsl(344, 100%, 45%);
+	box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+
+/*
+ * ルビ
+ */
+ ruby[data-rt] {
+	position: relative;
+}
+ruby[data-rt]::before {
+	content: attr(data-rt);
+	position: absolute;
+	top: -1em;
+	left: -2em;
+	right: -2em;
+	font-size: 0.5em;
+	text-align: center;
+	line-height: 1;
+	color: #666;
+}
+ruby[data-rt] rt {
+	display: none;
+}

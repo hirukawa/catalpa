@@ -1,0 +1,337 @@
+/*
+ * flex
+ */
+.markdown .flex {
+	display: flex;
+	justify-content: space-evenly;
+}
+.markdown .flex.space-between,
+.markdown .flex.left.right {
+	justify-content: space-between;
+}
+.markdown .flex.flex-start,
+.markdown .flex.left {
+	justify-content: flex-start;
+}
+.markdown .flex.flex-end,
+.markdown .flex.right {
+	justify-content: flex-end
+}
+
+/*
+ * hr
+ */
+.markdown hr {
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+	border: 0;
+	border-top: 1px solid @border-color;
+}
+
+/*
+ * IMG
+ */
+.markdown img {
+	max-width: 100%;
+	border: 0;
+	vertical-align: middle;
+}
+.markdown img.border {
+	border: 1px solid #808080;
+}
+.markdown img.shadow {
+	box-shadow: 2px 2px 8px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.25);
+}
+.markdown img.zoom {
+	box-shadow: none;
+}
+.markdown img.shadow.zoom {
+	box-shadow: 2px 2px 8px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.25);
+	transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.markdown img.shadow.zoom:hover {
+	box-shadow: 2px 7px 28px rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.25);
+}
+.markdown img.shadow.zoom:active {
+	box-shadow: 2px 2px 8px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.25);
+}
+
+/*
+ * P
+ */
+.markdown p.images-only {
+	text-align: center;
+}
+
+/*
+ * DL
+ */
+.markdown dd {
+	margin-bottom: 1em;
+}
+
+/*
+ * UL
+ */
+.markdown ul {
+	padding-left: 2em;
+}
+
+/*
+ * OL
+ */
+.markdown ol {
+	padding-left: 2em;
+}
+
+/*
+ * LI
+ */
+.markdown li {
+	margin-top: 0.75em;
+	margin-bottom: 0.75em;
+}
+.markdown li > p {
+	margin: 0;
+}
+
+/*
+ * task-list
+ */
+.markdown li.task-list-item {
+	list-style-type: none;
+	text-indent: -1.5em;
+	margin-left: 0.25em;
+}
+.markdown li.task-list-item input.task-list-item-checkbox:not(:checked),
+.markdown li.task-list-item input.task-list-item-checkbox:checked {
+	visibility: hidden;
+	margin: 0 0.5em 0 0;
+}
+.markdown li.task-list-item input.task-list-item-checkbox:not(:checked)::before {
+	&:extend(.material-icons);
+	visibility: visible;
+	content: 'check_box_outline_blank';
+	/* content: ''; */
+	line-height: 0.9;
+	font-size: 130%;
+	font-weight: 100;
+	color: #C0C0C0;
+}
+.markdown li.task-list-item input.task-list-item-checkbox:checked::before {
+	&:extend(.material-icons);
+	visibility: visible;
+	/* content: 'check_box'; */
+	content: 'done';
+	line-height: 0.9;
+	font-size: 130%;
+	font-weight: 900;
+	color: @secondary-variant-color;
+}
+.markdown li:not(.task-list-item) {
+	text-indent: initial;
+}
+
+/*
+ * UL .tree
+ */
+.markdown ul.tree {
+	font-family: @font-family-monospace;
+}
+.markdown ul.tree,
+.markdown ul.tree ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+.markdown ul.tree ul {
+	position: relative;
+	margin-left: 0.5em;
+}
+.markdown ul.tree ul:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 0;
+	border-left: 1px solid #808080;
+}
+.markdown ul.tree li {
+	position: relative;
+	margin: 0;
+	padding: 0 0 0 1em;
+	line-height: 1.5em;
+}
+.markdown ul.tree ul li:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0.8em;
+	left: 0;
+	width: 0.75em;
+	height: 0;
+	border-top: 1px solid #808080;
+}
+.markdown ul.tree ul li:last-child:before {
+	bottom: 0;
+	height: auto;
+	background: @background-color;
+}
+
+/*
+ * TABLE
+ */
+.markdown table {
+	min-width:  60%;
+	max-width: 100%;
+	margin: 1.5rem auto 1.5rem auto;
+	font-size: 83.33%;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+.markdown table > thead > tr > th {
+	padding: 0 0.5em;
+	line-height: 1.5;
+	vertical-align: bottom;
+	border-bottom: 2px solid @border-color;
+	white-space: nowrap;
+}
+.markdown table > thead > tr > th:not([align]) {
+	text-align: left;
+}
+.markdown table > tbody > tr:nth-of-type(odd) {
+	background-color: @background-variant-color;
+}
+.markdown table > tbody > tr > td {
+	vertical-align: baseline;
+	padding: 0.25em 0.5em;
+	border-top:    1px solid @border-color;
+	border-bottom: 1px solid @border-color;
+}
+.markdown table var {
+	font-style: normal;
+	white-space: nowrap;
+}
+.markdown table th::after,
+.markdown table td::after {
+	content: ' ';
+}
+.markdown table.left {
+	margin-left: 0;
+}
+.markdown table.right {
+	margin-right: 0;
+}
+
+/*
+ * BLOCKQUOTE
+ */
+.markdown blockquote {
+	font-family: @font-family-sans-serif-italic;
+	margin-left: 0.5em;
+	margin-right: 1em;
+	padding-top: 0.1em;
+	padding-bottom: 0.1em;
+	padding-left: 1.5em;
+	padding-right: 1.5em;
+	font-style: italic;
+	font-size: 0.95em;
+	border-left: 0.25em solid #e0e0e0;
+}
+.markdown blockquote:empty {
+	margin: 3.0em 0 0 0;
+	padding: 0;
+	height: 0;
+	border: 0;
+}
+
+/*
+ * TT
+ */
+.markdown tt {
+	font-family: @font-family-monospace;
+	word-break: break-all;
+	white-space: pre-wrap;
+}
+
+/*
+ * CODE
+ */
+.markdown code {
+	padding: 0.15em 0.25em 0.15em 0.25em;
+	font-family: @font-family-monospace;
+	font-size: 92%;
+	letter-spacing: 0.06em;
+	color: #c7254e;
+	background-color: rgba(128, 0, 32, 0.05);
+	border-radius: 4px;
+	white-space: pre-wrap;
+}
+.markdown .monospace code {
+	font-family: monospace;
+}
+
+
+/*
+ * KBD
+ */
+.markdown kbd {
+	display: inline-block;
+	vertical-align: text-top;
+	margin: 0;
+	padding: 0.2em 0.5em 0.2em 0.5em;
+	font-family: @font-family-monospace;
+	font-size: 92%;
+	line-height: 1.0;
+	color: #D0D0D0;
+	text-shadow: -1px -1px 0 rgba(0,0,0,0.5);
+	background-color: #202020;
+	border: 1px solid #000000;
+	border-radius: 3px;
+	box-shadow: 1px 1px 2px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.3) inset;
+	white-space: pre-wrap;
+}
+
+
+/*
+ * SAMP
+ */
+.markdown samp.button {
+	display: inline-block;
+	vertical-align: text-top;
+	margin: 0;
+	padding: 0.35em 0.5em 0.35em 0.5em;
+	font-family: @font-family-monospace;
+	font-size: 80%;
+	line-height: 1.0;
+	color: #202020;
+	background-color: #E0E0E0;
+	border: 1px solid #606060;
+	border-radius: 3px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,0.5), 1px 1px 2px #FFFFFF inset;
+	white-space: pre-wrap;
+}
+
+
+/*
+ * RUBY
+ */
+ ruby[data-rt] {
+	position: relative;
+}
+ruby[data-rt]::before {
+	content: attr(data-rt);
+	position: absolute;
+	top: -1em;
+	left: -2em;
+	right: -2em;
+	font-size: 0.5em;
+	text-align: center;
+	line-height: 1;
+	color: #666;
+}
+ruby[data-rt] rt {
+	display: none;
+}
