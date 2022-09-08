@@ -102,7 +102,7 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 
 		// ブランク行（半角スペース・タブのみで構成されている行）を垂直スペース用の div に変換します。
 		// 最初の半角スペースで構成される行は高さ 0 の垂直余白になります。（マージン相殺が無効になるのでこれでも高さが増えます。）
-		// さらに半角スペースで構成される行が続くと半角スペース 1つごとに高さ 0.25em の垂直余白になります。
+		// さらに半角スペースで構成される行が続くと半角スペース 1つごとに高さ 0.25rem の垂直余白になります。
 		try(BufferedReader reader = new BufferedReader(new StringReader(input))) {
 			StringBuilder sb = new StringBuilder();
 			String line;
@@ -120,8 +120,8 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 							sb.append("\n<div class=\"vspace\" data-length=\"0\" style=\"margin-block-start:-1px;height:1px\"></div>\n");
 							isContinuousVerticalSpace = true;
 						} else {
-							String em = BigDecimal.valueOf(space).divide(BigDecimal.valueOf(4)).toPlainString() + "em";
-							sb.append("\n<div class=\"vspace\" data-length=\"" + space + "\" style=\"height:" + em + "\"></div>\n");
+							String rem = BigDecimal.valueOf(space).divide(BigDecimal.valueOf(4)).toPlainString() + "rem";
+							sb.append("\n<div class=\"vspace\" data-length=\"" + space + "\" style=\"height:" + rem + "\"></div>\n");
 						}
 					}
 				} else {
