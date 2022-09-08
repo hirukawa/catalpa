@@ -149,6 +149,10 @@ public class Catalpa {
 		MutableDataSet options = new MutableDataSet();
 		options.set(HtmlRenderer.FENCED_CODE_NO_LANGUAGE_CLASS, "nohighlight");
 		options.set(HighlightExtension.REPLACE_YEN_SIGN, true);
+		options.set(TaskListExtension.ITEM_DONE_CLASS, "checked");       // タスクリストの完了アイテム <li> に "checked" クラスを追加します。
+		options.set(TaskListExtension.ITEM_NOT_DONE_CLASS, "unchecked"); // タスクリストの未完了アイテム <li> に "unchecked" クラスを追加します。
+		options.set(TaskListExtension.ITEM_DONE_MARKER, "");             // タスクリストの完了アイテム <li> に既定の子要素 <checkbox> を追加しません。
+		options.set(TaskListExtension.ITEM_NOT_DONE_MARKER, "");         // タスクリストの未完了アイテム <li> に既定の子要素 <checkbox> を追加しません。
 		options.set(Parser.EXTENSIONS, Arrays.asList(new Extension[] {
 				AttributesExtension.create(),
 				DefinitionExtension.create(),

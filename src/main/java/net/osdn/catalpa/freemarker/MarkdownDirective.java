@@ -29,6 +29,7 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 	
 	private static final String PARAM_RELATIVE_URL_PREFIX = "relative_url_prefix";
 	private static final String PARAM_REPLACE_BACKSLASH_TO_YENSIGN = "replace_backslash_to_yensign";
+	private static final String PARAM_USE_RUBY = "use_ruby";
 	private static final String PARAM_USE_CATALPA_FONT = "use_catalpa_font";
 
 	private static final DataValueFactory<Object> NULL_VALUE_FACTORY = new DataValueFactory<Object>() {
@@ -52,6 +53,7 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 		// Processing the parameters
 		String relativeUrlPrefix = null;
 		boolean isReplaceBackslashToYensign = false;
+		boolean useRuby = false;
 		boolean useCatalpaFont = false;
 		
 		@SuppressWarnings("unchecked")
@@ -64,10 +66,15 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 				}
 				relativeUrlPrefix = ((TemplateScalarModel)param.getValue()).getAsString();
 			} else if(param.getKey().equals(PARAM_REPLACE_BACKSLASH_TO_YENSIGN)) {
-				if(!(param.getValue() instanceof TemplateBooleanModel)) {
+				if (!(param.getValue() instanceof TemplateBooleanModel)) {
 					throw new TemplateModelException("The \"" + PARAM_REPLACE_BACKSLASH_TO_YENSIGN + "\" parameter must be a boolean.");
 				}
-				isReplaceBackslashToYensign = ((TemplateBooleanModel)param.getValue()).getAsBoolean();
+				isReplaceBackslashToYensign = ((TemplateBooleanModel) param.getValue()).getAsBoolean();
+			} else if(param.getKey().equals(PARAM_USE_RUBY)) {
+				if(!((param.getValue()) instanceof TemplateBooleanModel)) {
+					throw new TemplateModelException("The \"" + PARAM_USE_RUBY + "\" parameter must be a boolean.");
+				}
+				useRuby = ((TemplateBooleanModel)param.getValue()).getAsBoolean();
 			} else if(param.getKey().equals(PARAM_USE_CATALPA_FONT)) {
 				if(!((param.getValue()) instanceof TemplateBooleanModel)) {
 					throw new TemplateModelException("The \"" + PARAM_USE_CATALPA_FONT + "\" parameter must be a boolean.");
@@ -109,7 +116,7 @@ public class MarkdownDirective implements TemplateDirectiveModel {
 			renderer = HtmlRenderer.builder(options).build();
 		}
 		String output = renderer.render(document);
-		String japaneseTextLayouted = JapaneseTextLayouter.layout(output, isReplaceBackslashToYensign, useCatalpaFont);
+		String japaneseTextLayouted = JapaneseTextLayouter.layout(output, isReplaceBackslashToYensign, useRuby, useCatalpaFont);
 		env.getOut().write(japaneseTextLayouted);
 	}
 

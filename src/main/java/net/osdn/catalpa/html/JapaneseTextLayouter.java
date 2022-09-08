@@ -1,10 +1,12 @@
 package net.osdn.catalpa.html;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,6 +19,9 @@ public class JapaneseTextLayouter {
 
 	//private static final Pattern HTML_TAG_PATTERN = Pattern.compile("<(\"[^\"]*\"|'[^']*'|[^'\">])*>");
 	private static final Pattern HTML_TAG_PATTERN = Pattern.compile("<(/?\\w+|!--|!DOCTYPE)(\"[^\"]*\"|'[^']*'|[^'\">])*>", Pattern.CASE_INSENSITIVE);
+	private static final Pattern RUBY_PATTERN_1 = Pattern.compile("｜(.+?)《(.+?)》");
+	private static final Pattern RUBY_PATTERN_2 = Pattern.compile("([\\u4E00-\\u9FFF\\u3005-\\u3007\\u30F6]+)《(.+?)》");
+
 	private static final Set<String> HTML_TAGS = new HashSet<String>(Arrays.asList(
 			"!--", "!DOCTYPE",
 			"A", "ABBR", "ACRONYM", "ADDRESS", "APPLET", "AREA", "ARTICLE", "ASIDE", "AUDIO",
@@ -42,7 +47,7 @@ public class JapaneseTextLayouter {
 			"WBR"));
 	
 	private static final Set<String> ELEMENTS_TO_SKIP = new HashSet<String>(Arrays.asList(
-			"CODE", "KBD", "PRE", "SAMP", "SCRIPT", "STYLE", "TT"));
+			"CODE", "KBD", "PRE", "SAMP", "SCRIPT", "STYLE", "TT", "RUBY"));
 	
 	private static final Set<String> ELEMENTS_WITH_BOUNDARY = new HashSet<String>(Arrays.asList(
 			"CODE", "KBD", "SAMP", "TT"));
@@ -50,7 +55,12 @@ public class JapaneseTextLayouter {
 	private static final Set<String> INLINE_TEXT_TAGS = new HashSet<String>(Arrays.asList(
 			"A", "BIG", "EM", "I", "SMALL", "SPAN", "STRONG"));
 
-	public static String layout(CharSequence input, boolean isReplaceBackslashToYensign, boolean useCatalpaFont) {
+	public static String layout(CharSequence input, boolean isReplaceBackslashToYensign, boolean useRuby, boolean useCatalpaFont) {
+		// 青空文庫のルビ記法を ruby タグに置き換えます。
+		if(useRuby) {
+			input = applyRuby(input);
+		}
+
 		//プログラミング言語のキャメルケースやファイルパス記述でも折り返しできるように、ゼロ幅スペースとして<wbr>を挿入します。
 		//&#8203;ではなく<wbr>を挿入するのは、&#8203;を含むテキストをクリップボードにコピーするとゼロ幅スペースが含まれ、
 		//ソースコードとしてビルドできなくなるなどの問題を引き起こすためです。<wbr>はクリップボードへのコピー時に取り除かれます。
@@ -385,6 +395,101 @@ public class JapaneseTextLayouter {
 				}
 			}
 		}
+	}
+
+	/** 指定した文字列に含まれる青空文庫のルビ記法を <ruby> タグに置き換えて返します。
+	 *
+	 * @param s 文字列
+	 * @return 青空文庫のルビ記法を <ruby> タグに置き換えた文字列
+	 */
+	private static String applyRuby(CharSequence s) {
+		/* [\u4E00-\u9FFF\u3005-\u3007\u30F6]+ は漢字にマッチするパターンです。（ひらがな・カタカナにはマッチしません）
+		 *
+		 *  漢字 \u4E00 ～ \u9FFF
+		 *  以下の文字も漢字として扱います。
+		 *  \u3005 々
+		 *  \u3006 〆
+		 *  \u3007 〇
+		 *  \u30F6 ヶ
+		 *  \u4EDD 仝
+		 */
+
+		Set<String> rubies = new HashSet<>();
+		Map<String, String> map = new HashMap<>();
+
+		StringBuilder sb = new StringBuilder();
+		Matcher m;
+		int start;
+
+		m = RUBY_PATTERN_1.matcher(s);
+		start = 0;
+		while(m.find(start)) {
+			sb.append(s.subSequence(start, m.start()));
+
+			if(m.group(1).isBlank()) {
+				sb.append(m.group(0));
+			} else {
+				String rb = m.group(1);
+				String rt = m.group(2);
+				String element = "<ruby data-rt=\"" + rt + "\"><rb>" + rb + "</rb><rt>" + rt + "</rt></ruby>";
+				rubies.add(rb);
+				map.put(rb, element);
+				sb.append(element);
+			}
+			start = m.end();
+		}
+		sb.append(s.subSequence(start, s.length()));
+
+		s = sb.toString();
+		sb = new StringBuilder();
+		m = RUBY_PATTERN_2.matcher(s);
+		start = 0;
+		while(m.find(start)) {
+			sb.append(s.subSequence(start, m.start()));
+
+			if(m.group(1).isBlank()) {
+				sb.append(m.group(0));
+			} else {
+				String rb = m.group(1);
+				String rt = m.group(2);
+				String element = "<ruby data-rt=\"" + rt + "\"><rb>" + rb + "</rb><rt>" + rt + "</rt></ruby>";
+				rubies.add(rb);
+				map.put(rb, element);
+				sb.append(element);
+			}
+			start = m.end();
+		}
+		sb.append(s.subSequence(start, s.length()));
+
+		/*
+		// ルビが指定されていない箇所にもルビを自動適用します。
+		List<String> list = new ArrayList<>(rubies);
+		list.sort(Comparator.comparingInt(String::length).reversed());
+		for(String rb : list) {
+			String element = map.get(rb);
+			int fromIndex = 0;
+			int index;
+			while((index = sb.indexOf(rb, fromIndex)) >= 0) {
+				boolean skip = false;
+				for(int i = index; i > fromIndex; i--) {
+					if(sb.charAt(i - 1) == '>') {
+						if (i >= 4 && "<rb>".equals(sb.subSequence(i - 4, i))) {
+							skip = true;
+						}
+						break;
+					}
+				}
+				if(skip) {
+					fromIndex = index + rb.length();
+				} else {
+					sb.replace(index, index + rb.length(), element);
+					fromIndex = index + element.length();
+				}
+			}
+		}
+		*/
+
+		return sb.toString();
 	}
 
 	private static void addLetterSpacing(Char firstChar) {
