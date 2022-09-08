@@ -39,7 +39,7 @@ public class JapaneseTextLayouter {
 			"OBJECT", "OL", "OPTGROUP", "OPTION", "OUTPUT",
 			"P", "PARAM", "PICTURE", "PRE", "PROGRESS",
 			"Q",
-			"RP", "RT", "RUBY",
+			"RB", "RP", "RT", "RUBY",
 			"S", "SAMP", "SCRIPT", "SECTION", "SELECT", "SMALL", "SOURCE", "SPAN", "STRIKE", "STRONG", "STYLE", "SUB", "SUMMARY", "SUP", "SVG",
 			"TABLE", "TBODY", "TD", "TEMPLATE", "TEXTAREA", "TFOOT", "TH", "THEAD", "TIME", "TITLE", "TR", "TRACK", "TT",
 			"U", "UL",
@@ -47,13 +47,13 @@ public class JapaneseTextLayouter {
 			"WBR"));
 	
 	private static final Set<String> ELEMENTS_TO_SKIP = new HashSet<String>(Arrays.asList(
-			"CODE", "KBD", "PRE", "SAMP", "SCRIPT", "STYLE", "TT", "RUBY"));
+			"CODE", "KBD", "PRE", "SAMP", "SCRIPT", "STYLE", "TT", "RT", "RP"));
 	
 	private static final Set<String> ELEMENTS_WITH_BOUNDARY = new HashSet<String>(Arrays.asList(
 			"CODE", "KBD", "SAMP", "TT"));
 	
 	private static final Set<String> INLINE_TEXT_TAGS = new HashSet<String>(Arrays.asList(
-			"A", "BIG", "EM", "I", "SMALL", "SPAN", "STRONG"));
+			"A", "BIG", "EM", "I", "SMALL", "SPAN", "STRONG", "RUBY", "RB"));
 
 	public static String layout(CharSequence input, boolean isReplaceBackslashToYensign, boolean useRuby, boolean useCatalpaFont) {
 		// 青空文庫のルビ記法を ruby タグに置き換えます。
@@ -93,6 +93,12 @@ public class JapaneseTextLayouter {
 						RawChars next = (RawChars)tokens.get(j);
 						if(next.getType() == RawChars.Type.INLINE_TAG_CLOSE) {
 							lastCloseTag = next;
+							continue;
+						}
+						// ルビ（読み）タグ <rt> ～ </rt> はスキップします。
+						// これは <ruby><rb>漢字</rb><rt>かんじ</rt></ruby> となっているときにスペースを </ruby> の後ろに出すためです。
+						String text = next.toString();
+						if(text.startsWith("<rt>") && text.endsWith("/rt>")) {
 							continue;
 						}
 					}
@@ -414,9 +420,6 @@ public class JapaneseTextLayouter {
 		 *  \u4EDD 仝
 		 */
 
-		Set<String> rubies = new HashSet<>();
-		Map<String, String> map = new HashMap<>();
-
 		StringBuilder sb = new StringBuilder();
 		Matcher m;
 		int start;
@@ -431,10 +434,7 @@ public class JapaneseTextLayouter {
 			} else {
 				String rb = m.group(1);
 				String rt = m.group(2);
-				String element = "<ruby data-rt=\"" + rt + "\"><rb>" + rb + "</rb><rt>" + rt + "</rt></ruby>";
-				rubies.add(rb);
-				map.put(rb, element);
-				sb.append(element);
+				sb.append("<ruby data-rt=\"" + rt + "\"><rb>" + rb + "</rb><rt>" + rt + "</rt></ruby>");
 			}
 			start = m.end();
 		}
@@ -452,43 +452,11 @@ public class JapaneseTextLayouter {
 			} else {
 				String rb = m.group(1);
 				String rt = m.group(2);
-				String element = "<ruby data-rt=\"" + rt + "\"><rb>" + rb + "</rb><rt>" + rt + "</rt></ruby>";
-				rubies.add(rb);
-				map.put(rb, element);
-				sb.append(element);
+				sb.append("<ruby data-rt=\"" + rt + "\"><rb>" + rb + "</rb><rt>" + rt + "</rt></ruby>");
 			}
 			start = m.end();
 		}
 		sb.append(s.subSequence(start, s.length()));
-
-		/*
-		// ルビが指定されていない箇所にもルビを自動適用します。
-		List<String> list = new ArrayList<>(rubies);
-		list.sort(Comparator.comparingInt(String::length).reversed());
-		for(String rb : list) {
-			String element = map.get(rb);
-			int fromIndex = 0;
-			int index;
-			while((index = sb.indexOf(rb, fromIndex)) >= 0) {
-				boolean skip = false;
-				for(int i = index; i > fromIndex; i--) {
-					if(sb.charAt(i - 1) == '>') {
-						if (i >= 4 && "<rb>".equals(sb.subSequence(i - 4, i))) {
-							skip = true;
-						}
-						break;
-					}
-				}
-				if(skip) {
-					fromIndex = index + rb.length();
-				} else {
-					sb.replace(index, index + rb.length(), element);
-					fromIndex = index + element.length();
-				}
-			}
-		}
-		*/
-
 		return sb.toString();
 	}
 
