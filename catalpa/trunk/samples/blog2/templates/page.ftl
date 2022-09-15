@@ -27,13 +27,13 @@
 		<#include "css/main.css">
 
 		header .container {
-			max-width: 992px;
+			max-width: 960px;
 		}
 		main {
-			max-width: 1216px;
+			max-width: 1200px;
 		}
 		footer .container {
-			max-width: 992px;
+			max-width: 960px;
 		}
 		.card-container {
 			padding: 0 2px 0 0;

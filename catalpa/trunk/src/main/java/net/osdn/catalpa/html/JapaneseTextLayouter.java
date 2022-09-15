@@ -258,23 +258,22 @@ public class JapaneseTextLayouter {
 				tagName = tagName.substring(1);
 				isEndTag = true;
 			}
-			if(HTML_TAGS.contains(tagName)) {
-				// ADD CHARS BEFORE TAG
-				for(int i = index; i < m.start(); i++) {
-					previousChar = currentChar;
-					if(input.charAt(i) == 0x0D && (i+1 < m.start()) && input.charAt(i+1) == 0x0A) {
-						currentChar = new Char(CharClass.CRLF);
-						i++;
-					} else {
-						currentChar = new Char(input.charAt(i));
-					}
-					if(previousChar != null) {
-						previousChar.setNextChar(currentChar);
-						currentChar.setPreviousChar(previousChar);
-					}
-					tokens.add(currentChar);
+			// ADD CHARS BEFORE TAG
+			for(int i = index; i < m.start(); i++) {
+				previousChar = currentChar;
+				if(input.charAt(i) == 0x0D && (i+1 < m.start()) && input.charAt(i+1) == 0x0A) {
+					currentChar = new Char(CharClass.CRLF);
+					i++;
+				} else {
+					currentChar = new Char(input.charAt(i));
 				}
-				
+				if(previousChar != null) {
+					previousChar.setNextChar(currentChar);
+					currentChar.setPreviousChar(previousChar);
+				}
+				tokens.add(currentChar);
+			}
+			if(HTML_TAGS.contains(tagName)) {
 				if(!isEndTag && ELEMENTS_TO_SKIP.contains(tagName)) {
 					if(ELEMENTS_WITH_BOUNDARY.contains(tagName)) {
 						// ADD OPENING BOUNDARY CHAR
@@ -329,15 +328,10 @@ public class JapaneseTextLayouter {
 					index = m.end();
 				}
 			} else {
-				// ADD CHAR '<'
-				previousChar = currentChar;
-				currentChar = new Char('<');
-				if(previousChar != null) {
-					previousChar.setNextChar(currentChar);
-					currentChar.setPreviousChar(previousChar);
-				}
-				tokens.add(currentChar);
-				index++;
+				// ADD UNKNOWN CURRENT TAG
+				RawChars.Type type = isEndTag ? RawChars.Type.INLINE_TAG_CLOSE : RawChars.Type.INLINE_TAG_OPEN;
+				tokens.add(new RawChars(m.group(0), type));
+				index = m.end();
 			}
 		}
 		// ADD CHARS AFTER LAST TAG

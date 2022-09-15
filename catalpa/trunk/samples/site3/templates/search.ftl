@@ -5,7 +5,7 @@
 	<meta name="robots" content="noindex">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="icon" href="${baseurl}favicon.ico">
-	<title>${blog.title!}</title>
+	<title>${title!}</title>
 	<meta name="description" content="${(description!)?replace('\n', '')}">
 
 	<style>
@@ -13,13 +13,13 @@
 		<#include "css/search.css">
 
 		header .container {
-			max-width: 960px;
+			max-width: 992px;
 		}
 		main {
-			max-width: 960px;
+			max-width: 992px;
 		}
 		footer .container {
-			max-width: 960px;
+			max-width: 992px;
 		}
 	</style>
 </head>
@@ -28,9 +28,9 @@
 	<header>
 		<div class="container">
 			<#if (_PREVIEW!false) == true>
-			<a class="title" href="/">${blog.title!}</a>
+			<a class="title" href="/">${title!}</a>
 			<#else>
-			<a class="title" href="${siteurl!}">${blog.title!}</a>
+			<a class="title" href="${siteurl!}">${title!}</a>
 			</#if>
 			<div style="width:0px;height:16px"></div>
 			<form onsubmit="var e = document.getElementById('search-keyword'); search(e.value); e.select(); return false;">
