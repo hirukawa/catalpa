@@ -147,29 +147,29 @@
 	margin: 0;
 }
 .markdown ul > li::marker {
-	content: "\25cf\2003";
+	content: "\25cf\2002";
 	color: var(--list-marker-color);
 }
 .markdown ul > li > ul > li::marker {
-	content: "\25a0\2003";
+	content: "\25a0\2002";
 }
 .markdown ul > li > ul > li > ul > li::marker {
-	content: "\25c6\2003";
+	content: "\25c6\2002";
 }
 .markdown ul > li > ul > li > ul > li > ul > li::marker {
-	content: "\2013\2003";
+	content: "\2013\2002";
 	font-weight: bold;
 }
 .markdown ol > li::marker {
-	content: counter(list-item) ".\2003";
+	content: counter(list-item) ".\2002";
 	font-weight: bold;
 	color: var(--list-marker-color);
 }
 .markdown ul > li.task-list-item.checked::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(40,125,207);"/></g></g></svg>') "\2003";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(40,125,207);"/></g></g></svg>') "\2002";
 }
 .markdown ul > li.task-list-item.unchecked::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="checkbox"><path d="M448,160C448,142.339 433.661,128 416,128L96,128C78.339,128 64,142.339 64,160L64,480C64,497.661 78.339,512 96,512L416,512C433.661,512 448,497.661 448,480L448,160ZM416,168C416,163.585 412.415,160 408,160L104,160C99.585,160 96,163.585 96,168L96,472C96,476.415 99.585,480 104,480L408,480C412.415,480 416,476.415 416,472L416,168Z" style="fill:rgb(153,153,153);"/></g></svg>') "\2003";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="checkbox"><path d="M448,160C448,142.339 433.661,128 416,128L96,128C78.339,128 64,142.339 64,160L64,480C64,497.661 78.339,512 96,512L416,512C433.661,512 448,497.661 448,480L448,160ZM416,168C416,163.585 412.415,160 408,160L104,160C99.585,160 96,163.585 96,168L96,472C96,476.415 99.585,480 104,480L408,480C412.415,480 416,476.415 416,472L416,168Z" style="fill:rgb(153,153,153);"/></g></svg>') "\2002";
 }
 
 
@@ -488,10 +488,10 @@
 /*
  * ルビ
  */
- ruby[data-rt] {
+.markdown ruby[data-rt] {
 	position: relative;
 }
-ruby[data-rt]::before {
+.markdown ruby[data-rt]::before {
 	content: attr(data-rt);
 	position: absolute;
 	top: -0.75em;
@@ -502,7 +502,7 @@ ruby[data-rt]::before {
 	line-height: 1;
 	color: #666;
 }
-ruby[data-rt] rt {
+.markdown ruby[data-rt] rt {
 	display: none;
 }
 
@@ -510,233 +510,263 @@ ruby[data-rt] rt {
 /*
  * その他・汎用
  */
-.m-0 {
+.markdown .center {
+	text-align: center !important;
+}
+.markdown .left {
+	text-align: left !important;
+}
+.markdown .right {
+	text-align: right !important;
+}
+
+.markdown .m-0 {
 	margin: 0 !important;
 }
-.m-1 {
+.markdown .m-1 {
 	margin: 1em !important;
 }
-.m-2 {
+.markdown .m-2 {
 	margin: 2em !important;
 }
-.m-3 {
+.markdown .m-3 {
 	margin: 3em !important;
 }
-.m-auto {
+.markdown .m-auto {
 	margin: auto !important;
 }
-.mt-0 {
+.markdown .mt-0 {
 	margin-top: 0 !important;
 }
-.mt-1 {
+.markdown .mt-1 {
 	margin-top: 1em !important;
 }
-.mt-2 {
+.markdown .mt-2 {
 	margin-top: 2em !important;
 }
-.mt-3 {
+.markdown .mt-3 {
 	margin-top: 3em !important;
 }
-.mt-auto {
+.markdown .mt-auto {
 	margin-top: auto !important;
 }
-.mt-0 {
+.markdown .mt-0 {
 	margin-bottom: 0 !important;
 }
-.mb-1 {
+.markdown .mb-1 {
 	margin-bottom: 1em !important;
 }
-.mb-2 {
+.markdown .mb-2 {
 	margin-bottom: 2em !important;
 }
-.mb-3 {
+.markdown .mb-3 {
 	margin-bottom: 3em !important;
 }
-.mb-auto {
+.markdown .mb-auto {
 	margin-bottom: auto !important;
 }
-.ml-0 {
+.markdown .ml-0 {
 	margin-left: 0 !important;
 }
-.ml-1 {
+.markdown .ml-1 {
 	margin-left: 1em !important;
 }
-.ml-2 {
+.markdown .ml-2 {
 	margin-left: 2em !important;
 }
-.ml-3 {
+.markdown .ml-3 {
 	margin-left: 3em !important;
 }
-.ml-auto {
+.markdown .ml-auto {
 	margin-left: auto !important;
 }
-.mr-0 {
+.markdown .mr-0 {
 	margin-right: 0 !important;
 }
-.mr-1 {
+.markdown .mr-1 {
 	margin-right: 1em !important;
 }
-.mr-2 {
+.markdown .mr-2 {
 	margin-right: 2em !important;
 }
-.mr-3 {
+.markdown .mr-3 {
 	margin-right: 3em !important;
 }
-.mr-auto {
+.markdown .mr-auto {
 	margin-right: auto !important;
 }
-.mx-0, .mh-0 {
+.markdown .mx-0,
+.markdown .mh-0 {
 	margin-left: 0 !important;
 	margin-right: 0 !important;
 }
-.mx-1 .mh-1 {
+.markdown .mx-1
+.markdown .mh-1 {
 	margin-left: 1em !important;
 	margin-right: 1em !important;
 }
-.mx-2, .mh-2 {
+.markdown .mx-2,
+.markdown .mh-2 {
 	margin-left: 2em !important;
 	margin-right: 2em !important;
 }
-.mx-3, .mh-3 {
+.markdown .mx-3,
+.markdown .mh-3 {
 	margin-left: 3em !important;
 	margin-right: 3em !important;
 }
-.mx-auto, .mh-auto {
+.markdown .mx-auto,
+.markdown .mh-auto {
 	margin-left: auto !important;
 	margin-right: auto !important;
 }
-.my-0, .mv-0 {
+.markdown .my-0,
+.markdown .mv-0 {
 	margin-top: 0 !important;
 	margin-bottom: 0 !important;
 }
-.my-1 .mv-1 {
+.markdown .my-1,
+.markdown .mv-1 {
 	margin-top: 1em !important;
 	margin-bottom: 1em !important;
 }
-.my-2, .mv-2 {
+.markdown .my-2,
+.markdown .mv-2 {
 	margin-top: 2em !important;
 	margin-bottom: 2em !important;
 }
-.my-3, .mv-3 {
+.markdown .my-3,
+.markdown .mv-3 {
 	margin-top: 3em !important;
 	margin-bottom: 3em !important;
 }
-.my-auto, .my-auto {
+.markdown .my-auto,
+.markdown .my-auto {
 	margin-top: auto !important;
 	margin-bottom: auto !important;
 }
-.p-0 {
+.markdown .p-0 {
 	padding: 0 !important;
 }
-.p-1 {
+.markdown .p-1 {
 	padding: 1em !important;
 }
-.p-2 {
+.markdown .p-2 {
 	padding: 2em !important;
 }
-.p-3 {
+.markdown .p-3 {
 	padding: 3em !important;
 }
-.p-auto {
+.markdown .p-auto {
 	padding: auto !important;
 }
-.pt-0 {
+.markdown .pt-0 {
 	padding-top: 0 !important;
 }
-.pt-1 {
+.markdown .pt-1 {
 	padding-top: 1em !important;
 }
-.pt-2 {
+.markdown .pt-2 {
 	padding-top: 2em !important;
 }
-.pt-3 {
+.markdown .pt-3 {
 	padding-top: 3em !important;
 }
-.pt-auto {
+.markdown .pt-auto {
 	padding-top: auto !important;
 }
-.pt-0 {
+.markdown .pt-0 {
 	padding-bottom: 0 !important;
 }
-.pb-1 {
+.markdown .pb-1 {
 	padding-bottom: 1em !important;
 }
-.pb-2 {
+.markdown .pb-2 {
 	padding-bottom: 2em !important;
 }
-.pb-3 {
+.markdown .pb-3 {
 	padding-bottom: 3em !important;
 }
-.pb-auto {
+.markdown .pb-auto {
 	padding-bottom: auto !important;
 }
-.pl-0 {
+.markdown .pl-0 {
 	padding-left: 0 !important;
 }
-.pl-1 {
+.markdown .pl-1 {
 	padding-left: 1em !important;
 }
-.pl-2 {
+.markdown .pl-2 {
 	padding-left: 2em !important;
 }
-.pl-3 {
+.markdown .pl-3 {
 	padding-left: 3em !important;
 }
-.pl-auto {
+.markdown .pl-auto {
 	padding-left: auto !important;
 }
-.pr-0 {
+.markdown .pr-0 {
 	padding-right: 0 !important;
 }
-.pr-1 {
+.markdown .pr-1 {
 	padding-right: 1em !important;
 }
-.pr-2 {
+.markdown .pr-2 {
 	padding-right: 2em !important;
 }
-.pr-3 {
+.markdown .pr-3 {
 	padding-right: 3em !important;
 }
-.pr-auto {
+.markdown .pr-auto {
 	padding-right: auto !important;
 }
-.px-0, .ph-0 {
+.markdown .px-0,
+.markdown .ph-0 {
 	padding-left: 0 !important;
 	padding-right: 0 !important;
 }
-.px-1 .ph-1 {
+.markdown .px-1,
+.markdown .ph-1 {
 	padding-left: 1em !important;
 	padding-right: 1em !important;
 }
-.px-2, .ph-2 {
+.markdown .px-2,
+.markdown .ph-2 {
 	padding-left: 2em !important;
 	padding-right: 2em !important;
 }
-.px-3, .ph-3 {
+.markdown .px-3,
+.markdown .ph-3 {
 	padding-left: 3em !important;
 	padding-right: 3em !important;
 }
-.px-auto, .ph-auto {
+.markdown .px-auto,
+.markdown .ph-auto {
 	padding-left: auto !important;
 	padding-right: auto !important;
 }
-.py-0, .pv-0 {
+.markdown .py-0,
+.markdown .pv-0 {
 	padding-top: 0 !important;
 	padding-bottom: 0 !important;
 }
-.py-1 .pv-1 {
+.markdown .py-1,
+.markdown .pv-1 {
 	padding-top: 1em !important;
 	padding-bottom: 1em !important;
 }
-.py-2, .pv-2 {
+.markdown .py-2,
+.markdown .pv-2 {
 	padding-top: 2em !important;
 	padding-bottom: 2em !important;
 }
-.py-3, .pv-3 {
+.markdown .py-3,
+.markdown .pv-3 {
 	padding-top: 3em !important;
 	padding-bottom: 3em !important;
 }
-.py-auto, .pv-auto {
+.markdown .py-auto,
+.markdown .pv-auto {
 	padding-top: auto !important;
 	padding-bottom: auto !important;
 }

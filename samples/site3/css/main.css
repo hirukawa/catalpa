@@ -59,7 +59,6 @@ html {
 body {
 	margin: 0;
 	padding: 0;
-	line-height: 1.75;
 	font-size: var(--main-font-size-px);
 	color: var(--main-text-color);
 	background-color: var(--main-background-color);
@@ -186,7 +185,7 @@ main {
 	box-sizing: border-box;
 	margin: auto;
 }
-article {
+main .content {
 	padding-inline-start: calc(var(--main-padding-left) + var(--main-padding-left-adjust));
 	padding-inline-end: calc(var(--main-padding-right) + var(--main-padding-right-adjust));
 }

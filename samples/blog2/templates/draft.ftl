@@ -12,10 +12,10 @@
 		<#include "css/highlight.css">
 
 		header .container {
-			max-width: 992px;
+			max-width: 960px;
 		}
 		main {
-			max-width: 992px;
+			max-width: 960px;
 		}
 		article .header {
 			margin-block-start: 3rem;
@@ -70,50 +70,6 @@
 
 		footer {
 			margin: 1px 0 0 0;
-		}
-
-		.sns {
-			margin: 1rem 0;
-			padding: 1em 1em;
-			line-height: 1;
-			background-color: #f2f2f2;
-		}
-		.sns .button {
-			margin: 1em 0.25em 0 0;
-			display: inline-block;
-			font-family: "Yu Gothic Medium", "Yu Gothic", 'YuGothic';
-			font-weight: bold;
-			font-size: 87.5%; /* 16px -> 14px */
-			line-height: 1;
-			padding: 0.5em 0.75em;
-			border-radius: 0.25em;
-			color: white;
-		}
-		.sns .button svg {
-			height: 1em;
-			width: auto;
-			vertical-align: middle;
-		}
-		.sns .button span {
-			vertical-align: middle;
-		}
-		.sns .button.hatena {
-			background-color: #00A4DE;
-		}
-		.sns .button.hatena:hover {
-			background-color: #0091C5;
-		}
-		.sns .button.facebook {
-			background-color: #4267B2;
-		}
-		.sns .button.facebook:hover {
-			background-color: #365899;
-		}
-		.sns .button.twitter {
-			background-color: #1DA1F2;
-		}
-		.sns .button.twitter:hover {
-			background-color: #0C7ABF;
 		}
 
 		.categories {
