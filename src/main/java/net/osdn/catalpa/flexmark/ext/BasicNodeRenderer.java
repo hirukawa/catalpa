@@ -9,13 +9,17 @@ import com.vladsch.flexmark.ast.Image;
 import com.vladsch.flexmark.ast.ImageRef;
 import com.vladsch.flexmark.ast.Paragraph;
 import com.vladsch.flexmark.ast.SoftLineBreak;
+import com.vladsch.flexmark.ast.Text;
 import com.vladsch.flexmark.ext.attributes.AttributesNode;
+import com.vladsch.flexmark.ext.definition.DefinitionList;
+import com.vladsch.flexmark.ext.definition.DefinitionTerm;
 import com.vladsch.flexmark.html.HtmlWriter;
 import com.vladsch.flexmark.html.renderer.NodeRenderer;
 import com.vladsch.flexmark.html.renderer.NodeRendererContext;
 import com.vladsch.flexmark.html.renderer.NodeRenderingHandler;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.DataHolder;
+import org.jetbrains.annotations.NotNull;
 
 public class BasicNodeRenderer implements NodeRenderer {
 
@@ -34,6 +38,12 @@ public class BasicNodeRenderer implements NodeRenderer {
 		set.add(new NodeRenderingHandler<Heading>(Heading.class, new NodeRenderingHandler.CustomNodeRenderer<Heading>() {
 			@Override
 			public void render(Heading node, NodeRendererContext context, HtmlWriter html) {
+				BasicNodeRenderer.this.render(node, context, html);
+			}
+		}));
+		set.add(new NodeRenderingHandler<DefinitionList>(DefinitionList.class, new NodeRenderingHandler.CustomNodeRenderer<DefinitionList>() {
+			@Override
+			public void render(@NotNull DefinitionList node, @NotNull NodeRendererContext context, @NotNull HtmlWriter html) {
 				BasicNodeRenderer.this.render(node, context, html);
 			}
 		}));
@@ -82,6 +92,24 @@ public class BasicNodeRenderer implements NodeRenderer {
 			name = name.replaceAll("｜", "");
 			name = name.replaceAll("《.+?》", "");
 			html.raw("<a class=\"h" + node.getLevel() + " anchor\" id=\"" + id + "\" name=\"" + name + "\"></a>");
+		}
+		context.delegateRender();
+	}
+
+	protected void render(DefinitionList node, NodeRendererContext context, HtmlWriter html) {
+		// 定義リストの定義名を省略した場合は DefinitionTerm の子孫に Text ノードが存在しません。
+		// 定義名が空ではない場合、DL に "has-term" クラス属性を追加します。
+		if(node.hasChildren() && node.getFirstChild() instanceof DefinitionTerm) {
+			String term = null;
+			for(Node descendant : node.getFirstChild().getDescendants()) {
+				if(descendant instanceof Text) {
+					term = descendant.getChars().toString();
+					break;
+				}
+			}
+			if(term != null) {
+				html.attr("class", "has-term");
+			}
 		}
 		context.delegateRender();
 	}
