@@ -24,8 +24,8 @@
  *  dark
  */
 .markdown pre {
-	margin-block-start: 1em;
-	margin-block-end: 1em;
+	margin-block-start: var(--default-margin-block-start);
+	margin-block-end: var(--default-margin-block-end);
 	margin-inline-start: 0;
 	margin-inline-end: 0;
 	background: #272822;
