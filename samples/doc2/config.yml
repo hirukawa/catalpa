@@ -1,7 +1,0 @@
----
-title: ドキュメントのサンプル
-icon: img/sample3.png
----
-
-#--sidebar--
-<#include "_sidebar.md">

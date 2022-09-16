@@ -1,7 +1,0 @@
-  - [トップページ](index.html)
-      + [Catalpaの由来](index.html#Catalpaの由来)
-      + [組版](index.html#組版)
-      + [JIS X 4051](index.html#JIS+X+4051)
-  - [別ページ](other.html)
-      + [Java](other.html#Java)
-      + [オブジェクト指向](other.html#オブジェクト指向)
