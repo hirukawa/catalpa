@@ -24,28 +24,28 @@
 		<#include "css/markdown.css">
 		<#include "css/highlight.css">
 
-		.pager .previous, 
-		.pager .next {
+		.blog-pager .previous, 
+		.blog-pager .next {
 			width: clamp(0px, 360px, 100vw);
 		}
-		.categories {
+		.blog-categories {
 			padding: 0 1px 1px 1px;
 			gap: 2px;
 			background-color: var(--main-background-color);
 		}
-		.category {
+		.blog-category {
 			background-color: #f2f2f2;
 			color: var(--text-link-color);
 		}
-		.category:visited {
+		.blog-category:visited {
 			background-color: #f2f2f2;
 			color: var(--text-link-color);
 		}
-		.category:hover {
+		.blog-category:hover {
 			background-color: #f2f2f2;
 			color: var(--text-link-hover-color);
 		}
-		.card {
+		.blog-card {
 			width: clamp(0px, 200px, 100vw);
 		}
 		${css!}
@@ -73,7 +73,7 @@
 	<main>
 		<div class="content">
 			<article class="post">
-				<div class="header">
+				<div class="blog-header">
 					<span class="date">${blog.post.date}</span>
 					<#list blog.post.categories as category>
 					&thinsp;<a class="category" href="${baseurl}${category.url}">${category.name}</a>
@@ -143,7 +143,7 @@
 
 			<#-- pager -->
 			<#if blog.pager.previous?? || blog.pager.next??>
-			<div class="pager">
+			<div class="blog-pager">
 				<#if blog.pager.previous??>
 				<a class="previous grow" href="${blog.pager.previous.url}">
 					<div>
@@ -168,21 +168,21 @@
 			</#if>
 
 			<#-- category -->
-			<div class="categories">
+			<div class="blog-categories">
 			<#list blog.categories as category>
-				<a class="category" href="${baseurl}${category.url}">${category.name}&nbsp;<span class="label">(${category.posts?size})</span></a>
+				<a class="blog-category" href="${baseurl}${category.url}">${category.name}&nbsp;<span class="label">(${category.posts?size})</span></a>
 			</#list>
 			</div>
 
 			<#-- related -->
-			<div class="card-container">
+			<div class="blog-card-container">
 				<#list blog.post.related as post>
 					<#if post?index == 12>
 						<#break>
 					</#if>
-					<a class="card" href="${baseurl}${post.url}">
+					<a class="blog-card" href="${baseurl}${post.url}">
 						<#if post.thumbnail?has_content && post.thumbnail?starts_with("data:") >
-						<img src="${post.thubnail}">
+						<img src="${post.thubnail!}">
 						<#else>
 						<img src="${baseurl}${post.thumbnail!}">
 						</#if>
