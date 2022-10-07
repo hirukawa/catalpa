@@ -12,28 +12,28 @@
 		<#include "css/markdown.css">
 		<#include "css/highlight.css">
 
-		.pager .previous, 
-		.pager .next {
+		.blog-pager .previous, 
+		.blog-pager .next {
 			width: clamp(0px, 360px, 100vw);
 		}
-		.categories {
+		.blog-categories {
 			padding: 0 1px 1px 1px;
 			gap: 2px;
 			background-color: var(--main-background-color);
 		}
-		.category {
+		.blog-category {
 			background-color: #f2f2f2;
 			color: var(--text-link-color);
 		}
-		.category:visited {
+		.blog-category:visited {
 			background-color: #f2f2f2;
 			color: var(--text-link-color);
 		}
-		.category:hover {
+		.blog-category:hover {
 			background-color: #f2f2f2;
 			color: var(--text-link-hover-color);
 		}
-		.card {
+		.blog-card {
 			width: clamp(0px, 200px, 100vw);
 		}
 		${css!}
@@ -57,10 +57,10 @@
 	<main>
 		<div class="content">
 			<article>
-				<div class="header">
+				<div class="blog-header">
 					<span class="date">${blog.post.date}</span>
 					<#list blog.post.categories as category>
-					&thinsp;<a class="category" href="${baseurl}${category.url}">${category.name}</a>
+					&thinsp;<a class="blog-category" href="${baseurl}${category.url}">${category.name}</a>
 					</#list>
 					<h1 class="title">${blog.post.title}</h1>
 				</div>
@@ -78,7 +78,7 @@
 		<div class="content" style="padding:0">
 			<#-- pager -->
 			<#if blog.pager.previous?? || blog.pager.next??>
-			<div class="pager">
+			<div class="blog-pager">
 				<#if blog.pager.previous??>
 				<a class="previous grow" href="${blog.pager.previous.url}">
 					<div>

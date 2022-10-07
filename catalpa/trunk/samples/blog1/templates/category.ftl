@@ -26,10 +26,10 @@
 			margin-block-end: 1em;
 			max-width: 1200px;
 		}
-		.card-container {
+		.blog-card-container {
 			padding: 0 2px 0 0;
 		}
-		.card {
+		.blog-card {
 			padding: 12px min(16px, 2vw) 16px min(16px, 2vw);
 			background-color: #fefefe;
 			border-top: 2px dotted #ccc;
@@ -57,10 +57,10 @@
 			</div>
 		</div>
 		<#-- category -->
-		<div class="categories-wrapper">
-			<div class="content categories">
+		<div class="blog-categories-wrapper">
+			<div class="content blog-categories">
 			<#list blog.categories as category>
-				<a class="category <#if category.name == blog.category.name!>active</#if>"
+				<a class="blog-category <#if category.name == blog.category.name!>active</#if>"
 					href="${baseurl}${category.url}">${category.name}&nbsp;<span class="label">(${category.posts?size})</span>
 				</a>
 			</#list>
@@ -72,32 +72,32 @@
 	<main>
 		<div class="content">
 			<#-- article -->
-			<div class="card-container">
-				<div class="card-erase-horizontal-border"></div>
-				<div class="card-erase-vertical-border"></div>
+			<div class="blog-card-container">
+				<div class="blog-card-erase-horizontal-border"></div>
+				<div class="blog-card-erase-vertical-border"></div>
 
 				<#list blog.page.posts as post>
-				<a class="card" href="${baseurl}${post.url}">
+				<a class="blog-card" href="${baseurl}${post.url}">
 					<div class="date">${post.date}</div>
 					<#if post.thumbnail?has_content && post.thumbnail?starts_with("data:") >
-					<img src="${post.thumbnail}">
+					<img src="${post.thumbnail!}">
 					<#else>
 					<img src="${baseurl}${post.thumbnail!}">
 					</#if>
 					<h2 class="title">${post.title}</h2>
 				</a>
 				</#list>
-				<div class="card hidden"></div>
-				<div class="card hidden"></div>
-				<div class="card hidden"></div>
-				<div class="card hidden"></div>
-				<div class="card hidden"></div>
-				<div class="card hidden"></div>
+				<div class="blog-card hidden"></div>
+				<div class="blog-card hidden"></div>
+				<div class="blog-card hidden"></div>
+				<div class="blog-card hidden"></div>
+				<div class="blog-card hidden"></div>
+				<div class="blog-card hidden"></div>
 			</div>
 
 			<#-- pager -->
 			<#if blog.pager.previous?? || blog.pager.next??>
-			<div class="pager">
+			<div class="blog-pager">
 				<#if blog.pager.previous??>
 				<a class="previous" href="${blog.pager.previous.url}">前のページ</a>
 				</#if>
