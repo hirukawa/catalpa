@@ -33,9 +33,6 @@
 			background-color: #f2f2f2;
 			color: var(--text-link-hover-color);
 		}
-		.blog-card {
-			width: clamp(0px, 200px, 100vw);
-		}
 		${css!}
 	</style>
 </head>
