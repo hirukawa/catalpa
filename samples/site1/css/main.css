@@ -24,8 +24,8 @@
 	--blockquote-font-family:     var(--font-family-sans-serif-italic);
 	--blockquote-color:           #e8e8e8;
 
-	--font-family-sans-serif: "Meiryo", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", "Yu Gothic", 'YuGothic', "Roboto", "Droid Sans", sans-serif;
-	--font-family-sans-serif-italic: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", "Yu Gothic", 'YuGothic', "Roboto", "Droid Sans", sans-serif;
+	--font-family-sans-serif: "Meiryo", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", 'YuGothic', "Roboto", "Droid Sans", sans-serif;
+	--font-family-sans-serif-italic: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", 'YuGothic', "Roboto", "Droid Sans", sans-serif;
 	--font-family-serif: "Hiragino Mincho ProN", "Yu Mincho Medium", "Yu Mincho", "YuMincho", serif;
 	--font-family-monospace: "Consolas", "Meiryo", "monaco", "Osaka−等幅", "Osaka-mono", monospace;
 	--font-family-arial: "Arial", "Helvetica Neue", "Helvetica", sans-serif;
@@ -52,6 +52,7 @@
 html {
 	overflow-y: scroll; /* 常にスクロールバーを表示します */
 	scroll-behavior: smooth; /* スムースにスクロールします */
+	font-family: var(--font-family-sans-serif);
 	font-size: var(--content-font-size-px); /* html または :root css で font-size を指定すると 1rem が変更されます。*/
 }
 
