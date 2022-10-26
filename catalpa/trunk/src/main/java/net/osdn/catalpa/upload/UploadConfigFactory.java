@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import net.osdn.catalpa.Catalpa;
 import net.osdn.catalpa.Context;
+import net.osdn.catalpa.upload.firebase.FirebaseConfig;
 import net.osdn.catalpa.upload.netlify.NetlifyConfig;
 import net.osdn.catalpa.upload.sftp.SftpConfig;
 import net.osdn.catalpa.upload.smb.SmbConfig;
@@ -66,7 +67,9 @@ public class UploadConfigFactory {
 
 		String type = UploadConfig.getConfigValueAsString(uploadConfigData, "type");
 		if(type != null) {
-			if(type.equals("netlify")) {
+			if(type.equals("firebase")) {
+				uploadConfig = new FirebaseConfig();
+			} else if(type.equals("netlify")) {
 				uploadConfig = new NetlifyConfig();
 			} else if(type.equals("sftp")) {
 				uploadConfig = new SftpConfig();
