@@ -648,7 +648,7 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 		}
 	}
 	
-	private static Path createTemporaryDirectory(String dir, boolean isDeleteIfExists) throws IOException {
+	public static Path createTemporaryDirectory(String dir, boolean isDeleteIfExists) throws IOException {
 		Path path = Paths.get(System.getProperty("java.io.tmpdir"))
 				.resolve("catalpa")
 				.resolve(dir);

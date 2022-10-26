@@ -3,8 +3,8 @@ apply plugin: 'java'
 version = '0.9'
 
 tasks.withType(JavaCompile) {
-	sourceCompatibility = 17
-	targetCompatibility = 17
+	sourceCompatibility = 19
+	targetCompatibility = 19
 	options.compilerArgs << '-Xlint:all'
 }
 
@@ -48,6 +48,10 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-core:2.13.4'
 	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.4'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
+
+	// Firebase Hosting で必要です。
+	// https://mvnrepository.com/artifact/com.google.auth/google-auth-library-oauth2-http
+	implementation group: 'com.google.auth', name: 'google-auth-library-oauth2-http', version: '1.12.1'
 
 	// auto-detect-reader で必要です。
 	implementation 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
@@ -110,3 +114,5 @@ task exewrap(type: Exec, dependsOn: 'jar') {
 		"-V", "${version}",
 		"-v", "${version}"
 }
+sourceCompatibility = JavaVersion.VERSION_15
+targetCompatibility = JavaVersion.VERSION_15
