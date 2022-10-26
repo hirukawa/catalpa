@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 public class FirebaseConfig extends UploadConfig {
 
     private String siteId;
-    private Path secretKeyFilePath;
+    private Path serviceAccountKeyFilePath;
 
     public FirebaseConfig() {
     }
@@ -22,8 +22,8 @@ public class FirebaseConfig extends UploadConfig {
         return this.siteId;
     }
 
-    public Path getSecretKeyFilePath() {
-        return this.secretKeyFilePath;
+    public Path getServiceAccountKeyFilePath() {
+        return this.serviceAccountKeyFilePath;
     }
 
     private void initialize() {
@@ -35,17 +35,17 @@ public class FirebaseConfig extends UploadConfig {
         }
         this.siteId = s.trim();
 
-        s = getValueAsString("secretKey");
+        s = getValueAsString("serviceAccountKey");
         if(s != null) {
             String secretKey = s.replace('/', '\\');
             if(secretKey.length() >= 3 && secretKey.substring(1, 3).equals(":\\")) {
-                this.secretKeyFilePath = Paths.get(secretKey).toAbsolutePath();
+                this.serviceAccountKeyFilePath = Paths.get(secretKey).toAbsolutePath();
             } else {
-                Path p = getFolderPath("secretKey");
-                this.secretKeyFilePath = p.resolve(secretKey).toAbsolutePath();
+                Path p = getFolderPath("serviceAccountKey");
+                this.serviceAccountKeyFilePath = p.resolve(secretKey).toAbsolutePath();
             }
-            if(!Files.exists(this.secretKeyFilePath)) {
-                throw new UncheckedIOException(new FileNotFoundException(this.secretKeyFilePath.toString()));
+            if(!Files.exists(this.serviceAccountKeyFilePath)) {
+                throw new UncheckedIOException(new FileNotFoundException(this.serviceAccountKeyFilePath.toString()));
             }
         }
     }

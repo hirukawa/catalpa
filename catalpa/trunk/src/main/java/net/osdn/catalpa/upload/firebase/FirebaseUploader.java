@@ -25,6 +25,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 import java.util.zip.Deflater;
 import java.util.zip.GZIPOutputStream;
@@ -44,7 +47,7 @@ public class FirebaseUploader {
         this.config = config;
     }
 
-    public int upload(File localDirectory, ProgressObserver observer) throws IOException, InterruptedException, NoSuchAlgorithmException {
+    public int upload(File localDirectory, ProgressObserver observer) throws IOException, InterruptedException, NoSuchAlgorithmException, ExecutionException {
         this.observer = (observer != null) ? observer : ProgressObserver.EMPTY;
         this.observer.setProgress(0.0);
         this.observer.setText("アップロードの準備をしています…");
@@ -56,21 +59,20 @@ public class FirebaseUploader {
             throw new ToastMessage("Firebase Hosting", "siteId が指定されていません");
         }
 
-        Path secretKeyFilePath = config.getSecretKeyFilePath();
-        if(secretKeyFilePath == null) {
-            throw new ToastMessage("Firebase Hosting", "secretKeyFilePath が指定されていません");
+        Path serviceAccountKeyFilePath = config.getServiceAccountKeyFilePath();
+        if(serviceAccountKeyFilePath == null) {
+            throw new ToastMessage("Firebase Hosting", "serviceAccountKey が指定されていません");
         }
 
         Path input = localDirectory.toPath();
         Path output = MainApp.createTemporaryDirectory("upload-htdocs-gzipped", true);
 
+        String token = getAccessToken(serviceAccountKeyFilePath);
+
         MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
         HttpClient client = HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_2)
-                .followRedirects(HttpClient.Redirect.NORMAL)
+                .executor(Executors.newFixedThreadPool(6))
                 .build();
-
-        String token = getAccessToken(secretKeyFilePath);
 
         String versionId = createVersionId(client, token, siteId);
 
@@ -109,16 +111,25 @@ public class FirebaseUploader {
             for(Map.Entry<Path, String> entry : files.entrySet()) {
                 map.put(entry.getValue(), entry.getKey());
             }
+            uploadCount = populateFilesResult.uploadRequiredHashes.size();
+
+            @SuppressWarnings({"rawtypes", "unchecked"})
+            CompletableFuture<HttpResponse<String>>[] futures = new CompletableFuture[uploadCount];
+            int i = 0;
             for(String uploadRequiredhash : populateFilesResult.uploadRequiredHashes) {
                 Path file = map.get(uploadRequiredhash);
                 String url = populateFilesResult.uploadUrl + "/" + uploadRequiredhash;
 
-                this.observer.setProgress(++progress / (double)maxProgress);
-                this.observer.setText("/" + file.toString().replace('\\', '/'));
-
-                upload(client, token, url, output.resolve(file));
-                uploadCount++;
+                CompletableFuture<HttpResponse<String>> future = upload(client, token, url, output.resolve(file));
+                future.thenAccept(response -> {
+                    if(response.statusCode() == 200) {
+                        this.observer.setProgress(++progress / (double)maxProgress);
+                        this.observer.setText("/" + file.toString().replace('\\', '/'));
+                    }
+                });
+                futures[i++] = future;
             }
+            CompletableFuture.allOf(futures).get();
         }
 
         finalizeVersion(client, token, siteId, versionId);
@@ -132,7 +143,7 @@ public class FirebaseUploader {
         try(InputStream in = Files.newInputStream(secretKeyJsonFile)) {
             GoogleCredentials credential = GoogleCredentials
                     .fromStream(in)
-                    .createScoped("https://www.googleapis.com/auth/firebase");
+                    .createScoped("https://www.googleapis.com/auth/firebase.hosting");
 
             AccessToken token = credential.refreshAccessToken();
             return token.getTokenValue();
@@ -153,7 +164,7 @@ public class FirebaseUploader {
                             "headers": [{
                                 "glob": "**",
                                 "headers": {
-                                    "cache-Control": "max-age=1800"
+                                    "Cache-Control": "max-age=1800"
                                 }
                             }]
                         }
@@ -190,6 +201,7 @@ public class FirebaseUploader {
         }
         if(files.size() > 0) {
             sb.delete(sb.length() - 2, sb.length());
+            sb.append("\n");
         }
         sb.append("    }\n");
         sb.append("}\n");
@@ -212,18 +224,14 @@ public class FirebaseUploader {
     }
 
 
-    private static void upload(HttpClient client, String token, String url, Path path) throws IOException, InterruptedException {
+    private static CompletableFuture<HttpResponse<String>> upload(HttpClient client, String token, String url, Path path) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
                 .setHeader("Authorization", "Bearer " + token)
                 .setHeader("Content-Type", "application/octet-stream")
                 .POST(HttpRequest.BodyPublishers.ofFile(path))
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        if(response.statusCode() != 200) {
-            throw new IOException(response + "\n" + response.body());
-        }
+        return client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
     }
 
 
@@ -269,7 +277,7 @@ public class FirebaseUploader {
                 sha256.update(buf, 0, len);
             }
         }
-        return String.format("%040x", new BigInteger(1, sha256.digest()));
+        return String.format("%064x", new BigInteger(1, sha256.digest()));
     }
 
 
