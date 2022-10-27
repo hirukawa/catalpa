@@ -1,32 +1,39 @@
 package net.osdn.catalpa.upload.netlify;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.osdn.catalpa.ProgressObserver;
 import net.osdn.catalpa.URLEncoder;
 import net.osdn.catalpa.ui.javafx.MainApp;
 import net.osdn.catalpa.ui.javafx.ToastMessage;
-import net.osdn.util.rest.client.HttpException;
-import net.osdn.util.rest.client.RestClient;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Stream;
 
 public class NetlifyUploader {
 
     private NetlifyConfig    config;
-    private RestClient.Instance netlify;
     private MessageDigest    sha1;
     private Map<String, String> deployPathBySHA = new HashMap<String, String>();
 
@@ -38,48 +45,107 @@ public class NetlifyUploader {
         this.config = config;
     }
 
-    public int upload(File localDirectory, ProgressObserver observer) throws IOException, HttpException, NoSuchAlgorithmException {
+    public int upload(File localDirectory, ProgressObserver observer) throws IOException, InterruptedException, NoSuchAlgorithmException, ExecutionException {
         this.observer = (observer != null) ? observer : ProgressObserver.EMPTY;
         this.observer.setProgress(0.0);
         this.observer.setText("アップロードの準備をしています…");
 
         int uploadCount = 0;
 
-        netlify = RestClient.newInstance();
-        netlify.setUrl("https://api.netlify.com/api/v1");
-        netlify.setAuthorization("Bearer " + config.getPersonalAccessToken());
-
-        String siteId = getSiteId(config.getSiteName());
-        if(siteId == null) {
-            throw new ToastMessage("Netlify", "サイト名が見つかりません: " + config.getSiteName());
+        String siteName = config.getSiteName();
+        if(siteName == null) {
+            throw new ToastMessage("Netlify", "siteName が設定されていません。");
         }
 
-        CreateSiteDeployResult createSiteDeployResult = createSiteDeploy(siteId, localDirectory);
-        String deployId = createSiteDeployResult.id;
-        List<String> required = createSiteDeployResult.required;
-
-        progress = 0;
-        maxProgress = required.size() + 1;
-
-        for(String sha : required) {
-            String relativePath = deployPathBySHA.get(sha);
-            Path localFilePath = localDirectory.toPath().resolve(relativePath.substring(1));
-
-            this.observer.setProgress(++progress / (double)maxProgress);
-            this.observer.setText(relativePath.substring(1));
-
-            uploadDeployFile(deployId, relativePath, localFilePath);
-            uploadCount++;
+        String token = config.getPersonalAccessToken();
+        if(token == null) {
+            throw new ToastMessage("Netlify", "personalAccessToken が設定されていません。");
         }
 
+        Path input = localDirectory.toPath();
+
+        MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
+
+        try(ExecutorService executor = Executors.newFixedThreadPool(6)) {
+            HttpClient client = HttpClient.newBuilder()
+                    .executor(executor)
+                    .build();
+
+            String siteId = getSiteId(client, token, siteName);
+            if(siteId == null) {
+                throw new ToastMessage("Netlify", "サイト名が見つかりません: " + siteName);
+            }
+
+            Map<Path, String> files = new LinkedHashMap<>();
+            try(Stream<Path> stream = Files.walk(input)) {
+                List<Path> list = stream.toList();
+                for(Path path : list) {
+                    if(!Files.isDirectory(path)) {
+                        Path file = input.relativize(path);
+                        String hash = getSHA1(sha1, path);
+                        files.put(file, hash);
+                    }
+                }
+            }
+
+            CreateSiteDeployResult createSiteDeployResult = createSiteDeploy(client, token, siteId, files);
+            String deployId = createSiteDeployResult.id;
+            List<String> required = createSiteDeployResult.required;
+
+            if(required != null && required.size() > 0) {
+                progress = 0;
+                maxProgress = required.size();
+
+                Map<String, Path> map = new HashMap<>();
+                for(Map.Entry<Path, String> entry : files.entrySet()) {
+                    map.put(entry.getValue(), entry.getKey());
+                }
+                uploadCount = required.size();
+
+                @SuppressWarnings({"rawtypes", "unchecked"})
+                CompletableFuture<HttpResponse<String>>[] futures = new CompletableFuture[uploadCount];
+                int i = 0;
+                for(String hash : required) {
+                    Path file = map.get(hash);
+                    String url = "/" + file.toString().replace('\\', '/');
+
+                    CompletableFuture<HttpResponse<String>> future = uploadDeployFile(client, token, deployId, url, input.resolve(file));
+                    future.thenAccept(response -> {
+                        if(response.statusCode() == 200) {
+                            this.observer.setProgress(++progress / (double)maxProgress);
+                            this.observer.setText(url);
+                        }
+                    });
+                    futures[i++] = future;
+                }
+                CompletableFuture.allOf(futures).get();
+            }
+        }
         return uploadCount;
     }
 
-    public String getSiteId(String siteName) throws IOException, HttpException {
+
+    private static String getSiteId(HttpClient client, String token,  String siteName) throws IOException, InterruptedException {
         if(siteName == null) {
             return null;
         }
-        List<ListSitesResult> results = netlify.path("/sites").getList(ListSitesResult.class);
+
+        String url = "https://api.netlify.com" + "/api/v1/sites";
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+                .setHeader("Authorization", "Bearer " + token)
+                .GET()
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if(response.statusCode() != 200) {
+            throw new IOException(response + "\n" + response.body());
+        }
+
+        List<ListSitesResult> results = new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .readValue(response.body(), new TypeReference<List<ListSitesResult>>(){});
+
         for(ListSitesResult result : results) {
             if(siteName.equals(result.name)) {
                 return result.site_id;
@@ -88,75 +154,65 @@ public class NetlifyUploader {
         return null;
     }
 
-    public CreateSiteDeployResult createSiteDeploy(String siteId, File localDirectory) throws IOException, NoSuchAlgorithmException, HttpException {
-        String json = createDeployFilesJson(localDirectory);
 
-        CreateSiteDeployResult result = netlify.reset().path("/sites").path(siteId).path("/deploys")
-                .rawParam("title", "Uploaded from " + MainApp.APPLICATION_NAME + " " + MainApp.APPLICATION_VERSION)
-                .post("application/json", json.getBytes(StandardCharsets.UTF_8))
-                .get(CreateSiteDeployResult.class);
-
-        return result;
-    }
-
-    private String createDeployFilesJson(File localDirectory) throws IOException, NoSuchAlgorithmException {
+    private static CreateSiteDeployResult createSiteDeploy(HttpClient client, String token, String siteId, Map<Path, String> files) throws IOException, InterruptedException {
         StringBuilder sb = new StringBuilder();
-        sb.append("{\r\n");
-        sb.append("\t\"files\": {\r\n");
-
-        int localDirectoryLength = localDirectory.getAbsolutePath().length();
-        List<File> files = listLocalFiles(localDirectory);
-        for(int i = 0; i < files.size(); i++) {
-            File file = files.get(i);
-            String name = file.getAbsolutePath().substring(localDirectoryLength).replace('\\', '/');
-            String sha = getSHA1(file);
-            deployPathBySHA.put(sha, name);
-            sb.append("\t\t\"");
-            sb.append(URLEncoder.encode(name));
-            sb.append("\": \"");
-            sb.append(sha);
-            sb.append("\"");
-            if(i + 1 < files.size()) {
-                sb.append(",");
-            }
-            sb.append("\r\n");
+        sb.append("{\n");
+        sb.append("    \"files\": {\n");
+        for(Map.Entry<Path, String> entry : files.entrySet()) {
+            Path file = entry.getKey();
+            String hash = entry.getValue();
+            sb.append("        \"/" + file.toString().replace('\\', '/') + "\": ");
+            sb.append("\"" + hash + "\"");
+            sb.append(",\n");
         }
-        sb.append("\t}\r\n");
-        sb.append("}\r\n");
-        return sb.toString();
-    }
+        if(files.size() > 0) {
+            sb.delete(sb.length() - 2, sb.length());
+            sb.append("\n");
+        }
+        sb.append("    }\n");
+        sb.append("}\n");
 
-    private String uploadDeployFile(String deployId, String relativePath, Path localFilePath) throws IOException, HttpException {
-        String result = netlify.path("/deploys").path(deployId).path("/files")
-                .path(URLEncoder.encode(relativePath)).param("size", Files.size(localFilePath))
-                .put(RequestBody.create(MediaType.parse("application/octet-stream"), localFilePath.toFile()))
-                .get();
+        String url = "https://api.netlify.com" + "/api/v1/sites/" + siteId + "/deploys"
+                + "?title=" + URLEncoder.encode("Uploaded from " + MainApp.APPLICATION_NAME + " " + MainApp.APPLICATION_VERSION);
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+                .setHeader("Authorization", "Bearer " + token)
+                .setHeader("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(sb.toString()))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if(response.statusCode() != 200) {
+            throw new IOException(response + "\n" + response.body());
+        }
+
+        CreateSiteDeployResult result = new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .readValue(response.body(), CreateSiteDeployResult.class);
 
         return result;
     }
 
-    private static List<File> listLocalFiles(File dir) {
-        List<File> list = new ArrayList<File>();
 
-        for(File child : dir.listFiles()) {
-            if(child.isDirectory()) {
-                list.addAll(listLocalFiles(child));
-            } else {
-                list.add(child);
-            }
-        }
-        return list;
+    private static CompletableFuture<HttpResponse<String>> uploadDeployFile(HttpClient client, String token, String deployId, String url, Path file) throws IOException {
+        String _url = "https://api.netlify.com" + "/api/v1/deploys/" + deployId + "/files" + URLEncoder.encode(url)
+                + "?size=" + Files.size(file);
+        HttpRequest request = HttpRequest.newBuilder(URI.create(_url))
+                .setHeader("Authorization", "Bearer " + token)
+                .setHeader("Content-Type", "application/octet-stream")
+                .PUT(HttpRequest.BodyPublishers.ofFile(file))
+                .build();
+
+        return client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
     }
 
 
-    private String getSHA1(File file) throws NoSuchAlgorithmException, IOException {
-        if(sha1 == null) {
-            sha1 = MessageDigest.getInstance("SHA-1");
-        }
+    private static String getSHA1(MessageDigest sha1, Path path) throws IOException {
         sha1.reset();
 
-        try(FileInputStream in = new FileInputStream(file)) {
-            byte[] buf = new byte[8192];
+        try(InputStream in = Files.newInputStream(path)) {
+            byte[] buf = new byte[65536];
             int size;
             while((size = in.read(buf)) != -1) {
                 sha1.update(buf, 0, size);
@@ -165,10 +221,12 @@ public class NetlifyUploader {
         return String.format("%040x", new BigInteger(1, sha1.digest()));
     }
 
+
     static class ListSitesResult {
         public String site_id;
         public String name;
     }
+
 
     static class CreateSiteDeployResult {
         public String id;

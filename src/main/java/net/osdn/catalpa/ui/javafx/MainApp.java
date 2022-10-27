@@ -23,8 +23,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
 
+import com.google.api.client.util.store.DataStore;
 import freemarker.template.TemplateException;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -66,10 +70,10 @@ import net.osdn.catalpa.ProgressObserver;
 import net.osdn.catalpa.Util;
 import net.osdn.catalpa.upload.UploadConfig;
 import net.osdn.catalpa.upload.UploadConfigFactory;
+import net.osdn.util.javafx.Unchecked;
 import net.osdn.util.javafx.application.FxApplicationThread;
 import net.osdn.util.javafx.application.SingletonApplication;
-import net.osdn.util.javafx.concurrent.Async;
-import net.osdn.util.javafx.event.SilentEventHandler;
+import net.osdn.util.javafx.concurrent.AsyncTask;
 import net.osdn.util.javafx.fxml.Fxml;
 import net.osdn.util.javafx.stage.StageUtil;
 
@@ -77,6 +81,8 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 
 	public static final String APPLICATION_NAME = "Catalpa";
 	public static final String APPLICATION_VERSION;
+
+	public static ExecutorService serialExecutor = Executors.newSingleThreadExecutor();
 
 	private static final String MARKDOWN_CHEAT_SHEET_URL = "https://catalpa.oss.onl/markdown.html";
 
@@ -111,7 +117,9 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 		uploadConfigFactory = new UploadConfigFactory();
 		
 		fileWatchService = new FileWatchService();
-		fileWatchService.setOnSucceeded(wrap(this::fileWatchService_onSucceeded));
+		fileWatchService.setOnSucceeded(event -> Unchecked.execute(() -> {
+			fileWatchService_onSucceeded(event);
+		}));
 
 		while(HTTP_SERVER_PORT <= HTTP_SERVER_PORT_MAX) {
 			try {
@@ -143,8 +151,12 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 		Parent root = Fxml.load(this);
 
 		Scene scene = new Scene(root);
-		scene.setOnDragOver(wrap(this::scene_onDragOver));
-		scene.setOnDragDropped(wrap(this::scene_onDragDropped));
+		scene.setOnDragOver(event -> Unchecked.execute(() -> {
+			scene_onDragOver(event);
+		}));
+		scene.setOnDragDropped(event -> Unchecked.execute(() -> {
+			scene_onDragDropped(event);
+		}));
 
 		StageUtil.setRestorable(primaryStage, Preferences.userNodeForPackage(getClass()));
 
@@ -232,17 +244,39 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		menuFileOpen.setOnAction(wrap(this::btnOpen_onAction));
-		menuFileSaveAs.setOnAction(wrap(this::btnSaveAs_onAction));
-		menuFileExit.setOnAction(wrap(this::menuFileExit_onAction));
-		menuHelpAbout.setOnAction(wrap(this::menuHelpAbout_onAction));
-		lblVSCode.setOnMouseClicked(wrap(this::lblVSCode_onMouseClicked));
-		lblCheatSheet.setOnMouseClicked(wrap(this::lblCheatSheet_onMouseClicked));
-		btnOpen.setOnAction(wrap(this::btnOpen_onAction));
-		btnReload.setOnAction(wrap(this::btnReload_onAction));
-		btnOpenBrowser.setOnAction(wrap(this::btnOpenBrowser_onAction));
-		btnSaveAs.setOnAction(wrap(this::btnSaveAs_onAction));
-		btnUpload.setOnAction(wrap(this::btnUpload_onAction));
+		menuFileOpen.setOnAction(event -> Unchecked.execute(() -> {
+			btnOpen_onAction(event);
+		}));
+		menuFileSaveAs.setOnAction(event -> Unchecked.execute(() -> {
+			btnSaveAs_onAction(event);
+		}));
+		menuFileExit.setOnAction(event -> Unchecked.execute(() -> {
+			menuFileExit_onAction(event);
+		}));
+		menuHelpAbout.setOnAction(event -> Unchecked.execute(() -> {
+			menuHelpAbout_onAction(event);
+		}));
+		lblVSCode.setOnMouseClicked(event -> Unchecked.execute(() -> {
+			lblVSCode_onMouseClicked(event);
+		}));
+		lblCheatSheet.setOnMouseClicked(event -> Unchecked.execute(() -> {
+			lblCheatSheet_onMouseClicked(event);
+		}));
+		btnOpen.setOnAction(event -> Unchecked.execute(() -> {
+			btnOpen_onAction(event);
+		}));
+		btnReload.setOnAction(event -> Unchecked.execute(() -> {
+			btnReload_onAction(event);
+		}));
+		btnOpenBrowser.setOnAction(event -> Unchecked.execute(() -> {
+			btnOpenBrowser_onAction(event);
+		}));
+		btnSaveAs.setOnAction(event -> Unchecked.execute(() -> {
+			btnSaveAs_onAction(event);
+		}));
+		btnUpload.setOnAction(event -> Unchecked.execute(() -> {
+			btnUpload_onAction(event);
+		}));
 
 		cbAutoReload.setSelected(preferences.getBoolean("isAutoReload", false));
 		cbAutoReload.selectedProperty().addListener((observable, oldValue, newValue)-> {
@@ -297,9 +331,23 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 				.then(inputPath)
 				.otherwise((Path)null));
 
-		busy.addListener(wrap(this::busy_onChange));
+		busy.addListener((observable, oldValue, newValue) -> Unchecked.execute(() -> {
+			busy_onChange(newValue);
+		}));
 
 		updateRecentFile(null);
+	}
+
+	@Override
+	public void stop() throws Exception {
+		serialExecutor.shutdown();
+		try {
+			if(!serialExecutor.awaitTermination(5000, TimeUnit.MILLISECONDS)) {
+				System.err.println("serialExecutor.awaitTermination: timeout");
+			}
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected void menuFileExit_onAction(ActionEvent event) {
@@ -430,7 +478,7 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 		if(!busy.get() && DragboardHelper.hasOneDirectory(event.getDragboard())) {
 			success = true;
 			Path dir = DragboardHelper.getDirectory(event.getDragboard());
-			Platform.runLater(wrap(() -> {
+			Platform.runLater(Unchecked.runnable(() -> {
 				toast.hide();
 				if(prepareOpening(dir)) {
 					open(dir);
@@ -454,7 +502,7 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 			// 600ミリ秒以上連続でイベントが発生しなくなってから処理を開始します。
 			// （たとえばファイルを書き換えると DELETE + CREATE で2回ファイル変更イベントが連続発生することがあります。）
 			LocalDateTime t = this.lastModified = LocalDateTime.now();
-			FxApplicationThread.runLater(600, wrap(() -> {
+			FxApplicationThread.runLater(600, Unchecked.runnable(() -> {
 				if(t.equals(lastModified) && inputPath.getValue() != null) {
 					if(busy.get()) {
 						// 更新や保存処理中は更新が検出されても無視します。
@@ -527,7 +575,7 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 		}
 		previewOutputPath.setValue(null);
 
-		Async.execute(() -> {
+		MainApp.serialExecutor.execute(AsyncTask.create(() -> {
 			Path outputPath = createTemporaryDirectory("preview-htdocs", false);
 			Catalpa catalpa = new Catalpa(inputPath);
 			Map<String, Object> options = new HashMap<String, Object>();
@@ -540,11 +588,11 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 				defaultUrl.setValue((String) options.get("_DEFAULT_URL"));
 				previewOutputPath.setValue(outputPath);
 			});
-		}).onSucceeded(() -> {
+		}).onSucceeded(unused -> {
 			toast.show(Toast.GREEN, "更新プロセスが正常に終了しました", Toast.SHORT);
-		}).onCompleted(state -> {
+		}).onFinished(state -> {
 			busy.setValue(false);
-		});
+		}));
 	}
 	
 	protected void save(Path inputPath, Path outputPath) {
@@ -555,15 +603,16 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 		
 		toast.hide();
 		busy.setValue(true);
-		Async.execute(() -> {
+
+		MainApp.serialExecutor.execute(AsyncTask.create(() -> {
 			Catalpa catalpa = new Catalpa(inputPath);
 			Map<String, Object> options = new HashMap<String, Object>();
 			catalpa.process(outputPath, options, this);
-		}).onSucceeded(() -> {
+		}).onSucceeded(unused -> {
 			toast.show(Toast.GREEN, "保存しました", outputPath.toString(), Toast.LONG);
-		}).onCompleted(state -> {
+		}).onFinished(state -> {
 			busy.setValue(false);
-		});
+		}));
 	}
 	
 	protected void upload(Path inputPath) {
@@ -574,18 +623,19 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 
 		toast.hide();
 		busy.setValue(true);
-		Async.execute(() -> {
+
+		MainApp.serialExecutor.execute(AsyncTask.create(() -> {
 			Path outputPath = createTemporaryDirectory("upload-htdocs", true);
 			Catalpa catalpa = new Catalpa(inputPath);
 			Map<String, Object> options = new HashMap<String, Object>();
 			catalpa.process(outputPath, options, this);
 			progressOffset = 0.5;
 			uploadConfig.get().upload(outputPath.toFile(), this);
-		}).onSucceeded(() -> {
+		}).onSucceeded(unused -> {
 			toast.show(Toast.GREEN, "アップロードが完了しました", Toast.LONG);
-		}).onCompleted(state -> {
+		}).onFinished(state -> {
 			busy.setValue(false);
-		});
+		}));
 	}
 	
 	@Override
@@ -631,7 +681,7 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 		int i = menuFile.getItems().size() - 1;
 		for(String p : recentFiles) {
 			MenuItem item = new MenuItem(p);
-			item.setOnAction(SilentEventHandler.wrap(event -> {
+			item.setOnAction(event -> Unchecked.execute(() -> {
 				toast.hide();
 				String text = ((MenuItem)event.getSource()).getText();
 				if(prepareOpening(Paths.get(text))) {

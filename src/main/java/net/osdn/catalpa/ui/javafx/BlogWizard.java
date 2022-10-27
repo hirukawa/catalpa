@@ -38,6 +38,7 @@ import net.osdn.catalpa.addon.blog.BlogAddOn;
 import net.osdn.catalpa.addon.blog.Post;
 import net.osdn.catalpa.handler.YamlFrontMatterHandler;
 import net.osdn.util.io.AutoDetectReader;
+import net.osdn.util.javafx.Unchecked;
 import net.osdn.util.javafx.fxml.Fxml;
 import net.osdn.util.javafx.scene.control.DialogEx;
 
@@ -63,11 +64,17 @@ public class BlogWizard extends DialogEx<BlogWizard.InputData> {
 
 		calendar.getDatePicker().setValue(LocalDate.now());
 		tfFilename.requestFocus();
-		btnSkip.setOnAction(wrap(this::btnSkip_onAction));
-		btnCreate.setOnAction(wrap(this::btnCreate_onAction));
+		btnSkip.setOnAction(event -> Unchecked.execute(() -> {
+			btnSkip_onAction(event);
+		}));
+		btnCreate.setOnAction(event -> Unchecked.execute(() -> {
+			btnCreate_onAction(event);
+		}));
 		btnCreate.disableProperty().bind(tfFilename.textProperty().isEmpty());
 		setResultConverter(param -> { return getResult(); });
-		setOnShown(wrap(this::dialog_onShown));
+		setOnShown(event -> Unchecked.execute(() -> {
+			dialog_onShown(event);
+		}));
 
 		// ButtonTypes に何もボタンが追加されていないと、
 		// ダイアログ右上の×ボタンを押してもダイアログを閉じることができなくなります。

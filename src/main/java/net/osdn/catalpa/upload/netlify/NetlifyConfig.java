@@ -3,7 +3,6 @@ package net.osdn.catalpa.upload.netlify;
 import net.osdn.catalpa.ProgressObserver;
 import net.osdn.catalpa.ui.javafx.ToastMessage;
 import net.osdn.catalpa.upload.UploadConfig;
-import net.osdn.util.rest.client.HttpException;
 
 import java.io.File;
 
@@ -45,11 +44,7 @@ public class NetlifyConfig extends UploadConfig  {
 
         NetlifyUploader uploader = new NetlifyUploader(this);
         int count = 0;
-        try {
-            count = uploader.upload(dir, observer);
-        } catch(HttpException._401_UNAUTHORIZED e) {
-            throw new ToastMessage("Netlify", "認証に失敗しました。\r\npersonalAccessToken が正しいか確認してください。");
-        }
+        count = uploader.upload(dir, observer);
 
         return count;
     }
