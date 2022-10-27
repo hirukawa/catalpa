@@ -7,11 +7,13 @@ import javafx.geometry.Orientation;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogEvent;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Window;
+import net.osdn.util.javafx.Unchecked;
 import net.osdn.util.javafx.fxml.Fxml;
 import net.osdn.util.javafx.scene.control.DialogEx;
 
@@ -39,7 +41,9 @@ public class LicenseDialog extends DialogEx<Void> {
 		getDialogPane().getButtonTypes().addAll(ButtonType.CLOSE);
 		scrollPane.prefViewportWidthProperty().bind(textFlow.widthProperty());
 		scrollPane.prefViewportHeightProperty().bind(textFlow.heightProperty());
-		setOnShown(event -> { Platform.runLater(wrap(this::dialog_onReady)); });
+		setOnShown(event -> Unchecked.execute(() -> {
+			dialog_onShown(event);
+		}));
 		getDialogPane().getContent().setOpacity(0.0);
 
 		Node[] nodes = build(license);
@@ -54,7 +58,7 @@ public class LicenseDialog extends DialogEx<Void> {
 	@FXML ScrollPane scrollPane;
 	@FXML TextFlow textFlow;
 
-	void dialog_onReady() throws IOException {
+	private void dialog_onShown(DialogEvent event) {
 		getDialogPane().getContent().setOpacity(1.0);
 	}
 

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 import java.util.zip.Deflater;
@@ -67,74 +68,75 @@ public class FirebaseUploader {
         Path input = localDirectory.toPath();
         Path output = MainApp.createTemporaryDirectory("upload-htdocs-gzipped", true);
 
+        MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
         String token = getAccessToken(serviceAccountKeyFilePath);
 
-        MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
-        HttpClient client = HttpClient.newBuilder()
-                .executor(Executors.newFixedThreadPool(6))
-                .build();
+        try(ExecutorService executor = Executors.newFixedThreadPool(6)) {
+            HttpClient client = HttpClient.newBuilder()
+                    .executor(executor)
+                    .build();
 
-        String versionId = createVersionId(client, token, siteId);
+            String versionId = createVersionId(client, token, siteId);
 
-        Map<Path, String> files = new LinkedHashMap<>();
-        int len;
-        byte[] buf = new byte[65536];
-        try(Stream<Path> stream = Files.walk(input)) {
-            List<Path> list = stream.toList();
-            for(Path path : list) {
-                if(Files.isDirectory(path)) {
-                    Path dirname = input.relativize(path);
-                    Files.createDirectories(output.resolve(dirname));
-                } else {
-                    Path file = input.relativize(path);
-                    try(InputStream in = Files.newInputStream(path);
-                        OutputStream out = Files.newOutputStream(output.resolve(file));
-                        GZIPOutputStream gzOut = new GZIPOutputStream(out) {{ def.setLevel(Deflater.BEST_SPEED); }}) {
-                        while((len = in.read(buf)) > 0) {
-                            gzOut.write(buf, 0, len);
+            Map<Path, String> files = new LinkedHashMap<>();
+            int len;
+            byte[] buf = new byte[65536];
+            try(Stream<Path> stream = Files.walk(input)) {
+                List<Path> list = stream.toList();
+                for(Path path : list) {
+                    if(Files.isDirectory(path)) {
+                        Path dirname = input.relativize(path);
+                        Files.createDirectories(output.resolve(dirname));
+                    } else {
+                        Path file = input.relativize(path);
+                        try(InputStream in = Files.newInputStream(path);
+                            OutputStream out = Files.newOutputStream(output.resolve(file));
+                            GZIPOutputStream gzOut = new GZIPOutputStream(out) {{ def.setLevel(Deflater.BEST_SPEED); }}) {
+                            while((len = in.read(buf)) > 0) {
+                                gzOut.write(buf, 0, len);
+                            }
+                            gzOut.finish();
                         }
-                        gzOut.finish();
+                        String hash = getSHA256(sha256, output.resolve(file));
+                        files.put(file, hash);
                     }
-                    String hash = getSHA256(sha256, output.resolve(file));
-                    files.put(file, hash);
                 }
             }
-        }
 
-        PopulateFilesResult populateFilesResult = populateFiles(client, token, siteId, versionId, files);
+            PopulateFilesResult populateFilesResult = populateFiles(client, token, siteId, versionId, files);
 
-        if(populateFilesResult.uploadRequiredHashes != null) {
-            progress = 0;
-            maxProgress = populateFilesResult.uploadRequiredHashes.size();
+            if(populateFilesResult.uploadRequiredHashes != null) {
+                progress = 0;
+                maxProgress = populateFilesResult.uploadRequiredHashes.size();
 
-            Map<String, Path> map = new HashMap<>();
-            for(Map.Entry<Path, String> entry : files.entrySet()) {
-                map.put(entry.getValue(), entry.getKey());
+                Map<String, Path> map = new HashMap<>();
+                for(Map.Entry<Path, String> entry : files.entrySet()) {
+                    map.put(entry.getValue(), entry.getKey());
+                }
+                uploadCount = populateFilesResult.uploadRequiredHashes.size();
+
+                @SuppressWarnings({"rawtypes", "unchecked"})
+                CompletableFuture<HttpResponse<String>>[] futures = new CompletableFuture[uploadCount];
+                int i = 0;
+                for(String hash : populateFilesResult.uploadRequiredHashes) {
+                    Path file = map.get(hash);
+                    String url = populateFilesResult.uploadUrl + "/" + hash;
+
+                    CompletableFuture<HttpResponse<String>> future = upload(client, token, url, output.resolve(file));
+                    future.thenAccept(response -> {
+                        if(response.statusCode() == 200) {
+                            this.observer.setProgress(++progress / (double)maxProgress);
+                            this.observer.setText("/" + file.toString().replace('\\', '/'));
+                        }
+                    });
+                    futures[i++] = future;
+                }
+                CompletableFuture.allOf(futures).get();
             }
-            uploadCount = populateFilesResult.uploadRequiredHashes.size();
 
-            @SuppressWarnings({"rawtypes", "unchecked"})
-            CompletableFuture<HttpResponse<String>>[] futures = new CompletableFuture[uploadCount];
-            int i = 0;
-            for(String uploadRequiredhash : populateFilesResult.uploadRequiredHashes) {
-                Path file = map.get(uploadRequiredhash);
-                String url = populateFilesResult.uploadUrl + "/" + uploadRequiredhash;
-
-                CompletableFuture<HttpResponse<String>> future = upload(client, token, url, output.resolve(file));
-                future.thenAccept(response -> {
-                    if(response.statusCode() == 200) {
-                        this.observer.setProgress(++progress / (double)maxProgress);
-                        this.observer.setText("/" + file.toString().replace('\\', '/'));
-                    }
-                });
-                futures[i++] = future;
-            }
-            CompletableFuture.allOf(futures).get();
+            finalizeVersion(client, token, siteId, versionId);
+            releaseVersion(client, token, siteId, versionId);
         }
-
-        finalizeVersion(client, token, siteId, versionId);
-        releaseVersion(client, token, siteId, versionId);
-
         return uploadCount;
     }
 
@@ -146,7 +148,7 @@ public class FirebaseUploader {
                     .createScoped("https://www.googleapis.com/auth/firebase.hosting");
 
             AccessToken token = credential.refreshAccessToken();
-            return token.getTokenValue();
+            return token.getTokenValue().replaceFirst("\\.*$", "");
         }
     }
 
@@ -191,7 +193,6 @@ public class FirebaseUploader {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
         sb.append("    \"files\": {\n");
-
         for(Map.Entry<Path, String> entry : files.entrySet()) {
             Path file = entry.getKey();
             String hash = entry.getValue();
@@ -224,11 +225,11 @@ public class FirebaseUploader {
     }
 
 
-    private static CompletableFuture<HttpResponse<String>> upload(HttpClient client, String token, String url, Path path) throws IOException, InterruptedException {
+    private static CompletableFuture<HttpResponse<String>> upload(HttpClient client, String token, String url, Path file) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
                 .setHeader("Authorization", "Bearer " + token)
                 .setHeader("Content-Type", "application/octet-stream")
-                .POST(HttpRequest.BodyPublishers.ofFile(path))
+                .POST(HttpRequest.BodyPublishers.ofFile(file))
                 .build();
 
         return client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
@@ -267,7 +268,7 @@ public class FirebaseUploader {
     }
 
 
-    private static String getSHA256(MessageDigest sha256, Path path) throws IOException, NoSuchAlgorithmException {
+    private static String getSHA256(MessageDigest sha256, Path path) throws IOException {
         sha256.reset();
 
         try(InputStream in = Files.newInputStream(path)) {

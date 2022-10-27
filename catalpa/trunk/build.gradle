@@ -43,11 +43,10 @@ dependencies {
 	implementation 'com.github.luccappellaro:jzopfli:0.0.4'
 	implementation 'com.esotericsoftware.yamlbeans:yamlbeans:1.15'
 
-	// rest-client-util で必要です。（okhttpをバージョン4に上げてはいけない）
-	implementation 'com.squareup.okhttp3:okhttp:3.14.9'
+	// Netlify と Firebase Hosting で必要です。
 	implementation 'com.fasterxml.jackson.core:jackson-core:2.13.4'
 	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.4'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
 
 	// Firebase Hosting で必要です。
 	// https://mvnrepository.com/artifact/com.google.auth/google-auth-library-oauth2-http
@@ -63,7 +62,6 @@ jar {
 	manifest {
 		attributes "Specification-Version": "${project.version}"
 		attributes "Main-Class": "net.osdn.catalpa.ui.javafx.Main"
-		attributes "Splashscreen-Image": "img/splash.gif"
 		attributes "Class-Path": sourceSets.main.runtimeClasspath.collect { "lib/$it.name" }.join(' ')
 	}
 	into('net/osdn/catalpa/ui/javafx') {
