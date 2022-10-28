@@ -26,19 +26,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import com.vladsch.flexmark.util.misc.Extension;
-import org.brotli.wrapper.Brotli;
-import org.brotli.wrapper.enc.Encoder;
 
 import com.vladsch.flexmark.ext.attributes.AttributesExtension;
 import com.vladsch.flexmark.ext.definition.DefinitionExtension;
@@ -76,11 +72,7 @@ import net.osdn.catalpa.handler.YamlFrontMatterHandler;
 import net.osdn.util.io.AutoDetectReader;
 
 public class Catalpa {
-	
-	static {
-		Brotli.loadLibrary();
-	}
-	
+
 	public static final String CONFIG_FILENAME = "config.yml";
 	
 	private static final List<Handler> DEFAULT_HANDLERS = Arrays.asList(
@@ -119,8 +111,6 @@ public class Catalpa {
 	private Configuration freeMarker;
 	private List<SitemapItem> sitemap = new ArrayList<SitemapItem>();
 	private List<SearchIndex> searchIndexes;
-	private Set<String> compressionTargets = new HashSet<String>();
-	private Set<String> compressionFormats = new HashSet<String>();
 	private ProgressObserver observer;
 	private int progress;
 	private int maxProgress;
@@ -223,25 +213,6 @@ public class Catalpa {
 		if(Files.exists(filename) && !Files.isDirectory(filename)) {
 			config = context.load(filename);
 			type = config.get("type") != null ? config.get("type").toString() : null;
-
-			
-			compressionTargets.clear();
-			compressionFormats.clear();
-			if(!Boolean.TRUE.equals(options.get("_PREVIEW"))) {
-				for(String s : Util.getValues(config, "compression.target")) {
-					if(s.startsWith(".")) {
-						s = s.substring(1);
-					}
-					compressionTargets.add(s.toLowerCase());
-				}
-				for(String s : Util.getValues(config, "compression.format")) {
-					if(s.startsWith(".")) {
-						s = s.substring(1);
-					}
-					compressionFormats.add(s.toLowerCase());
-				}
-			}
-			
 			addon = getApplicableAddOn(type);
 		}
 		if(addon != null) {
@@ -451,24 +422,7 @@ public class Catalpa {
 	}
 	
 	public void write(Path path, byte[] bytes) throws IOException {
-
 		Files.write(path, bytes);
-		
-		String ext = Util.getFileExtension(path);
-		if(compressionTargets.contains(ext)) {
-			for(String format : compressionFormats) {
-				byte[] data = null;
-				if(format.equals("gz") || format.equals("gzip")) {
-					data = Zopfli.compress(bytes);
-				} else if(format.equals("br") || format.equals("brotli")) {
-					data = Encoder.compress(bytes);
-				}
-				if(data != null) {
-					Path p = path.resolveSibling(path.getFileName().toString() + "." + format);
-					Files.write(p, data);
-				}
-			}
-		}
 	}
 	
 	protected void copyRecursively(Path src, Path dst) throws IOException {
@@ -498,14 +452,9 @@ public class Catalpa {
 			return;
 		}
 		
-		String ext = Util.getFileExtension(dst);
-		if(compressionTargets.contains(ext)) {
-			write(dst, Files.readAllBytes(src));
-		} else {
-			Files.copy(src, dst,
-					StandardCopyOption.REPLACE_EXISTING,
-					StandardCopyOption.COPY_ATTRIBUTES);
-		}
+		Files.copy(src, dst,
+				StandardCopyOption.REPLACE_EXISTING,
+				StandardCopyOption.COPY_ATTRIBUTES);
 	}
 	
 	protected SitemapItem createSitemapItem(Context context) throws IOException {
