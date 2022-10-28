@@ -499,10 +499,10 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 		}
 		if(isModified) {
 			// ファイル変更イベントは連続で発生するので
-			// 600ミリ秒以上連続でイベントが発生しなくなってから処理を開始します。
+			// 1000ミリ秒以上連続でイベントが発生しなくなってから処理を開始します。
 			// （たとえばファイルを書き換えると DELETE + CREATE で2回ファイル変更イベントが連続発生することがあります。）
 			LocalDateTime t = this.lastModified = LocalDateTime.now();
-			FxApplicationThread.runLater(600, Unchecked.runnable(() -> {
+			FxApplicationThread.runLater(1000, Unchecked.runnable(() -> {
 				if(t.equals(lastModified) && inputPath.getValue() != null) {
 					if(busy.get()) {
 						// 更新や保存処理中は更新が検出されても無視します。
@@ -617,7 +617,7 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 	
 	protected void upload(Path inputPath) {
 		progressOffset = 0.0;
-		progressScale = 0.5;
+		progressScale = 0.4;
 		progressBar.setProgress(0.0);
 		progressLabel.setText("");
 
@@ -629,7 +629,8 @@ public class MainApp extends SingletonApplication implements Initializable, Prog
 			Catalpa catalpa = new Catalpa(inputPath);
 			Map<String, Object> options = new HashMap<String, Object>();
 			catalpa.process(outputPath, options, this);
-			progressOffset = 0.5;
+			progressOffset = 0.4;
+			progressScale = 0.6;
 			uploadConfig.get().upload(outputPath.toFile(), this);
 		}).onSucceeded(unused -> {
 			toast.show(Toast.GREEN, "アップロードが完了しました", Toast.LONG);

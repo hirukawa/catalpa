@@ -83,6 +83,8 @@ public class FirebaseUploader {
             byte[] buf = new byte[65536];
             try(Stream<Path> stream = Files.walk(input)) {
                 List<Path> list = stream.toList();
+                progress = 0;
+                maxProgress = list.size();
                 for(Path path : list) {
                     if(Files.isDirectory(path)) {
                         Path dirname = input.relativize(path);
@@ -100,6 +102,7 @@ public class FirebaseUploader {
                         String hash = getSHA256(sha256, output.resolve(file));
                         files.put(file, hash);
                     }
+                    this.observer.setProgress((++progress / (double)maxProgress) * 0.4);
                 }
             }
 
@@ -125,7 +128,7 @@ public class FirebaseUploader {
                     CompletableFuture<HttpResponse<String>> future = upload(client, token, url, output.resolve(file));
                     future.thenAccept(response -> {
                         if(response.statusCode() == 200) {
-                            this.observer.setProgress(++progress / (double)maxProgress);
+                            this.observer.setProgress(0.4 + (++progress / (double)maxProgress) * 0.6);
                             this.observer.setText("/" + file.toString().replace('\\', '/'));
                         }
                     });
@@ -134,6 +137,7 @@ public class FirebaseUploader {
                 CompletableFuture.allOf(futures).get();
             }
 
+            this.observer.setProgress(1.0);
             finalizeVersion(client, token, siteId, versionId);
             releaseVersion(client, token, siteId, versionId);
         }

@@ -1,6 +1,6 @@
 apply plugin: 'java'
 
-version = '0.9'
+version = '0.9.1'
 
 tasks.withType(JavaCompile) {
 	sourceCompatibility = 19
@@ -40,7 +40,6 @@ dependencies {
 	implementation 'net.java.dev.jna:jna:5.12.1'
 	implementation 'org.kordamp.ikonli:ikonli-javafx:12.3.1'
 	implementation 'org.kordamp.ikonli:ikonli-materialdesign-pack:12.3.1'
-	implementation 'com.github.luccappellaro:jzopfli:0.0.4'
 	implementation 'com.esotericsoftware.yamlbeans:yamlbeans:1.15'
 
 	// Netlify と Firebase Hosting で必要です。
