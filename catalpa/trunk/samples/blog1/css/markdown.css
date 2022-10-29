@@ -455,19 +455,31 @@
 	transform: rotate(0);
 }
 .markdown dl.deg-1 > dt {
-	transform: rotate(-1deg);
+	transform: rotate(-0.5deg);
 }
 .markdown dl.deg-2 > dt {
-	transform: rotate(-2deg);
+	transform: rotate(-1.0deg);
 }
 .markdown dl.deg-3 > dt {
-	transform: rotate(-3deg);
+	transform: rotate(-1.5deg);
 }
 .markdown dl.deg-4 > dt {
-	transform: rotate(-4deg);
+	transform: rotate(-2.0deg);
 }
 .markdown dl.deg-5 > dt {
-	transform: rotate(-5deg);
+	transform: rotate(-2.5deg);
+}
+.markdown dl.deg-6 > dt {
+	transform: rotate(-3.0deg);
+}
+.markdown dl.deg-7 > dt {
+	transform: rotate(-3.5deg);
+}
+.markdown dl.deg-8 > dt {
+	transform: rotate(-4.0deg);
+}
+.markdown dl.deg-9 > dt {
+	transform: rotate(-4.5deg);
 }
 .markdown dl.note {
 	background-color: hsl(0, 0%, 96%);
@@ -648,8 +660,8 @@
 	height: 0.7em;
 	transform: translateY(-50%) rotate(-45deg);
 	box-sizing: border-box;
-	border-top: 0.25em solid var(--primary-color);
-	border-left: 0.25em solid var(--primary-color);
+	border-top: 0.25em solid var(--button-background-color);
+	border-left: 0.25em solid var(--button-background-color);
 }
 .markdown .button.previous.primary::after {
 	border-top: 0.25em solid var(--primary-color);
@@ -696,8 +708,8 @@
 	width: 0.7em;
 	height: 0.7em;
 	box-sizing: border-box;
-	border-top: 0.25em solid var(--primary-color);
-	border-right: 0.25em solid var(--primary-color);
+	border-top: 0.25em solid var(--button-background-color);
+	border-right: 0.25em solid var(--button-background-color);
 }
 .markdown .button.next.primary::after {
 	border-top: 0.25em solid var(--primary-color);
