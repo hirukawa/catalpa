@@ -179,7 +179,7 @@
 					</#if>
 					<a class="blog-card" href="${baseurl}${post.url}">
 						<#if post.thumbnail?has_content && post.thumbnail?starts_with("data:") >
-						<img src="${post.thubnail!}">
+						<img src="${post.thumbnail!}">
 						<#else>
 						<img src="${baseurl}${post.thumbnail!}">
 						</#if>
