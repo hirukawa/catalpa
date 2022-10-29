@@ -65,6 +65,23 @@ public class FirebaseUploader {
             throw new ToastMessage("Firebase Hosting", "serviceAccountKey が指定されていません");
         }
 
+        String firebaseConfig;
+        Path firebaseConfigFilePath = config.getFirebaseConfigFilePath();
+        if(firebaseConfigFilePath != null && Files.exists(firebaseConfigFilePath)) {
+            firebaseConfig = Files.readString(firebaseConfigFilePath);
+        } else {
+            firebaseConfig = """
+            {
+                "headers": [{
+                    "glob": "**",
+                    "headers": {
+                        "Cache-Control": "max-age=1800"
+                    }
+                }]
+            }
+            """;
+        }
+
         Path input = localDirectory.toPath();
         Path output = MainApp.createTemporaryDirectory("upload-htdocs-gzipped", true);
 
@@ -76,7 +93,7 @@ public class FirebaseUploader {
                     .executor(executor)
                     .build();
 
-            String versionId = createVersionId(client, token, siteId);
+            String versionId = createVersionId(client, token, siteId, firebaseConfig);
 
             Map<Path, String> files = new LinkedHashMap<>();
             int len;
@@ -157,25 +174,14 @@ public class FirebaseUploader {
     }
 
 
-    private static String createVersionId(HttpClient client, String token, String siteId) throws IOException, InterruptedException {
+    private static String createVersionId(HttpClient client, String token, String siteId, String firebaseConfig) throws IOException, InterruptedException {
         String versionId = null;
 
         String url = "https://firebasehosting.googleapis.com" + "/v1beta1/sites/" + siteId + "/versions";
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
                 .setHeader("Authorization", "Bearer " + token)
                 .setHeader("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString("""
-                    {
-                        "config": {
-                            "headers": [{
-                                "glob": "**",
-                                "headers": {
-                                    "Cache-Control": "max-age=1800"
-                                }
-                            }]
-                        }
-                    }
-                    """, StandardCharsets.UTF_8))
+                .POST(HttpRequest.BodyPublishers.ofString("{ \"config\": " + firebaseConfig + " }", StandardCharsets.UTF_8))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
