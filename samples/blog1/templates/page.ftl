@@ -91,11 +91,11 @@
 					<h2 class="title">${post.title}</h2>
 				</a>
 				</#list>
-				<div class="blog-card hidden"></div>
-				<div class="blog-card hidden"></div>
-				<div class="blog-card hidden"></div>
-				<div class="blog-card hidden"></div>
-				<div class="blog-card hidden"></div>
+				<div class="blog-card blog-page hidden"></div>
+				<div class="blog-card blog-page hidden"></div>
+				<div class="blog-card blog-page hidden"></div>
+				<div class="blog-card blog-page hidden"></div>
+				<div class="blog-card blog-page hidden"></div>
 			</div>
 
 			<#-- pager -->
