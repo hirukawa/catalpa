@@ -60,7 +60,6 @@ import net.osdn.catalpa.flexmark.ext.samp_button.SampButtonExtension;
 import net.osdn.catalpa.SitemapItem.ChangeFreq;
 import net.osdn.catalpa.addon.blog.BlogAddOn;
 import net.osdn.catalpa.flexmark.ext.BasicNodeExtension;
-import net.osdn.catalpa.flexmark.ext.LineDividableTableExtension;
 import net.osdn.catalpa.flexmark.ext.RelativeLinkExtension;
 import net.osdn.catalpa.freemarker.BaseurlMethod;
 import net.osdn.catalpa.freemarker.LastModifiedTracker;
@@ -157,7 +156,6 @@ public class Catalpa {
 				SampButtonExtension.create(),
 				
 				BasicNodeExtension.create(),
-				LineDividableTableExtension.create(),
 				RelativeLinkExtension.create()
 		}));
 		return options;

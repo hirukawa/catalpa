@@ -47,7 +47,7 @@ public class JapaneseTextLayouter {
 			"WBR"));
 	
 	private static final Set<String> ELEMENTS_TO_SKIP = new HashSet<String>(Arrays.asList(
-			"CODE", "KBD", "PRE", "SAMP", "SCRIPT", "STYLE", "TT", "RT", "RP"));
+			"CODE", "KBD", "PRE", "SAMP", "SCRIPT", "STYLE", "SVG", "TT", "RT", "RP"));
 	
 	private static final Set<String> ELEMENTS_WITH_BOUNDARY = new HashSet<String>(Arrays.asList(
 			"CODE", "KBD", "SAMP", "TT"));
