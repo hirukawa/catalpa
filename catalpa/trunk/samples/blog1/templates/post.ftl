@@ -187,10 +187,10 @@
 						<div class="title">${post.title}</div>
 					</a>
 				</#list>
-				<a class="blog-card hidden"></a>
-				<a class="blog-card hidden"></a>
-				<a class="blog-card hidden"></a>
-				<a class="blog-card hidden"></a>
+				<a class="blog-card blog-post hidden"></a>
+				<a class="blog-card blog-post hidden"></a>
+				<a class="blog-card blog-post hidden"></a>
+				<a class="blog-card blog-post hidden"></a>
 			</div>
 		</div>
 	</main>
