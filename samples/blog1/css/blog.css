@@ -71,12 +71,12 @@
 	border: 1px solid var(--main-background-color);
 }
 .blog-card.hidden {
-	overflow: hidden;
-	max-height: 0;
-	margin: 0;
-	padding: 0;
-	border-top: none;
-	border-left: none;
+	overflow: hidden !important;
+	max-height: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border-top: none !important;
+	border-left: none !important;
 }
 
 .blog-card .date {
