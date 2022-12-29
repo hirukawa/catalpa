@@ -77,7 +77,7 @@
 				<div class="blog-card-erase-vertical-border"></div>
 
 				<#list blog.page.posts as post>
-				<a class="blog-card" href="${baseurl}${post.url}">
+				<a class="blog-card blog-page" href="${baseurl}${post.url}">
 					<div class="date">${post.date}</div>
 					<#if post.thumbnail?has_content && post.thumbnail?starts_with("data:") >
 					<img src="${post.thumbnail!}">
@@ -87,7 +87,6 @@
 					<h2 class="title">${post.title}</h2>
 				</a>
 				</#list>
-				<div class="blog-card hidden"></div>
 				<div class="blog-card hidden"></div>
 				<div class="blog-card hidden"></div>
 				<div class="blog-card hidden"></div>

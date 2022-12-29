@@ -71,9 +71,10 @@
 		<div class="content">
 			<article class="post">
 				<div class="blog-header">
-					<span class="date">${blog.post.date}</span>
+					<span class="date">${blog.post.date}&ensp;</span>
 					<#list blog.post.categories as category>
-					&thinsp;<a class="category" href="${baseurl}${category.url}">${category.name}</a>
+					<#if category?index gt 0><span style="color:#999">,</span></#if>
+					<a class="category" href="${baseurl}${category.url}">${category.name}</a>
 					</#list>
 					<h1 class="title">${blog.post.title}</h1>
 				</div>
@@ -174,10 +175,10 @@
 			<#-- related -->
 			<div class="blog-card-container">
 				<#list blog.post.related as post>
-					<#if post?index == 12>
+					<#if post?index == 10>
 						<#break>
 					</#if>
-					<a class="blog-card" href="${baseurl}${post.url}">
+					<a class="blog-card blog-post" href="${baseurl}${post.url}">
 						<#if post.thumbnail?has_content && post.thumbnail?starts_with("data:") >
 						<img src="${post.thumbnail!}">
 						<#else>
@@ -186,6 +187,10 @@
 						<div class="title">${post.title}</div>
 					</a>
 				</#list>
+				<a class="blog-card hidden"></a>
+				<a class="blog-card hidden"></a>
+				<a class="blog-card hidden"></a>
+				<a class="blog-card hidden"></a>
 			</div>
 		</div>
 	</main>

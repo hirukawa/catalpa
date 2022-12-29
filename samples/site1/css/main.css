@@ -15,19 +15,20 @@
 	--text-link-color:            #01509d;
 	--text-link-visited-color:    #01509d;
 	--text-link-hover-color:      #ef4e00;
-	--table-text-color:           var(--text-black-color);
 	--button-text-color:          var(--text-white-color);
 	--button-background-color:    #287DCF;
 	--list-marker-color:          #287DCF;
+	--table-text-color:           var(--text-black-color);
 	--table-background-color-odd: #f8f8f8;
 	--table-border-color:         #cccccc;
 	--blockquote-font-family:     var(--font-family-sans-serif-italic);
 	--blockquote-color:           #e8e8e8;
+	--ruby-text-color:            var(--text-black-color);
 
 	--font-family-sans-serif: "Meiryo", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", 'YuGothic', "Roboto", "Droid Sans", sans-serif;
 	--font-family-sans-serif-italic: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", 'YuGothic', "Roboto", "Droid Sans", sans-serif;
 	--font-family-serif: "Hiragino Mincho ProN", "Yu Mincho Medium", "Yu Mincho", "YuMincho", serif;
-	--font-family-monospace: "Consolas", "Meiryo", "monaco", "Osaka−等幅", "Osaka-mono", monospace;
+	--font-family-monospace: "Consolas", "Meiryo", "Menlo", "Osaka−等幅", "Osaka-mono", monospace;
 	--font-family-arial: "Arial", "Helvetica Neue", "Helvetica", sans-serif;
 	--font-family-baskerville: "Baskerville", "Baskerville Old Face", "Garamond", "Times New Roman", serif;
 	--font-family-bodoni: "Bodoni MT", "Bodoni 72", "Didot", "Didot LT STD", "Hoefler Text", "Garamond", "Times New Roman", serif;
@@ -167,7 +168,7 @@ input[type="search"] {
 	line-height: 1.0;
 	margin: auto;
 	padding: 0.6em 1em 0.5em 1em;
-	width: 14em;
+	width: 12em;
 	border-style: none;
 	border-radius: 2em;
 	box-shadow: inset 1px 1px 3px rgba(0,0,0,.5);

@@ -48,7 +48,6 @@
 	font-size: 2.5em; /* 16px -> 40px */
 	font-weight: bold;
 	line-height: 1.25;
-
 	text-align: center;
 }
 .markdown h2 {
@@ -57,6 +56,7 @@
 	font-size: 1.75em; /* 16px -> 28px */
 	font-weight: bold;
 	line-height: 1.25;
+	text-align: initial;
 }
 .markdown h3 {
 	margin-block-start: 2rem;
@@ -64,6 +64,7 @@
 	font-size: 1.5em; /* 16px -> 24px */
 	font-weight: bold;
 	line-height: 1.25;
+	text-align: initial;
 }
 .markdown h4 {
 	margin-block-start: 2rem;
@@ -71,6 +72,7 @@
 	font-size: 1.25em; /* 16px -> 20px */
 	font-weight: bold;
 	line-height: 1.25;
+	text-align: initial;
 }
 .markdown h5 {
 	margin-block-start: 1.5rem;
@@ -78,6 +80,7 @@
 	font-size: 1.125em; /* 16px -> 18px */
 	font-weight: bold;
 	line-height: 1.25;
+	text-align: initial;
 }
 .markdown h6 {
 	margin-block-start: 1rem;
@@ -85,6 +88,7 @@
 	font-size: 1em; /* 16px -> 16px */
 	font-weight: bold;
 	line-height: 1.25;
+	text-align: initial;
 }
 
 /*
@@ -319,6 +323,7 @@
 	border-spacing: 0;
 	border-collapse: collapse;
 	line-height: 1.5;
+	color: var(--table-text-color);
 }
 .markdown table > thead {
 	font-size: 93.75%; /* 16px -> 15px */
@@ -451,6 +456,13 @@
 	margin: 0;
 	padding: 1em;
 }
+.markdown dl.note.has-term > dd,
+.markdown dl.tip.has-term > dd,
+.markdown dl.info.has-term > dd,
+.markdown dl.warning.has-term > dd,
+.markdown dl.caution.has-term > dd {
+	padding-block-start: 1.75em;
+}
 .markdown dl.deg-0 > dt {
 	transform: rotate(0);
 }
@@ -482,6 +494,7 @@
 	transform: rotate(-4.5deg);
 }
 .markdown dl.note {
+	color: #333;
 	background-color: hsl(0, 0%, 96%);
 }
 .markdown dl.note > dt {
@@ -492,6 +505,7 @@
 	border-left: 0.5em solid hsl(300, 48%, 32%);
 }
 .markdown dl.tip {
+	color: #006D10;
 	background-color: hsl(153, 99%, 96%);
 }
 .markdown dl.tip > dt {
@@ -502,6 +516,7 @@
 	border-left: 0.5em solid hsl(153, 99%, 29%);
 }
 .markdown dl.info {
+	color: #003B73;
 	background-color: hsl(210, 99%, 96%);
 }
 .markdown dl.info > dt {
@@ -512,6 +527,7 @@
 	border-left: 0.5em solid hsl(210, 99%, 31%);
 }
 .markdown dl.warning {
+	color: #B46D01;
 	background-color: hsl(36, 98%, 96%);
 }
 .markdown dl.warning > dt {
@@ -522,6 +538,7 @@
 	border-left: 0.5em solid hsl(36, 98%, 51%);
 }
 .markdown dl.caution {
+	color: #A60026;
 	background-color: hsl(344, 100%, 96%);
 }
 .markdown dl.caution > dt {
@@ -542,13 +559,13 @@
 .markdown ruby[data-rt]::before {
 	content: attr(data-rt);
 	position: absolute;
-	top: -0.75em;
-	left: -2em;
-	right: -2em;
+	top: -0.825em;
+	left: -2.5em;
+	right: -2.5em;
 	font-size: 0.5em;
 	text-align: center;
 	line-height: 1;
-	color: #666;
+	color: var(--ruby-text-color);
 }
 .markdown ruby[data-rt] rt {
 	display: none;
@@ -609,7 +626,7 @@
 }
 .markdown .button.hover:hover {
 	box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.22);
-	transform: translateY(-4px);
+	transform: translateY(-2px);
 }
 .markdown .button.hover:active {
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
@@ -785,12 +802,15 @@
  * 画像とテキストは横に並びます。画像の縦横比は 1:1 です。
  */
 .markdown p.card {
-	margin: 1em 0;
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+	margin-inline-start: calc(0px - var(--content-padding-left) - var(--content-padding-left-adjust));
+	margin-inline-end: calc(0px - var(--content-padding-right) - var(--content-padding-right-adjust));
 	padding: 0;
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: center;
-	gap: 1em;
+	justify-content: space-evenly;
+	gap: 1em 0;
 }
 .markdown p.card a {
 	display: block;
@@ -801,7 +821,7 @@
 }
 .markdown p.card a:hover {
 	box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.22);
-	transform: translateY(-4px);
+	transform: translateY(-2px);
 }
 .markdown p.card a:active {
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
@@ -823,18 +843,25 @@
 	padding: 0 1em;
 	width: 176px;
 }
+.markdown p.card a.padding {
+	width: 288px;
+	height: 0;
+}
 
 /*
  * 画像とテキストのリンクをカード形式にします。
  * 画像とテキストは縦に並びます。画像の縦横比は 16:10（landscape）です。
  */
  .markdown p.card.landscape {
-	margin: 1em 0;
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+	margin-inline-start: calc(0px - var(--content-padding-left) - var(--content-padding-left-adjust));
+	margin-inline-end: calc(0px - var(--content-padding-right) - var(--content-padding-right-adjust));
 	padding: 0;
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: center;
-	gap: 1em;
+	justify-content: space-evenly;
+	gap: 1em 0;
 }
 .markdown p.card.landscape a {
 	display: block;
@@ -845,7 +872,7 @@
 }
 .markdown p.card.landscape a:hover {
 	box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.22);
-	transform: translateY(-4px);
+	transform: translateY(-2px);
 }
 .markdown p.card.landscape a:active {
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
@@ -855,20 +882,25 @@
 .markdown p.card.landscape a > img {
 	border-radius: 4px 4px 0 0;
 	object-fit: cover;
-	width: 192px;
-	height: 120px;
+	width: 176px;
+	height: 110px;
 }
 .markdown p.card.landscape a > img + em {
 	display: table-cell;
-	width: calc(192px - 0.75em * 2);
+	width: calc(176px - 0.5em * 2);
 	height: 72px;
 	text-align: center;
 	vertical-align: middle;
 	line-height: 1.25;
 	font-weight: normal;
 	font-style: normal;
-	padding: 0 0.75em;
+	padding: 0 0.5em;
 }
+.markdown p.card.landscape a.padding {
+	width: 176px;
+	height: 0;
+}
+
 
 /*
  * その他・汎用
@@ -881,6 +913,10 @@
 }
 .markdown .right {
 	text-align: right !important;
+}
+
+.nowrap {
+	white-space: nowrap !important;
 }
 
 .inline-block {
@@ -906,6 +942,27 @@
 	font-size: 125% !important; /* 16px -> 20px */
 }
 
+.markdown .flex-center {
+	justify-content: center !important;
+	column-gap: 1em !important;
+}
+.markdown .flex-space-evenly {
+	justify-content: space-evenly !important;
+}
+
+
+.markdown div.column-2 {
+	display: flex;
+	flex-wrap: wrap;
+	column-gap: var(--content-padding-left);
+}
+.markdown div.column-2 > div {
+	margin-inline-start: auto;
+	margin-inline-end: auto;
+	width: calc((var(--content-width) - (var(--content-padding-left) * 2) - var(--content-padding-left-adjust) - var(--content-padding-right) - var(--content-padding-right-adjust)) / 2);
+}
+
+
 .markdown .m-0 {
 	margin: 0 !important;
 }
@@ -923,6 +980,12 @@
 }
 .markdown .m-5 {
 	margin: 5em !important;
+}
+.markdown .m-small {
+	margin: 0.5em !important;
+}
+.markdown .m-tiny {
+	margin: 0.25em !important;
 }
 .markdown .m-auto {
 	margin: auto !important;
@@ -945,10 +1008,16 @@
 .markdown .mt-5 {
 	margin-top: 5em !important;
 }
+.markdown .mt-small {
+	margin-top: 0.5em !important;
+}
+.markdown .mt-tiny {
+	margin-top: 0.25em !important;
+}
 .markdown .mt-auto {
 	margin-top: auto !important;
 }
-.markdown .mt-0 {
+.markdown .mb-0 {
 	margin-bottom: 0 !important;
 }
 .markdown .mb-1 {
@@ -965,6 +1034,12 @@
 }
 .markdown .mb-5 {
 	margin-bottom: 5em !important;
+}
+.markdown .mb-small {
+	margin-bottom: 0.5em !important;
+}
+.markdown .mb-tiny {
+	margin-bottom: 0.25em !important;
 }
 .markdown .mb-auto {
 	margin-bottom: auto !important;
@@ -987,6 +1062,12 @@
 .markdown .ml-5 {
 	margin-left: 5em !important;
 }
+.markdown .ml-small {
+	margin-left: 0.5em !important;
+}
+.markdown .ml-tiny {
+	margin-left: 0.25em !important;
+}
 .markdown .ml-auto {
 	margin-left: auto !important;
 }
@@ -1007,6 +1088,12 @@
 }
 .markdown .mr-5 {
 	margin-right: 5em !important;
+}
+.markdown .mr-small {
+	margin-right: 0.5em !important;
+}
+.markdown .mr-tiny {
+	margin-right: 0.25em !important;
 }
 .markdown .mr-auto {
 	margin-right: auto !important;
@@ -1034,6 +1121,14 @@
 .markdown .mx-5 {
 	margin-left: 5em !important;
 	margin-right: 5em !important;
+}
+.markdown .mx-small {
+	margin-left: 0.5em !important;
+	margin-right: 0.5em !important;
+}
+.markdown .mx-tiny {
+	margin-left: 0.25em !important;
+	margin-right: 0.25em !important;
 }
 .markdown .mx-auto {
 	margin-left: auto !important;
@@ -1063,6 +1158,14 @@
 	margin-top: 5em !important;
 	margin-bottom: 5em !important;
 }
+.markdown .my-small {
+	margin-top: 0.5em !important;
+	margin-bottom: 0.5em !important;
+}
+.markdown .my-small {
+	margin-top: 0.25em !important;
+	margin-bottom: 0.25em !important;
+}
 .markdown .my-auto {
 	margin-top: auto !important;
 	margin-bottom: auto !important;
@@ -1085,6 +1188,12 @@
 .markdown .p-5 {
 	padding: 5em !important;
 }
+.markdown .p-small {
+	padding: 0.5em !important;
+}
+.markdown .p-tiny {
+	padding: 0.25em !important;
+}
 .markdown .p-auto {
 	padding: auto !important;
 }
@@ -1105,6 +1214,12 @@
 }
 .markdown .pt-5 {
 	padding-top: 5em !important;
+}
+.markdown .pt-small {
+	padding-top: 0.5em !important;
+}
+.markdown .pt-tiny {
+	padding-top: 0.25em !important;
 }
 .markdown .pt-auto {
 	padding-top: auto !important;
@@ -1127,6 +1242,12 @@
 .markdown .pb-5 {
 	padding-bottom: 5em !important;
 }
+.markdown .pb-small {
+	padding-bottom: 0.5em !important;
+}
+.markdown .pb-tiny {
+	padding-bottom: 0.25em !important;
+}
 .markdown .pb-auto {
 	padding-bottom: auto !important;
 }
@@ -1148,6 +1269,12 @@
 .markdown .pl-5 {
 	padding-left: 5em !important;
 }
+.markdown .pl-small {
+	padding-left: 0.5em !important;
+}
+.markdown .pl-tiny {
+	padding-left: 0.25em !important;
+}
 .markdown .pl-auto {
 	padding-left: auto !important;
 }
@@ -1168,6 +1295,12 @@
 }
 .markdown .pr-5 {
 	padding-right: 5em !important;
+}
+.markdown .pr-small {
+	padding-right: 0.5em !important;
+}
+.markdown .pr-tiny {
+	padding-right: 0.25em !important;
 }
 .markdown .pr-auto {
 	padding-right: auto !important;
@@ -1196,6 +1329,14 @@
 	padding-left: 5em !important;
 	padding-right: 5em !important;
 }
+.markdown .px-small {
+	padding-left: 0.5em !important;
+	padding-right: 0.5em !important;
+}
+.markdown .px-tiny {
+	padding-left: 0.25em !important;
+	padding-right: 0.25em !important;
+}
 .markdown .px-auto {
 	padding-left: auto !important;
 	padding-right: auto !important;
@@ -1223,6 +1364,14 @@
 .markdown .py-5 {
 	padding-top: 5em !important;
 	padding-bottom: 5em !important;
+}
+.markdown .py-small {
+	padding-top: 0.5em !important;
+	padding-bottom: 0.5em !important;
+}
+.markdown .py-tiny {
+	padding-top: 0.25em !important;
+	padding-bottom: 0.25em !important;
 }
 .markdown .py-auto {
 	padding-top: auto !important;

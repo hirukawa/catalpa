@@ -15,6 +15,8 @@
 	<meta property="og:title" content="${title!}">
 	<meta property="og:description" content="${(description!)?replace('\n', '')}">
 	<#if image?has_content><meta property="og:image" content="${siteurl!}/${image}"></#if>
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
 
 	<style>
 		<#include "css/main.css">
@@ -67,7 +69,7 @@
 			<div class="content">
 				<#-- SNS はてなブックマーク -->
 				<a class="sns button hatena"
-					href="http://b.hatena.ne.jp/add?mode=confirm&url=${url?remove_ending('index.html')}&title=${title!}" target="_blank"
+					href="https://b.hatena.ne.jp/add?mode=confirm&url=${url?remove_ending('index.html')}&title=${title!}" target="_blank"
 					alt="はてなブックマーク"
 					title="はてなブックマークに追加する"
 					style="font-family:'Yu Gothic Medium','Yu Gothic','YuGothic';font-weight:bold;font-size:14px;line-height:1;margin:0;padding:6px 8px;border-radius:0.25em;color:white;background-color:#00A4DE">
@@ -86,7 +88,7 @@
 				</a>
 				<#-- SNS Facebook -->
 				<a class="sns button facebook"
-					href="http://www.facebook.com/share.php?u=${url?remove_ending('index.html')}" target="_blank"
+					href="https://www.facebook.com/share.php?u=${url?remove_ending('index.html')}" target="_blank"
 					alt="Facebookシェア"
 					title="Facebookでシェアする"
 					style="font-family:'Yu Gothic Medium','Yu Gothic','YuGothic';font-weight:bold;font-size:87.5%;line-height:1;margin:0;padding:6px 8px;border-radius:0.25em;color:white;background-color:#1877F2">
@@ -99,7 +101,7 @@
 				</a>
 				<#-- SNS Twitter -->
 				<a class="sns button twitter"
-					href="http://twitter.com/share?url=${url?remove_ending('index.html')}&text=${title!}" target="_blank"
+					href="https://twitter.com/share?url=${url?remove_ending('index.html')}&text=${title!}" target="_blank"
 					alt="Twitter"
 					title="ツイートする"
 					style="font-family:'Yu Gothic Medium','Yu Gothic','YuGothic';font-weight:bold;font-size:87.5%;line-height:1;margin:0;padding:6px 8px;border-radius:0.25em;color:white;background-color:#1D9BF0">
