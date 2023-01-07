@@ -23,6 +23,7 @@ import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateNotFoundException;
+import freemarker.template.utility.StringUtil;
 import net.osdn.catalpa.Context;
 import net.osdn.catalpa.Handler;
 import net.osdn.catalpa.Util;
@@ -121,8 +122,23 @@ public class TemplateHandler implements Handler {
 			name += ".ftl";
 		}
 		FileTime lastModifiedTime = null;
-		Template template = context.getFreeMarker().getTemplate(name);
-	
+		Template template = null;
+		try {
+			template = context.getFreeMarker().getTemplate(name);
+		} catch(TemplateNotFoundException original) {
+			String msg = original.getMessage() != null ? original.getMessage() : "";
+			if(!msg.startsWith("Template not found")) {
+				throw original;
+			}
+
+			TemplateNotFoundException exception = new TemplateNotFoundException(
+					original.getTemplateName(),
+					original.getCustomLookupCondition(),
+					"\"" + context.getRelativeInputPath() + "\" に適用するテンプレート " + StringUtil.jQuote(original.getTemplateName()) + " が見つかりません。");
+			exception.setStackTrace(original.getStackTrace());
+			throw exception;
+		}
+
 		if(template != null) {
 			TemplateLoader tl = context.getFreeMarker().getTemplateLoader();
 			Object templateSource = tl.findTemplateSource(name);
