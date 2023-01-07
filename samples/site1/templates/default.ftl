@@ -101,7 +101,7 @@
 				</a>
 				<#-- SNS Twitter -->
 				<a class="sns button twitter"
-					href="https://twitter.com/share?url=${url?remove_ending('index.html')}&text=${title!}" target="_blank"
+					href="https://twitter.com/intent/tweet?url=${url?remove_ending('index.html')}&text=${title!}" target="_blank"
 					alt="Twitter"
 					title="ツイートする"
 					style="font-family:'Yu Gothic Medium','Yu Gothic','YuGothic';font-weight:bold;font-size:87.5%;line-height:1;margin:0;padding:6px 8px;border-radius:0.25em;color:white;background-color:#1D9BF0">

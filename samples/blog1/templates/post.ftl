@@ -95,7 +95,7 @@
 				<div style="margin-block-end:0.5em">この記事を共有しませんか？</div>
 				<div style="display:flex;flex-wrap:wrap;align-items:center;gap:0.5em">
 					<a class="sns button hatena"
-						href="http://b.hatena.ne.jp/add?mode=confirm&url=${url?remove_ending('index.html')}&title=${title!}" target="_blank"
+						href="https://b.hatena.ne.jp/add?mode=confirm&url=${url?remove_ending('index.html')}&title=${title!}" target="_blank"
 						alt="はてなブックマーク"
 						title="はてなブックマークに追加する"
 						style="font-family:'Yu Gothic Medium','Yu Gothic','YuGothic';font-weight:bold;font-size:14px;line-height:1;margin:0;padding:6px 8px;border-radius:0.25em;color:white;background-color:#00A4DE">
@@ -113,7 +113,7 @@
 						ブックマーク
 					</a>
 					<a class="sns button facebook"
-						href="http://www.facebook.com/share.php?u=${url?remove_ending('index.html')}" target="_blank"
+						href="https://www.facebook.com/share.php?u=${url?remove_ending('index.html')}" target="_blank"
 						alt="Facebookシェア"
 						title="Facebookでシェアする"
 						style="font-family:'Yu Gothic Medium','Yu Gothic','YuGothic';font-weight:bold;font-size:87.5%;line-height:1;margin:0;padding:6px 8px;border-radius:0.25em;color:white;background-color:#1877F2">
@@ -125,7 +125,7 @@
 						シェア
 					</a>
 					<a class="sns button twitter"
-						href="http://twitter.com/share?url=${url?remove_ending('index.html')}&text=${title!}" target="_blank"
+						href="https://twitter.com/intent/tweet?url=${url?remove_ending('index.html')}&text=${title!}" target="_blank"
 						alt="Twitter"
 						title="ツイートする"
 						style="font-family:'Yu Gothic Medium','Yu Gothic','YuGothic';font-weight:bold;font-size:87.5%;line-height:1;margin:0;padding:6px 8px;border-radius:0.25em;color:white;background-color:#1D9BF0">
