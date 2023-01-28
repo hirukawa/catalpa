@@ -15,8 +15,12 @@
 	<meta property="og:title" content="${title!}">
 	<meta property="og:description" content="${(description!)?replace('\n', '')}">
 	<#if image?has_content><meta property="og:image" content="${siteurl!}/${image}"></#if>
-	<!-- Twitter -->
+	<!-- Twitter card -->
 	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="${title!}" />
+	<meta name="twitter:description" content="${(description!)?replace('\n', '')}" />
+	<#if image?has_content><meta name="twitter:image" content="${siteurl!}/${image}"></#if>
+
 
 	<style>
 		<#include "css/main.css">
