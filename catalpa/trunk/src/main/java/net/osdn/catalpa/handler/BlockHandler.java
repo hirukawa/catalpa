@@ -15,7 +15,7 @@ import net.osdn.catalpa.Util;
 
 public class BlockHandler implements Handler {
 
-	private static Pattern TABLE_BLOCK_PATTERN = Pattern.compile("(^\\|[^\r\n]*\r\n)+(^\\{[^\r\n]*\\}\s*\r\n)?(^\s*)\r\n", Pattern.MULTILINE | Pattern.DOTALL);
+	private static Pattern TABLE_BLOCK_PATTERN = Pattern.compile("(^\\|[^\r\n]*\r\n)(^(\\||  )[^\r\n]*\r\n)*(^\\|[^\r\n]*\r\n)(^\\{[^\r\n]*\\}\s*\r\n)?(^\s*)\r\n", Pattern.MULTILINE | Pattern.DOTALL);
 
 	protected static final String[] APPLICABLE_EXTENSIONS = new String[] {
 		".markdown",
@@ -89,8 +89,13 @@ public class BlockHandler implements Handler {
 				output.append(table);
 			}
 			for(String line : m.group(0).split("\r\n")) {
-				if(line.lastIndexOf('|') == 0 && line.trim().length() > 1) {
+				String trim = line.trim();
+				if(trim.length() > 1 && line.charAt(0) == '|' && trim.charAt(trim.length() - 1) != '|') {
 					output.append(line);
+					continue;
+				}
+				if(line.startsWith("  ")) {
+					output.append(line.substring(2));
 					continue;
 				}
 				output.append(line);
