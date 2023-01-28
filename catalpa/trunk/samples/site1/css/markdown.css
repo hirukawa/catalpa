@@ -12,6 +12,10 @@
 	.markdown dl.info > dt,
 	.markdown dl.warning > dt,
 	.markdown dl.caution > dt,
+	.markdown dl.primary > dt,
+	.markdown dl.primary-variant > dt,
+	.markdown dl.secondary > dt,
+	.markdown dl.secondary-variant > dt,
 	.markdown .button {
 		white-space: normal !important;
 	}
@@ -27,6 +31,11 @@
 	line-break: strict;   /* 厳密な禁則処理 */
 	text-align: justify;  /* 最終行を除いて両端を揃えます */
 	line-height: 1.75rem;
+}
+
+.markdown .cancel-padding {
+	margin-inline-start: calc(0px - var(--content-padding-left) - var(--content-padding-left-adjust));
+	margin-inline-end: calc(0px - var(--content-padding-right) - var(--content-padding-right-adjust));
 }
 
 /*
@@ -197,6 +206,7 @@
 .markdown ul > li.task-list-item.unchecked::marker {
 	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="checkbox"><path d="M448,160C448,142.339 433.661,128 416,128L96,128C78.339,128 64,142.339 64,160L64,480C64,497.661 78.339,512 96,512L416,512C433.661,512 448,497.661 448,480L448,160ZM416,168C416,163.585 412.415,160 408,160L104,160C99.585,160 96,163.585 96,168L96,472C96,476.415 99.585,480 104,480L408,480C412.415,480 416,476.415 416,472L416,168Z" style="fill:rgb(153,153,153);"/></g></svg>') "\2003";
 }
+
 
 /*
  * ファイルツリー
@@ -386,7 +396,11 @@
 .markdown dl.tip,
 .markdown dl.info,
 .markdown dl.warning,
-.markdown dl.caution {
+.markdown dl.caution,
+.markdown dl.primary,
+.markdown dl.primary-variant,
+.markdown dl.secondary,
+.markdown dl.secondary-variant {
 	position: relative;
 	display: table;
 	margin-block-start: var(--default-margin-block-start);
@@ -398,36 +412,56 @@
 .markdown dl.tip.has-term,
 .markdown dl.info.has-term,
 .markdown dl.warning.has-term,
-.markdown dl.caution.has-term {
+.markdown dl.caution.has-term,
+.markdown dl.primary.has-term,
+.markdown dl.primary-variant.has-term,
+.markdown dl.secondary.has-term,
+.markdown dl.secondary-variant.has-term {
 	margin-block-start: calc(1.5em + var(--default-margin-block-start));
 }
-.markdown dl.note.mx-auto,
-.markdown dl.tip.mx-auto,
-.markdown dl.info.mx-auto,
-.markdown dl.warning.mx-auto,
-.markdown dl.caution.mx-auto {
+.markdown dl.note.mx-auto, .markdown dl.note.center,
+.markdown dl.tip.mx-auto, .markdown dl.tip.center,
+.markdown dl.info.mx-auto, .markdown dl.info.center,
+.markdown dl.warning.mx-auto, .markdown dl.warning.center,
+.markdown dl.caution.mx-auto, .markdown dl.caution.center,
+.markdown dl.primary.mx-auto, .markdown dl.primary.center,
+.markdown dl.primary-variant.mx-auto, .markdown dl.primary-variant.center,
+.markdown dl.secondary.mx-auto, .markdown dl.secondary.center,
+.markdown dl.secondary-variant.mx-auto, .markdown dl.secondary-variant.center {
 	margin-inline-start: auto;
 	margin-inline-end: auto;
 }
-.markdown dl.note.ml-auto,
-.markdown dl.tip.ml-auto,
-.markdown dl.info.ml-auto,
-.markdown dl.warning.ml-auto,
-.markdown dl.caution.ml-auto {
+.markdown dl.note.ml-auto, .markdown dl.note.right,
+.markdown dl.tip.ml-auto, .markdown dl.tip.right,
+.markdown dl.info.ml-auto, .markdown dl.info.right,
+.markdown dl.warning.ml-auto, .markdown dl.warning.right,
+.markdown dl.caution.ml-auto, .markdown dl.caution.right,
+.markdown dl.primary.ml-auto, .markdown dl.primary.right,
+.markdown dl.primary-variant.ml-auto, .markdown dl.primary-variant.right,
+.markdown dl.secondary.ml-auto, .markdown dl.secondary.right,
+.markdown dl.secondary-variant.ml-auto, .markdown dl.secondary-variant.right {
 	margin-inline-start: auto;
 }
-.markdown dl.note.mr-auto,
-.markdown dl.tip.mr-auto,
-.markdown dl.info.mr-auto,
-.markdown dl.warning.mr-auto,
-.markdown dl.caution.mr-auto {
+.markdown dl.note.mr-auto, .markdown dl.note.left,
+.markdown dl.tip.mr-auto, .markdown dl.tip.left,
+.markdown dl.info.mr-auto, .markdown dl.info.left,
+.markdown dl.warning.mr-auto, .markdown dl.warning.left,
+.markdown dl.caution.mr-auto, .markdown dl.caution.left,
+.markdown dl.primary.mr-auto, .markdown dl.primary.left,
+.markdown dl.primary-variant.mr-auto, .markdown dl.primary-variant.left,
+.markdown dl.secondary.mr-auto, .markdown dl.secondary.left,
+.markdown dl.secondary-variant.mr-auto, .markdown dl.secondary-variant.left {
 	margin-inline-end: auto;
 }
 .markdown dl.note > dt,
 .markdown dl.tip > dt,
 .markdown dl.info > dt,
 .markdown dl.warning > dt,
-.markdown dl.caution > dt {
+.markdown dl.caution > dt,
+.markdown dl.primary > dt,
+.markdown dl.primary-variant > dt,
+.markdown dl.secondary > dt,
+.markdown dl.secondary-variant > dt {
 	position: absolute;
 	display: inline-block;
 	margin-block-start: 1em;
@@ -445,14 +479,22 @@
 .markdown dl.tip > dt:empty,
 .markdown dl.info > dt:empty,
 .markdown dl.warning > dt:empty,
-.markdown dl.caution > dt:empty {
+.markdown dl.caution > dt:empty,
+.markdown dl.primary > dt:empty,
+.markdown dl.primary-variant > dt:empty,
+.markdown dl.secondary > dt:empty,
+.markdown dl.secondary-variant > dt:empty {
 	display: none;
 }
 .markdown dl.note > dd,
 .markdown dl.tip > dd,
 .markdown dl.info > dd,
 .markdown dl.warning > dd,
-.markdown dl.caution > dd {
+.markdown dl.caution > dd,
+.markdown dl.primary > dd,
+.markdown dl.primary-variant > dd,
+.markdown dl.secondary > dd,
+.markdown dl.secondary-variant > dd {
 	margin: 0;
 	padding: 1em;
 }
@@ -460,7 +502,11 @@
 .markdown dl.tip.has-term > dd,
 .markdown dl.info.has-term > dd,
 .markdown dl.warning.has-term > dd,
-.markdown dl.caution.has-term > dd {
+.markdown dl.caution.has-term > dd,
+.markdown dl.primary.has-term > dd,
+.markdown dl.primary-variant.has-term > dd,
+.markdown dl.secondary.has-term > dd,
+.markdown dl.secondary-variant.has-term > dd {
 	padding-block-start: 1.75em;
 }
 .markdown dl.deg-0 > dt {
@@ -504,6 +550,9 @@
 .markdown dl.note > dt:empty + dd {
 	border-left: 0.5em solid hsl(300, 48%, 32%);
 }
+.markdown dl.note li::marker {
+	color: #985B97;
+}
 .markdown dl.tip {
 	color: #006D10;
 	background-color: hsl(153, 99%, 96%);
@@ -514,6 +563,9 @@
 }
 .markdown dl.tip > dt:empty + dd {
 	border-left: 0.5em solid hsl(153, 99%, 29%);
+}
+.markdown dl.tip li::marker {
+	color: #77BC7B;
 }
 .markdown dl.info {
 	color: #003B73;
@@ -526,6 +578,9 @@
 .markdown dl.info > dt:empty + dd {
 	border-left: 0.5em solid hsl(210, 99%, 31%);
 }
+.markdown dl.info li::marker {
+	color: #287DC0;
+}
 .markdown dl.warning {
 	color: #B46D01;
 	background-color: hsl(36, 98%, 96%);
@@ -537,6 +592,9 @@
 .markdown dl.warning > dt:empty + dd {
 	border-left: 0.5em solid hsl(36, 98%, 51%);
 }
+.markdown dl.warning li::marker {
+	color: #F9A743;
+}
 .markdown dl.caution {
 	color: #A60026;
 	background-color: hsl(344, 100%, 96%);
@@ -547,6 +605,53 @@
 }
 .markdown dl.caution > dt:empty + dd {
 	border-left: 0.5em solid hsl(344, 100%, 45%);
+}
+.markdown dl.caution li::marker {
+	color: #F0675F;
+}
+.markdown dl.primary {
+	color: #333;
+	background-color: hsl(0, 0%, 96%);
+}
+.markdown dl.primary > dt {
+	color: var(--text-white-color);
+	background-color: var(--primary-color);
+}
+.markdown dl.primary > dt:empty + dd {
+	border-left: 0.5em solid var(--primary-color);
+}
+.markdown dl.primary-variant {
+	color: #333;
+	background-color: hsl(0, 0%, 96%);
+}
+.markdown dl.primary-variant > dt {
+	color: var(--text-white-color);
+	background-color: var(--primary-variant-color);
+}
+.markdown dl.primary-variant > dt:empty + dd {
+	border-left: 0.5em solid var(--primary-variant-color);
+}
+.markdown dl.secondary {
+	color: #333;
+	background-color: hsl(0, 0%, 96%);
+}
+.markdown dl.secondary > dt {
+	color: var(--text-white-color);
+	background-color: var(--secondary-color);
+}
+.markdown dl.secondary > dt:empty + dd {
+	border-left: 0.5em solid var(--secondary-color);
+}
+.markdown dl.secondary-variant {
+	color: #333;
+	background-color: hsl(0, 0%, 96%);
+}
+.markdown dl.secondary-variant > dt {
+	color: var(--text-white-color);
+	background-color: var(--secondary-variant-color);
+}
+.markdown dl.secondary-variant > dt:empty + dd {
+	border-left: 0.5em solid var(--secondary-variant-color);
 }
 
 
@@ -899,6 +1004,34 @@
 .markdown p.card.landscape a.padding {
 	width: 176px;
 	height: 0;
+}
+.markdown p.card.landscape a > img + em span[style*="font-family:catalpa"],
+.markdown p.card.landscape a > img + em span[style="font-family:monospace;font-size:50%;"]
+{
+	display: none;
+}
+@media screen and (max-width: 500px) {
+	.markdown p.card.landscape a {
+		display: flex;
+		width: calc(100vw - 2em);
+	}
+	.markdown p.card.landscape a > img {
+		border-radius: 4px 0 0 4px;
+		width: 128px;
+		height: 80px;
+	}
+	.markdown p.card.landscape a > img + em {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		height: 80px;
+		padding: 0 0 0 0.75em;
+		text-align: left;
+	}
+	.markdown p.card.landscape a > img + em br
+	{
+		display: none;
+	}
 }
 
 
