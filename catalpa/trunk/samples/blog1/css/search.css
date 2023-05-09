@@ -10,8 +10,8 @@
 	font-size: 1em;
 }
 .search-result strong {
-	color: #c7254e;
-	background-color: rgba(128, 0, 32, 0.05);
+	color: var(--code-color);
+	background-color: var(--code-background-color);
 	border-radius: 4px;
 	white-space: pre-wrap;
 }
@@ -32,14 +32,14 @@
 }
 .search-result > .entries > .entry > .title > a {
 	font-weight: bold;
-	color: #01509d;
+	color: var(--text-link-color);
 	text-decoration: none;
 }
 .search-result > .entries > .entry > .title > a:visited {
-	color: #01509d;
+	color: var(--text-link-visited-color);
 }
 .search-result > .entries > .entry > .title > a:hover {
-	color: #ef4e00;
+	color: var(--text-link-hover-color);
 }
 .search-result > .entries > .entry > .url {
 	font-size: 14px;
@@ -51,17 +51,17 @@
 .search-result > .entries > .entry > .text {
 	margin-top: 6px;
 	font-size: 15px;
-	color: #333333;
+	color: var(--main-text-color);
 }
 
 /*
- * KBD
+ * ['Ctrl'] 
+ * <kbd data-length="4">Ctrl</kbd>
  */
  .markdown kbd {
-	display: inline-block;
-	vertical-align: text-top;
+	vertical-align: middle;
 	margin: 0;
-	padding: 0.2em 0.5em 0.2em 0.5em;
+	padding: 0.35em 0.5em;
 	font-family: var(--font-family-monospace);
 	font-size: 87.5%; /* 16px -> 14px */
 	line-height: 1.0;
@@ -72,4 +72,10 @@
 	border-radius: 3px;
 	box-shadow: 1px 1px 2px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.3) inset;
 	white-space: pre-wrap;
+}
+
+@media (prefers-color-scheme: dark) {
+	.search-result > .entries > .entry > .url > a {
+		color: #a6e22e;
+	}
 }

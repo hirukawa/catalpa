@@ -1,3 +1,41 @@
+.markdown pre {
+	margin-block-start: var(--default-margin-block-start);
+	margin-block-end: var(--default-margin-block-end);
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+}
+.markdown pre > code {
+	display: block;
+	margin: 0;
+	padding: 0.5em 0.75em;
+	word-break: break-all;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;  word-wrap: break-word;
+	text-align: left;
+	letter-spacing: 0;
+	line-height: 1.5;
+	tab-size: 4;
+	border: 0;
+	border-radius: 0;
+}
+.markdown pre > div.title {
+	padding: 0.5em 0 0.5em 0.5em;
+	line-height: 1.0;
+	font-family: var(--font-family-monospace);
+	font-weight: normal;
+	border-bottom: 0;
+	overflow: auto;
+}
+.markdown pre > div.title > span.copy-button {
+	float: right;
+	padding: 0 0.75em;
+	font-weight: bold;
+	cursor: pointer;
+}
+.markdown pre > div.title > span.copy-button::after {
+	content: "COPY";
+}
+
 /*
  * line number
  */
@@ -16,304 +54,12 @@
 	padding: 0.5em 0.5em 0.5em 0;
 	text-align: right;
 	overflow: hidden;
-	color: #808080;
-	border-right: 1px solid #414339;
-}
-
-/*
- *  dark
- */
-.markdown pre {
-	margin-block-start: var(--default-margin-block-start);
-	margin-block-end: var(--default-margin-block-end);
-	margin-inline-start: 0;
-	margin-inline-end: 0;
-	background: #272822;
-}
-.markdown pre > code {
-	display: block;
-	margin: 0;
-	padding: 0.5em 0.75em;
-	word-break: break-all;
-	white-space: pre-wrap;
-	overflow-wrap: break-word;  word-wrap: break-word;
-	text-align: left;
-	letter-spacing: 0;
-	line-height: 1.5;
-	tab-size: 4;
-	border: 0;
-	border-radius: 0;
-	color: #F0F0F0;
-	background: #272822;
-}
-
-.markdown pre > div.title {
-	padding: 0.5em 0 0.5em 0.5em;
-	color: #f8f8f2;
-	background: #414339;
-	line-height: 1.0;
-	font-family: var(--font-family-monospace);
-	font-weight: normal;
-	border-bottom: 0;
-	overflow: auto;
-}
-.markdown pre.cmd > div.title {
-	background: #2e3e4d;
-	border-bottom: 1px solid #C0C0C0;
-}
-.markdown pre > div.title > span.copy-button {
-	float: right;
-	padding: 0 0.75em;
-	font-weight: bold;
-	cursor: pointer;
-}
-.markdown pre > div.title > span.copy-button::after {
-	content: "COPY";
-}
-.markdown pre > div.title > span.copy-button {
-	color: #999;
-}
-.markdown pre > div.title > span.copy-button:hover {
-	color: #eee;
-}
-.markdown pre > div.title > span.copy-button:active {
-	color: #999;
-}
-
-
-.markdown pre > code.nohighlight {
-	color: #f8f8f2;
-}
-
-.markdown pre > code.language-java .hljs-meta {
-	color: #66d9ef;
-}
-
-.markdown pre > code.language-java .hljs-class .hljs-title {
-	color: #a6e22e;
-	text-decoration: underline;
-}
-
-.markdown pre > code.yaml .hljs-bullet,
-.markdown pre > code.yaml .hljs-number,
-.markdown pre > code.yaml .hljs-string {
-	color: #f8f8f2;
-}
-.markdown pre > code.yaml .hljs-array {
-	color: #e6db74;
-}
-.markdown pre > code.yaml .hljs-object {
-	color: #66d9ef;
-}
-.markdown pre > code.yaml .hljs-attr {
-	color: #a6e22e;
-}
-
-.hljs,
-.hljs-tag,
-.hljs-subst {
-	color: #f8f8f2;
-}
-
-.hljs-strong,
-.hljs-emphasis {
-	color: #a8a8a2;
-}
-
-.hljs-bullet,
-.hljs-quote,
-.hljs-number,
-.hljs-regexp,
-.hljs-literal,
-.hljs-link {
-	color: #ae81ff;
-}
-
-.hljs-code,
-.hljs-title,
-.hljs-section,
-.hljs-selector-class,
-.hljs-attr {
-	color: #a6e22e;
-}
-
-.hljs-strong {
-	font-weight: bold;
-}
-
-.hljs-emphasis {
-	font-style: italic;
-}
-
-.hljs-keyword,
-.hljs-selector-tag,
-.hljs-name {
-	color: #f92672;
-}
-
-.hljs-symbol,
-.hljs-attribute {
-	color: #66d9ef;
-}
-
-.hljs-params,
-.hljs-class .hljs-title {
-	color: #f8f8f2;
-}
-
-.hljs-string,
-.hljs-type,
-.hljs-built_in,
-.hljs-builtin-name,
-.hljs-selector-id,
-.hljs-selector-attr,
-.hljs-selector-pseudo,
-.hljs-addition,
-.hljs-variable,
-.hljs-template-variable {
-	color: #e6db74;
-}
-
-.hljs-comment,
-.hljs-deletion,
-.hljs-meta {
-	color: #b3ad8f;
-}
-
-/*
- * light
- */
-.markdown pre.light.line-number > code:before {
-	color: #3394B2;
-	border-right: 1px solid #C0C0C0;
-}
-.markdown pre.light {
-	background: #F8F8F8;
-}
-.markdown pre.light > code {
-	color: #383A42;
-	background: #F8F8F8;
-}
-.markdown pre.light > div.title {
-	color: #303030;
-	background: #E9E9E9;
-}
-.markdown pre.light > div.title > span.copy-button {
-	color: #aaa;
-}
-.markdown pre.light > div.title > span.copy-button:hover {
-	color: #333;
-}
-.markdown pre.light > div.title > span.copy-button:active {
-	color: #aaa;
-}
-
-.markdown pre.light > code.nohighlight,
-.markdown pre.light > code.language-raw {
-	color: #303030;
-	background: #F2F2F2;
-}
-
-.markdown pre.light > code.language-java .hljs-meta {
-	color: #E45649;
-}
-.markdown pre.light > code.language-java .hljs-class .hljs-title {
-	color: #50A14F;
-	text-decoration: underline;
-}
-
-
-.markdown pre.light > code.yaml .hljs-bullet,
-.markdown pre.light > code.yaml .hljs-number,
-.markdown pre.light > code.yaml .hljs-string {
-	color: #383A42;
-}
-.markdown pre.light > code.yaml .hljs-array {
-	color: #50A14F;
-}
-.markdown pre.light > code.yaml .hljs-object {
-	color: #C18401;
-}
-.markdown pre.light > code.yaml .hljs-attr {
-	color: #50A14F;
-}
-
-
-.markdown pre.light .hljs,
-.markdown pre.light .hljs-tag,
-.markdown pre.light .hljs-subst {
-	color: #383A42;
-}
-
-.markdown pre.light .hljs-strong,
-.markdown pre.light .hljs-emphasis {
-	color: #202020;
-}
-
-.markdown pre.light .hljs-bullet,
-.markdown pre.light .hljs-quote,
-.markdown pre.light .hljs-number,
-.markdown pre.light .hljs-regexp,
-.markdown pre.light .hljs-literal,
-.markdown pre.light .hljs-link {
-	color: #986801;
-}
-
-.markdown pre.light .hljs-code,
-.markdown pre.light .hljs-title,
-.markdown pre.light .hljs-section,
-.markdown pre.light .hljs-selector-class,
-.markdown pre.light .hljs-attr {
-	color: #4078F2;
-}
-
-.markdown pre.light .hljs-strong {
-	font-weight: bold;
-}
-
-.markdown pre.light .hljs-emphasis {
-	font-style: italic;
-}
-
-.markdown pre.light .hljs-keyword,
-.markdown pre.light .hljs-selector-tag,
-.markdown pre.light .hljs-name {
-	color: #A626A4;
-}
-
-.markdown pre.light .hljs-symbol,
-.markdown pre.light .hljs-attribute {
-	color: #C18401;
-}
-
-.markdown pre.light .hljs-params,
-.markdown pre.light .hljs-class .hljs-title {
-	color: #383A42;
-}
-
-.markdown pre.light .hljs-string,
-.markdown pre.light .hljs-type,
-.markdown pre.light .hljs-built_in,
-.markdown pre.light .hljs-builtin-name,
-.markdown pre.light .hljs-selector-id,
-.markdown pre.light .hljs-selector-attr,
-.markdown pre.light .hljs-selector-pseudo,
-.markdown pre.light .hljs-addition,
-.markdown pre.light .hljs-variable,
-.markdown pre.light .hljs-template-variable {
-	color: #50A14F;
-}
-
-.markdown pre.light .hljs-comment,
-.markdown pre.light .hljs-deletion,
-.markdown pre.light .hljs-meta {
-	color: #A0A1A7;
 }
 
 /*
  * scroll
  */
-.markdown pre.scroll {
+ .markdown pre.scroll {
 	overflow: auto;
 }
 .markdown pre.scroll > code {
@@ -332,9 +78,14 @@
 .markdown pre.scroll::-webkit-scrollbar-corner {
 	display: none;
 }
+
 /*
- * scroll (dark)
+ * dark color (default)
  */
+.markdown pre.line-number > code:before {
+	color: #808080;
+	border-right: 1px solid #414339;
+}
 .markdown pre.scroll::-webkit-scrollbar-track {
 	border-top: 1px solid #3F403C;
 	background-color: #272822;
@@ -349,9 +100,385 @@
 .markdown pre.scroll::-webkit-scrollbar-thumb:active {
 	background-color: #636460;
 }
+.markdown pre {
+	background-color: #272822;
+	border: 1px solid #404040;
+}
+.markdown pre > code {
+	color: #F0F0F0;
+	background-color: #272822;
+}
+.markdown pre > div.title {
+	color: #f8f8f2;
+	background-color: #414339;
+}
+.markdown pre.cmd > div.title {
+	background-color: #2e3e4d;
+	border-bottom: 1px solid #C0C0C0;
+}
+.markdown pre > div.title > span.copy-button {
+	color: #999;
+}
+.markdown pre > div.title > span.copy-button:hover {
+	color: #eee;
+}
+.markdown pre > div.title > span.copy-button:active {
+	color: #999;
+}
+.markdown pre > code.nohighlight,
+.markdown pre > code.language-raw {
+	color: #F0F0F0;
+	background-color: #272822;
+}
+.markdown pre > code.language-java .hljs-meta {
+	color: #66d9ef;
+}
+.markdown pre > code.language-java .hljs-class .hljs-title {
+	color: #a6e22e;
+	text-decoration: underline;
+}
+.markdown pre > code.yaml .hljs-bullet,
+.markdown pre > code.yaml .hljs-number,
+.markdown pre > code.yaml .hljs-string {
+	color: #f8f8f2;
+}
+.markdown pre > code.yaml .hljs-array {
+	color: #e6db74;
+}
+.markdown pre > code.yaml .hljs-object {
+	color: #66d9ef;
+}
+.markdown pre > code.yaml .hljs-attr {
+	color: #a6e22e;
+}
+.markdown pre .hljs,
+.markdown pre .hljs-tag,
+.markdown pre .hljs-subst {
+	color: #f8f8f2;
+}
+.markdown pre .hljs-strong,
+.markdown pre .hljs-emphasis {
+	color: #a8a8a2;
+}
+.markdown pre .hljs-bullet,
+.markdown pre .hljs-quote,
+.markdown pre .hljs-number,
+.markdown pre .hljs-regexp,
+.markdown pre .hljs-literal,
+.markdown pre .hljs-link {
+	color: #ae81ff;
+}
+.markdown pre .hljs-code,
+.markdown pre .hljs-title,
+.markdown pre .hljs-section,
+.markdown pre .hljs-selector-class,
+.markdown pre .hljs-attr {
+	color: #a6e22e;
+}
+.markdown pre .hljs-strong {
+	font-weight: bold;
+}
+.markdown pre .hljs-emphasis {
+	font-style: italic;
+}
+.markdown pre .hljs-keyword,
+.markdown pre .hljs-selector-tag,
+.markdown pre .hljs-name {
+	color: #f92672;
+}
+.markdown pre .hljs-symbol,
+.markdown pre .hljs-attribute {
+	color: #66d9ef;
+}
+.markdown pre .hljs-params,
+.markdown pre .hljs-class .hljs-title {
+	color: #f8f8f2;
+}
+.markdown pre .hljs-string,
+.markdown pre .hljs-type,
+.markdown pre .hljs-built_in,
+.markdown pre .hljs-builtin-name,
+.markdown pre .hljs-selector-id,
+.markdown pre .hljs-selector-attr,
+.markdown pre .hljs-selector-pseudo,
+.markdown pre .hljs-addition,
+.markdown pre .hljs-variable,
+.markdown pre .hljs-template-variable {
+	color: #e6db74;
+}
+.markdown pre .hljs-comment,
+.markdown pre .hljs-deletion,
+.markdown pre .hljs-meta {
+	color: #b3ad8f;
+}
+
 /*
- * scroll (light)
+ * light color
  */
+@media (prefers-color-scheme: light) {
+	.markdown pre.line-number > code:before {
+		color: #3394B2;
+		border-right: 1px solid #C0C0C0;
+	}
+	.markdown pre.scroll::-webkit-scrollbar-track {
+		border-top: 1px solid #E0E0E0;
+		background-color: #F2F2F2;
+	}
+	.markdown pre.scroll::-webkit-scrollbar-thumb {
+		border-top: 1px solid #b8b8b8;
+		background-color: #c1c1c1;
+	}
+	.markdown pre.scroll::-webkit-scrollbar-thumb:hover {
+		background-color: #a8a8a8;
+	}
+	.markdown pre.scroll::-webkit-scrollbar-thumb:active {
+		background-color: #787878;
+	}
+	.markdown pre {
+		background-color: #F8F8F8;
+		border: 1px solid #A0A0A0;
+	}
+	.markdown pre > code {
+		color: #383A42;
+		background-color: #F8F8F8;
+	}
+	.markdown pre > div.title {
+		color: #303030;
+		background-color: #E9E9E9;
+	}
+	.markdown pre > div.title > span.copy-button {
+		color: #aaa;
+	}
+	.markdown pre > div.title > span.copy-button:hover {
+		color: #333;
+	}
+	.markdown pre > div.title > span.copy-button:active {
+		color: #aaa;
+	}
+	.markdown pre > code.nohighlight,
+	.markdown pre > code.language-raw {
+		color: #383A42;
+		background-color: #F8F8F8;
+	}
+	.markdown pre > code.language-java .hljs-meta {
+		color: #E45649;
+	}
+	.markdown pre > code.language-java .hljs-class .hljs-title {
+		color: #50A14F;
+		text-decoration: underline;
+	}
+	.markdown pre > code.yaml .hljs-bullet,
+	.markdown pre > code.yaml .hljs-number,
+	.markdown pre > code.yaml .hljs-string {
+		color: #383A42;
+	}
+	.markdown pre > code.yaml .hljs-array {
+		color: #50A14F;
+	}
+	.markdown pre > code.yaml .hljs-object {
+		color: #C18401;
+	}
+	.markdown pre > code.yaml .hljs-attr {
+		color: #50A14F;
+	}
+	.markdown pre .hljs,
+	.markdown pre .hljs-tag,
+	.markdown pre .hljs-subst {
+		color: #383A42;
+	}
+	.markdown pre .hljs-strong,
+	.markdown pre .hljs-emphasis {
+		color: #202020;
+	}
+	.markdown pre .hljs-bullet,
+	.markdown pre .hljs-quote,
+	.markdown pre .hljs-number,
+	.markdown pre .hljs-regexp,
+	.markdown pre .hljs-literal,
+	.markdown pre .hljs-link {
+		color: #986801;
+	}
+	.markdown pre .hljs-code,
+	.markdown pre .hljs-title,
+	.markdown pre .hljs-section,
+	.markdown pre .hljs-selector-class,
+	.markdown pre .hljs-attr {
+		color: #4078F2;
+	}
+	.markdown pre .hljs-strong {
+		font-weight: bold;
+	}
+	.markdown pre .hljs-emphasis {
+		font-style: italic;
+	}
+	.markdown pre .hljs-keyword,
+	.markdown pre .hljs-selector-tag,
+	.markdown pre .hljs-name {
+		color: #A626A4;
+	}
+	.markdown pre .hljs-symbol,
+	.markdown pre .hljs-attribute {
+		color: #C18401;
+	}
+	.markdown pre .hljs-params,
+	.markdown pre .hljs-class .hljs-title {
+		color: #383A42;
+	}
+	.markdown pre .hljs-string,
+	.markdown pre .hljs-type,
+	.markdown pre .hljs-built_in,
+	.markdown pre .hljs-builtin-name,
+	.markdown pre .hljs-selector-id,
+	.markdown pre .hljs-selector-attr,
+	.markdown pre .hljs-selector-pseudo,
+	.markdown pre .hljs-addition,
+	.markdown pre .hljs-variable,
+	.markdown pre .hljs-template-variable {
+		color: #50A14F;
+	}
+	.markdown pre .hljs-comment,
+	.markdown pre .hljs-deletion,
+	.markdown pre .hljs-meta {
+		color: #A0A1A7;
+	}
+}
+
+/*
+ * dark color (explicit)
+ */
+.markdown pre.dark.line-number > code:before {
+	color: #808080;
+	border-right: 1px solid #414339;
+}
+.markdown pre.dark.scroll::-webkit-scrollbar-track {
+	border-top: 1px solid #3F403C;
+	background-color: #272822;
+}
+.markdown pre.dark.scroll::-webkit-scrollbar-thumb {
+	border-top: 1px solid #565654;
+	background-color: #474844;
+}
+.markdown pre.dark.scroll::-webkit-scrollbar-thumb:hover {
+	background-color: #525250;
+}
+.markdown pre.dark.scroll::-webkit-scrollbar-thumb:active {
+	background-color: #636460;
+}
+.markdown pre.dark {
+	background-color: #272822;
+	border: 1px solid #404040;
+}
+.markdown pre.dark > code {
+	color: #F0F0F0;
+	background-color: #272822;
+}
+.markdown pre.dark > div.title {
+	color: #f8f8f2;
+	background-color: #414339;
+}
+.markdown pre.dark > div.title > span.copy-button {
+	color: #999;
+}
+.markdown pre.dark > div.title > span.copy-button:hover {
+	color: #eee;
+}
+.markdown pre.dark > div.title > span.copy-button:active {
+	color: #999;
+}
+.markdown pre.dark > code.nohighlight,
+.markdown pre.dark > code.language-raw {
+	color: #F0F0F0;
+	background-color: #272822;
+}
+.markdown pre.dark > code.language-java .hljs-meta {
+	color: #66d9ef;
+}
+.markdown pre.dark > code.language-java .hljs-class .hljs-title {
+	color: #a6e22e;
+	text-decoration: underline;
+}
+.markdown pre.dark > code.yaml .hljs-bullet,
+.markdown pre.dark > code.yaml .hljs-number,
+.markdown pre.dark > code.yaml .hljs-string {
+	color: #f8f8f2;
+}
+.markdown pre.dark > code.yaml .hljs-array {
+	color: #e6db74;
+}
+.markdown pre.dark > code.yaml .hljs-object {
+	color: #66d9ef;
+}
+.markdown pre.dark > code.yaml .hljs-attr {
+	color: #a6e22e;
+}
+.markdown pre.dark .hljs,
+.markdown pre.dark .hljs-tag,
+.markdown pre.dark .hljs-subst {
+	color: #f8f8f2;
+}
+.markdown pre.dark .hljs-strong,
+.markdown pre.dark .hljs-emphasis {
+	color: #a8a8a2;
+}
+.markdown pre.dark .hljs-bullet,
+.markdown pre.dark .hljs-quote,
+.markdown pre.dark .hljs-number,
+.markdown pre.dark .hljs-regexp,
+.markdown pre.dark .hljs-literal,
+.markdown pre.dark .hljs-link {
+	color: #ae81ff;
+}
+.markdown pre.dark .hljs-code,
+.markdown pre.dark .hljs-title,
+.markdown pre.dark .hljs-section,
+.markdown pre.dark .hljs-selector-class,
+.markdown pre.dark .hljs-attr {
+	color: #a6e22e;
+}
+.markdown pre.dark .hljs-strong {
+	font-weight: bold;
+}
+.markdown pre.dark .hljs-emphasis {
+	font-style: italic;
+}
+.markdown pre.dark .hljs-keyword,
+.markdown pre.dark .hljs-selector-tag,
+.markdown pre.dark .hljs-name {
+	color: #f92672;
+}
+.markdown pre.dark .hljs-symbol,
+.markdown pre.dark .hljs-attribute {
+	color: #66d9ef;
+}
+.markdown pre.dark .hljs-params,
+.markdown pre.dark .hljs-class .hljs-title {
+	color: #f8f8f2;
+}
+.markdown pre.dark .hljs-string,
+.markdown pre.dark .hljs-type,
+.markdown pre.dark .hljs-built_in,
+.markdown pre.dark .hljs-builtin-name,
+.markdown pre.dark .hljs-selector-id,
+.markdown pre.dark .hljs-selector-attr,
+.markdown pre.dark .hljs-selector-pseudo,
+.markdown pre.dark .hljs-addition,
+.markdown pre.dark .hljs-variable,
+.markdown pre.dark .hljs-template-variable {
+	color: #e6db74;
+}
+.markdown pre.dark .hljs-comment,
+.markdown pre.dark .hljs-deletion,
+.markdown pre.dark .hljs-meta {
+	color: #b3ad8f;
+}
+
+/*
+ * light color (explicit)
+ */
+.markdown pre.light.line-number > code:before {
+	color: #3394B2;
+	border-right: 1px solid #C0C0C0;
+}
 .markdown pre.light.scroll::-webkit-scrollbar-track {
 	border-top: 1px solid #E0E0E0;
 	background-color: #F2F2F2;
@@ -366,3 +493,111 @@
 .markdown pre.light.scroll::-webkit-scrollbar-thumb:active {
 	background-color: #787878;
 }
+.markdown pre.light {
+	background-color: #F8F8F8;
+	border: 1px solid #A0A0A0;
+}
+.markdown pre.light > code {
+	color: #383A42;
+	background-color: #F8F8F8;
+}
+.markdown pre.light > div.title {
+	color: #303030;
+	background-color: #E9E9E9;
+}
+.markdown pre.light > div.title > span.copy-button {
+	color: #aaa;
+}
+.markdown pre.light > div.title > span.copy-button:hover {
+	color: #333;
+}
+.markdown pre.light > div.title > span.copy-button:active {
+	color: #aaa;
+}
+.markdown pre.light > code.nohighlight,
+.markdown pre.light > code.language-raw {
+	color: #383A42;
+	background-color: #F8F8F8;
+}
+.markdown pre.light > code.language-java .hljs-meta {
+	color: #E45649;
+}
+.markdown pre.light > code.language-java .hljs-class .hljs-title {
+	color: #50A14F;
+	text-decoration: underline;
+}
+.markdown pre.light > code.yaml .hljs-bullet,
+.markdown pre.light > code.yaml .hljs-number,
+.markdown pre.light > code.yaml .hljs-string {
+	color: #383A42;
+}
+.markdown pre.light > code.yaml .hljs-array {
+	color: #50A14F;
+}
+.markdown pre.light > code.yaml .hljs-object {
+	color: #C18401;
+}
+.markdown pre.light > code.yaml .hljs-attr {
+	color: #50A14F;
+}
+.markdown pre.light .hljs,
+.markdown pre.light .hljs-tag,
+.markdown pre.light .hljs-subst {
+	color: #383A42;
+}
+.markdown pre.light .hljs-strong,
+.markdown pre.light .hljs-emphasis {
+	color: #202020;
+}
+.markdown pre.light .hljs-bullet,
+.markdown pre.light .hljs-quote,
+.markdown pre.light .hljs-number,
+.markdown pre.light .hljs-regexp,
+.markdown pre.light .hljs-literal,
+.markdown pre.light .hljs-link {
+	color: #986801;
+}
+.markdown pre.light .hljs-code,
+.markdown pre.light .hljs-title,
+.markdown pre.light .hljs-section,
+.markdown pre.light .hljs-selector-class,
+.markdown pre.light .hljs-attr {
+	color: #4078F2;
+}
+.markdown pre.light .hljs-strong {
+	font-weight: bold;
+}
+.markdown pre.light .hljs-emphasis {
+	font-style: italic;
+}
+.markdown pre.light .hljs-keyword,
+.markdown pre.light .hljs-selector-tag,
+.markdown pre.light .hljs-name {
+	color: #A626A4;
+}
+.markdown pre.light .hljs-symbol,
+.markdown pre.light .hljs-attribute {
+	color: #C18401;
+}
+.markdown pre.light .hljs-params,
+.markdown pre.light .hljs-class .hljs-title {
+	color: #383A42;
+}
+.markdown pre.light .hljs-string,
+.markdown pre.light .hljs-type,
+.markdown pre.light .hljs-built_in,
+.markdown pre.light .hljs-builtin-name,
+.markdown pre.light .hljs-selector-id,
+.markdown pre.light .hljs-selector-attr,
+.markdown pre.light .hljs-selector-pseudo,
+.markdown pre.light .hljs-addition,
+.markdown pre.light .hljs-variable,
+.markdown pre.light .hljs-template-variable {
+	color: #50A14F;
+}
+.markdown pre.light .hljs-comment,
+.markdown pre.light .hljs-deletion,
+.markdown pre.light .hljs-meta {
+	color: #A0A1A7;
+}
+

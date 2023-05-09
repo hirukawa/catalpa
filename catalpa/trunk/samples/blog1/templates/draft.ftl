@@ -11,28 +11,6 @@
 		<#include "css/blog.css">
 		<#include "css/markdown.css">
 		<#include "css/highlight.css">
-
-		.blog-pager .previous, 
-		.blog-pager .next {
-			width: clamp(0px, 360px, 100vw);
-		}
-		.blog-categories {
-			padding: 0 1px 1px 1px;
-			gap: 2px;
-			background-color: var(--main-background-color);
-		}
-		.blog-category {
-			background-color: #f2f2f2;
-			color: var(--text-link-color);
-		}
-		.blog-category:visited {
-			background-color: #f2f2f2;
-			color: var(--text-link-color);
-		}
-		.blog-category:hover {
-			background-color: #f2f2f2;
-			color: var(--text-link-hover-color);
-		}
 		${css!}
 	</style>
 </head>
@@ -116,6 +94,16 @@
 	</footer>
 
 	<script>
+		var ua = window.navigator.userAgent.toLowerCase();
+		if(ua.indexOf("windows") !== -1) {
+			document.documentElement.style.setProperty("--is-windows", 1)
+		} else if(ua.indexOf("mac os") !== -1) {
+			document.documentElement.style.setProperty("--is-mac", 1);
+		} else if(ua.indexOf("android") !== -1) {
+			document.documentElement.style.setProperty("--is-android", 1);
+		} else if(ua.indexOf("iphone") !== -1) {
+			document.documentElement.style.setProperty("--is-iphone", 1);
+		}
 		const content = document.getElementsByClassName("content")[0];
 		const sticky_header = document.getElementById("sticky-header");
 		if(content != null || sticky_header != null) {

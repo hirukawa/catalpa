@@ -23,28 +23,6 @@
 		<#include "css/blog.css">
 		<#include "css/markdown.css">
 		<#include "css/highlight.css">
-
-		.blog-pager .previous, 
-		.blog-pager .next {
-			width: clamp(0px, 360px, 100vw);
-		}
-		.blog-categories {
-			padding: 0 1px 1px 1px;
-			gap: 2px;
-			background-color: var(--main-background-color);
-		}
-		.blog-category {
-			background-color: #f2f2f2;
-			color: var(--text-link-color);
-		}
-		.blog-category:visited {
-			background-color: #f2f2f2;
-			color: var(--text-link-color);
-		}
-		.blog-category:hover {
-			background-color: #f2f2f2;
-			color: var(--text-link-hover-color);
-		}
 		${css!}
 	</style>
 </head>
@@ -91,7 +69,7 @@
 
 		<div class="content" style="padding:0">
 			<#-- sns -->
-			<div style="margin:1rem 0;padding:1em;background-color:#f2f2f2">
+			<div class="share blog-post">
 				<div style="margin-block-end:0.5em">この記事を共有しませんか？</div>
 				<div style="display:flex;flex-wrap:wrap;align-items:center;gap:0.5em">
 					<a class="sns button hatena"
@@ -141,7 +119,7 @@
 
 			<#-- pager -->
 			<#if blog.pager.previous?? || blog.pager.next??>
-			<div class="blog-pager">
+			<div class="blog-pager blog-post">
 				<#if blog.pager.previous??>
 				<a class="previous grow" href="${blog.pager.previous.url}">
 					<div>
@@ -166,14 +144,14 @@
 			</#if>
 
 			<#-- category -->
-			<div class="blog-categories">
+			<div class="blog-categories blog-post">
 			<#list blog.categories as category>
-				<a class="blog-category" href="${baseurl}${category.url}">${category.name}&nbsp;<span class="label">(${category.posts?size})</span></a>
+				<a class="blog-category blog-post" href="${baseurl}${category.url}">${category.name}&nbsp;<span class="label">(${category.posts?size})</span></a>
 			</#list>
 			</div>
 
 			<#-- related -->
-			<div class="blog-card-container">
+			<div class="blog-card-container blog-post">
 				<#list blog.post.related as post>
 					<#if post?index == 10>
 						<#break>
@@ -210,6 +188,16 @@
 	</footer>
 
 	<script>
+		var ua = window.navigator.userAgent.toLowerCase();
+		if(ua.indexOf("windows") !== -1) {
+			document.documentElement.style.setProperty("--is-windows", 1)
+		} else if(ua.indexOf("mac os") !== -1) {
+			document.documentElement.style.setProperty("--is-mac", 1);
+		} else if(ua.indexOf("android") !== -1) {
+			document.documentElement.style.setProperty("--is-android", 1);
+		} else if(ua.indexOf("iphone") !== -1) {
+			document.documentElement.style.setProperty("--is-iphone", 1);
+		}
 		const content = document.getElementsByClassName("content")[0];
 		const sticky_header = document.getElementById("sticky-header");
 		if(content != null || sticky_header != null) {
