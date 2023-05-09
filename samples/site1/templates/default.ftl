@@ -128,6 +128,16 @@
 	</footer>
 
 	<script>
+		var ua = window.navigator.userAgent.toLowerCase();
+		if(ua.indexOf("windows") !== -1) {
+			document.documentElement.style.setProperty("--is-windows", 1)
+		} else if(ua.indexOf("mac os") !== -1) {
+			document.documentElement.style.setProperty("--is-mac", 1);
+		} else if(ua.indexOf("android") !== -1) {
+			document.documentElement.style.setProperty("--is-android", 1);
+		} else if(ua.indexOf("iphone") !== -1) {
+			document.documentElement.style.setProperty("--is-iphone", 1);
+		}
 		const content = document.getElementsByClassName("content")[0];
 		const sticky_header = document.getElementById("sticky-header");
 		if(content != null || sticky_header != null) {

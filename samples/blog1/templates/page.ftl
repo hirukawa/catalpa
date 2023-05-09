@@ -28,21 +28,9 @@
 		<#include "css/blog.css">
 
 		main .content {
-			margin-block-start: 1em;
-			margin-block-end: 1em;
-			max-width: 1200px;
+			padding: 0;
 		}
-		.blog-card-container {
-			padding: 0 2px 0 0;
-		}
-		.blog-card {
-			padding: 12px min(16px, 2vw) 16px min(16px, 2vw);
-			background-color: #fefefe;
-			border-top: 2px dotted #ccc;
-			border-left: 2px dotted #ccc;
-			border-right: none;
-			border-bottom: none;
-		}
+
 		${css!}
 	</style>
 </head>
@@ -63,10 +51,10 @@
 			</div>
 		</div>
 		<#-- category -->
-		<div class="blog-categories-wrapper">
-			<div class="content blog-categories">
+		<div class="blog-categories-wrapper blog-page">
+			<div class="content blog-categories blog-page">
 			<#list blog.categories as category>
-				<a class="blog-category" href="${baseurl}${category.url}">${category.name}&nbsp;<span class="label">(${category.posts?size})</span></a>
+				<a class="blog-category blog-page" href="${baseurl}${category.url}">${category.name}&nbsp;<span class="label">(${category.posts?size})</span></a>
 			</#list>
 			</div>
 		</div>
@@ -76,19 +64,16 @@
 	<main>
 		<div class="content">
 			<#-- article -->
-			<div class="blog-card-container">
-				<div class="blog-card-erase-horizontal-border"></div>
-				<div class="blog-card-erase-vertical-border"></div>
-
+			<div class="blog-card-container blog-page">
 				<#list blog.page.posts as post>
 				<a class="blog-card blog-page" href="${baseurl}${post.url}">
-					<div class="date">${post.date}</div>
 					<#if post.thumbnail?has_content && post.thumbnail?starts_with("data:") >
 					<img src="${post.thumbnail!}">
 					<#else>
 					<img src="${baseurl}${post.thumbnail!}">
 					</#if>
 					<h2 class="title">${post.title}</h2>
+					<div class="date">${post.date}</div>
 				</a>
 				</#list>
 				<div class="blog-card blog-page hidden"></div>
@@ -127,6 +112,16 @@
 	</footer>
 
 	<script>
+		var ua = window.navigator.userAgent.toLowerCase();
+		if(ua.indexOf("windows") !== -1) {
+			document.documentElement.style.setProperty("--is-windows", 1)
+		} else if(ua.indexOf("mac os") !== -1) {
+			document.documentElement.style.setProperty("--is-mac", 1);
+		} else if(ua.indexOf("android") !== -1) {
+			document.documentElement.style.setProperty("--is-android", 1);
+		} else if(ua.indexOf("iphone") !== -1) {
+			document.documentElement.style.setProperty("--is-iphone", 1);
+		}
 		const content = document.getElementsByClassName("content")[0];
 		const sticky_header = document.getElementById("sticky-header");
 		if(content != null || sticky_header != null) {
