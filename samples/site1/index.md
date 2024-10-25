@@ -4,4 +4,4 @@
 今、あなたが見ているこのページは、Catalpaを使って
 あなたがMarkdownからHTMLに変換してくれたものです。
 
-![](img/sample.png){width=48 height=48} {.right .mr-4}
+![](img/sample.png){width=48 height=48}

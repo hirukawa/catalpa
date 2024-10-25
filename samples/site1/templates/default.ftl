@@ -15,19 +15,24 @@
 	<meta property="og:title" content="${title!}">
 	<meta property="og:description" content="${(description!)?replace('\n', '')}">
 	<#if image?has_content><meta property="og:image" content="${siteurl!}/${image}"></#if>
+
 	<!-- Twitter card -->
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content="${title!}" />
 	<meta name="twitter:description" content="${(description!)?replace('\n', '')}" />
 	<#if image?has_content><meta name="twitter:image" content="${siteurl!}/${image}"></#if>
 
+	<!-- Web Fonts  Noto Sans JP, Noto Serif JP, Noto Sans Mono -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&family=Noto+Sans+Mono:wdth,wght@62.5,100..900&display=swap" rel="stylesheet">
 
-	<style>
+	<style><@compress single_line=true>
 		<#include "css/main.css">
 		<#include "css/markdown.css">
 		<#include "css/highlight.css">
 		${css!}
-	</style>
+	</@compress></style>
 </head>
 <body>
 	<#-- header -->
@@ -163,9 +168,10 @@
 				if (xhr.readyState === 4) {
 					if (xhr.status === 200) {
 						location.reload();
+						return;
 					}
-					waitForUpdate();
 				}
+				waitForUpdate();
 			};
 			xhr.onerror = function (e) {
 				waitForUpdate();

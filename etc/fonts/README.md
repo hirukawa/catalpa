@@ -1,13 +1,16 @@
 # Catalpaカスタムフォント
 
-従来、Catalpa の四分アキは monospace font-size:50% の半角スペースで実現していました。
-16px フォントの場合の四分アキは 4px です。font-size:50% とした場合、フォントサイズは 8px となり、半角スペースの幅は 4px になることが期待されます。
-しかし、Google Chrome では最小フォントサイズに制限があるため、font-size:50% を指定しても十分に小さなサイズになりません。
-フォントサイズは 8px ではなく 10px になってしまい、半角スペースの幅も 5px となってしまいます。
+このフォントには半角スペースのグリフのみを持つフォントです。
+半角スペース文字が全角文字と同じ幅を持っています。
+font-size: 50% とすることで二分アキ、font-size: 25% とすることで四分アキ となります。
 
-この問題おを解決するために Catalpaカスタムフォントを作成しました。このフォントには半角スペースのグリフが1つだけ含まれています。
-半角スペースの幅は四分アキと同じにしてあります。つまり、font-size:50% にしなくても、そのままで四分アキになります。（16pxフォントのときに4pxになります。）
-二分アキスペースが必要な場合には font-size:200% を指定します。このとき、line-height:0 も併せて指定しないと文字の高さによって改行に影響がでます。
+※ 以前は半角スペースの幅を四分アキとして、二分アキのときは font-size: 200% としていました。
+　 ですが、font-size: 200% とすると行の高さも大きくなり改行に影響が出ていました。（line-height:0 としても完全に防ぐことができませんでした）
+
+※ 以前は Google Chrome に最小フォントサイズの制限があり、16px フォントに font-size: 50% を適用しても 8px になりませんでした。
+　 最低 10pxになってしまいました。現在は Google Chrome で最小フォントサイズが撤廃されたため、
+　 半角スペースを全角サイズで用意して縮小することで、二分アキ、四分アキにすることができます。
+
 
 FontForge で catalpa.sfd を開き、woff2 としてフォントを出力します。
 
@@ -19,12 +22,9 @@ Windows の場合は certutil -f -encode catalpa.woff2 catalpa.woff2.base64 の�
 
 @font-face {
 	font-family: "catalpa";
-	src: url("data:application/font-woff;base64,d09GMgABAAAAAAJwAA4AAAAABfQAAAIbAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP0ZGVE0cGhwGYACCQggEEQgKWHYLCgABNgIkAxAEIAWEAQcqGxAFAB6FcZsTTmVyqvCdLvV4+H7u89yb95KUecGzLBBYIGEqV8ii3BqDao1oNaH+sq6d2MP9vGUCPVx0WPOvXLQNfESb6WADTjVPIPfF/r+bfIvwA/hdc2kgC3BswkgDKyxKqJfQEQUkgVAQ7tpnnsII9/CgJNuEgO/nRgA/ur2Ll/+DAKy0kR2JQKCkeK5S5+sLYrc8tPngQUYh1WUAAgAuPRjzeBtDXTu0lup1QABgjAUNGuxkAfvYBHayGwNFERgbhvB7ZvgjgGgJQCQSABA0klsdqxEQwyBBAT0SPVYDCqZYgVJWLKx53Ql4Vh7juD7Gcf2Li+8Xp4A3YXrfrytGc2/a+nXf2yaN5nybJlyzt10b/5SEzBYEz/6392ao9bdf0VtnX+IY5L26Bb0EQb0OlhLkPRYAQEmOAYmEQNFLkAiBQzIAVnspAGMGLCB0HrKA1HkkQGPSX4CiizUCVCtimgW0ujjLJsoyHAIbwmp3UbIFaJzwgWK1AarNseUtWqtjr6GDo5czhUR2RWI4caQgp6AghczMrWwt9e31kZWXA3j3mXDxn7Acm81X22V/36crrwNwF+OKoTtiwPu5PUcGuEIgudExzvCUWRU44cB0LctwJhGQgowc0kBj6vXdgpq0qjS4g9uYPF85SwLNZXLUoLmFVRRq6WqadiYfulGeXSg8Kckz+DhSLZvN5ND/fALDPBEEAICyFwIA") format("woff2");
+	src: url("data:application/font-woff;base64,d09GMgABAAAAAAJwAA4AAAAABfQAAAIaAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP0ZGVE0cGhwGYACCQggEEQgKWHYLCgABNgIkAxAEIAWEBAcqGxMFAB4HdsNXE7bcDNNY/sXD/+/3bZ/77hPcH2p/SGOeEKtioZBYEyIa8RA1TchAVMtEGmt9eIL7+W6BAz9dgldY848oG/hKtHnqJv8inAD231y6/TFMw1QDDEso6hKKKCAJhIJwV/nyYIO5h+Qh2YkQ8OP968Pwo/YG/vQOvRKA+ZbLSAgEciPumlL2lPcRG+WbFh9cTUtJyjkAAgCOXz3a/Ki2rrqV2fIMEABoBQoUWC9Av0JgvaxFlgXablf6PdP9I4CoCEAkJABAUMguNV4uQXS7EsigQUKDhYCMAxKQ87yZRdcvzubMHzc90yrPfBm7994GXoSD/S/r7G/nRVV+7X9ZJH87XhRNsFQdRlX8738Z8cmBxNvvvU/OLer/18xrrLMvMY50uTwDjQSC8gzMNiBdJgCA3DAOGjQQyBoJJITAsA1goacE0BolINSuEZDUbhBQ2OabAFkdSwUozYuOAJU6jhqLPAfD0GlY6BJIZIYWpv1ptjASLa2MtWEV3mDQmExuUAp4fDW1yyVzrY5DOo7YpzXt6uHtbutrS500yODdZ3Vp/heWfdPXx/u+/W715JDBJYaaIZYz4P3cltyAkxyeRsxQ4imzKUzKpGrZlDwOjnzAIa1e1yZi1bu49X6HJQ89ch9TpZXSc7Rz4FDb286utaFzaP/hwgKeiQjOmlIlQPIwUruqZXaZ8ccT0O1xFQIAQD4OAQAA") format("woff2");
 }
 
-Catalpaカスタムフォントを使用する場合は、@markdown ディレクティブに use_catalpa_font=true を指定します。
-これで、Catalpaカスタムフォントを使用するHTMLが出力されるようになります。
-
 （例）
-　<div class="content markdown"><!--start-search-target--><@markdown replace_backslash_to_yensign=true use_catalpa_font=true>${content!}</@markdown><!--end-search-target--></div>
+　<div class="content markdown"><!--start-search-target--><@markdown>${content!}</@markdown><!--end-search-target--></div>
 

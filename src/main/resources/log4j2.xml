@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Loggers>
+        <Root level="trace">
+            <appenderRef ref="file"/>
+            <appenderRef ref="${sys:log.appender}"/>
+        </Root>
+    </Loggers>
+
+    <Properties>
+        <Property name="LAYOUT">
+            %date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %3threadId %X{caller}: %message%n%throwable
+        </Property>
+        <Property name="STYLE">
+            {FATAL=#f0524f, ERROR=#f0524f, WARN=#a68a0d, INFO=#c0c0c0, DEBUG=#808080, TRACE=#808080}
+        </Property>
+    </Properties>
+
+    <Appenders>
+        <RollingFile name="file" filePattern="${sys:log.directory}/%date{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${LAYOUT}" charset="UTF-8"/>
+            <DirectWriteRolloverStrategy>
+                <Delete basePath="${sys:log.directory}">
+                    <IfFileName regex="\d{4}-\d{2}-\d{2}\.log"/>
+                    <IfAccumulatedFileCount exceeds="35"/>
+                </Delete>
+            </DirectWriteRolloverStrategy>
+            <TimeBasedTriggeringPolicy/>
+        </RollingFile>
+
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%highlight{${LAYOUT}}${STYLE}" disableAnsi="false"/>
+        </Console>
+
+        <Null name="null"/>
+    </Appenders>
+
+</Configuration>

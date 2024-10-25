@@ -21,7 +21,7 @@ OS2Version: 0
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1658974796
-ModificationTime: 1658980695
+ModificationTime: 1729400581
 PfmFamily: 17
 TTFWeight: 400
 TTFWidth: 5
@@ -59,11 +59,9 @@ BeginChars: 256 1
 
 StartChar: space
 Encoding: 32 32 0
-Width: 512
-Flags: W
+Width: 2048
+Flags: WO
 LayerCount: 2
-Fore
-Validated: 1
 EndChar
 EndChars
 EndSplineFont

@@ -1,0 +1,165 @@
+.root {
+    -fx-font-family: "Meiryo";
+    -fx-font-size: 12px;
+}
+
+FontIcon {
+	-fx-icon-size: 17;
+    -fx-icon-color: #00A7D3;
+}
+
+Label.menu-label {
+	-fx-opacity: 1;
+	-fx-alignment: center;
+	-fx-min-width: 42;
+    -fx-pref-height: 29;
+}
+Label.menu-label:hover {
+	-fx-background-color:
+		linear-gradient(to bottom, derive(-fx-base,75%) 0%, -fx-outer-border 90%),
+		-fx-selection-bar;
+	-fx-background-insets: 0 0 0 0, 1 0 1 0;
+	-fx-background-radius: 0, 0 ;
+}
+
+.menu-item:hover FontIcon {
+    -fx-icon-color: #ffffff;
+}
+
+Label.menu-label FontIcon {
+    -fx-icon-color: #00A7D3;
+}
+Label.menu-label:hover FontIcon {
+    -fx-icon-color: #ffffff;
+}
+Label.menu-label:disabled FontIcon {
+    -fx-icon-color: #b0b0b0;
+}
+
+FontIcon.vscode {
+    -fx-icon-size: 16;
+}
+
+FontIcon.markdown {
+    -fx-icon-size: 28;
+}
+
+/*
+ *
+ */
+#tfInputPath {
+    -fx-opacity: 1.0;
+}
+
+/*
+ * Progress
+ */
+#progress {
+	-fx-background-color: rgba(255, 255, 255, 0.5);
+}
+#progressBar {
+	-fx-min-height: 25px;
+}
+#progressBar > .track {
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
+	-fx-control-inner-background: transparent;
+}
+#progressBar > .bar {
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
+}
+#lblProgress {
+	-fx-min-height: 25px;
+	-fx-padding: 0 0 0 5px;
+}
+#lblProgress .text {
+	-fx-fill: #FFFFFF;
+	-fx-font-weight: bold;
+	-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,1.0), 4,0.75,0,0);
+}
+
+/*
+ * Message
+ */
+#message {
+    -fx-max-height: 25;
+    -fx-background-color: #0096C9;
+}
+#lblMessage {
+    -fx-padding: 0 0 0 8;
+    -fx-pref-height: 25;
+}
+#lblMessage .text {
+    -fx-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,1.0), 4,0.75,0,0);
+}
+#btnMessageClose {
+    -fx-padding: 0 8 0 8;
+    -fx-pref-height: 25;
+    -fx-background-color: transparent;
+}
+#btnMessageClose .text {
+    -fx-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,1.0), 4,0.75,0,0);
+}
+
+/*
+ * Error
+ */
+#error {
+    -fx-max-height: 25;
+    -fx-background-color: #E15050;
+}
+#lblError {
+    -fx-padding: 0 0 0 8;
+    -fx-pref-height: 25;
+}
+#lblError .text {
+    -fx-fill: #FFFFFF;
+    -fx-font-weight: bold;
+	-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,1.0), 4,0.75,0,0);
+}
+#btnErrorClose {
+    -fx-padding: 0 8 0 8;
+    -fx-pref-height: 25;
+    -fx-background-color: transparent;
+}
+#btnErrorClose .text {
+    -fx-fill: #FFFFFF;
+    -fx-font-weight: bold;
+	-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,1.0), 4,0.75,0,0);
+}
+
+/*
+ * Tooltip
+ */
+.tooltip {
+    -fx-font-size: 14;
+}
+
+/*
+ * modena
+ */
+.text-input {
+	-fx-prompt-text-fill: #666;
+}
+
+.text-input.flat-border-right {
+    -fx-background-insets: 0 0 0 0, 1 0 1 1;
+    -fx-background-radius: 3 0 0 3, 2 0 0 2;
+}
+.text-input.flat-border-right:focused {
+    -fx-background-insets: -0.2, 1, -1.4, 3;
+    -fx-background-radius: 3 0 0 3, 2 0 0 2, 4 0 0 4, 0 0 0 0;
+}
+.button.flat-border-left {
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-background-radius: 0 3 3 0, 0 3 3 0, 0 2 2 0, 0 1 1 0;
+}
+.button.flat-border-left:focused {
+	-fx-background-insets: -0.2, 1, 2, -1.4, 2.6;
+	-fx-background-radius: 0 3 3 0, 0 2 2 0, 0 1 1 0, 0 4 4 0, 0 1 1 0;
+}

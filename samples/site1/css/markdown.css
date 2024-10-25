@@ -21,9 +21,9 @@
 	}
 }
 
-@font-face { 
+@font-face {
 	font-family: "catalpa"; /* 二分アキ・四分アキを正確に実現するためのカスタムフォントです。*/
-	src: url("data:application/font-woff;base64,d09GMgABAAAAAAJwAA4AAAAABfQAAAIbAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP0ZGVE0cGhwGYACCQggEEQgKWHYLCgABNgIkAxAEIAWEAQcqGxAFAB6FcZsTTmVyqvCdLvV4+H7u89yb95KUecGzLBBYIGEqV8ii3BqDao1oNaH+sq6d2MP9vGUCPVx0WPOvXLQNfESb6WADTjVPIPfF/r+bfIvwA/hdc2kgC3BswkgDKyxKqJfQEQUkgVAQ7tpnnsII9/CgJNuEgO/nRgA/ur2Ll/+DAKy0kR2JQKCkeK5S5+sLYrc8tPngQUYh1WUAAgAuPRjzeBtDXTu0lup1QABgjAUNGuxkAfvYBHayGwNFERgbhvB7ZvgjgGgJQCQSABA0klsdqxEQwyBBAT0SPVYDCqZYgVJWLKx53Ql4Vh7juD7Gcf2Li+8Xp4A3YXrfrytGc2/a+nXf2yaN5nybJlyzt10b/5SEzBYEz/6392ao9bdf0VtnX+IY5L26Bb0EQb0OlhLkPRYAQEmOAYmEQNFLkAiBQzIAVnspAGMGLCB0HrKA1HkkQGPSX4CiizUCVCtimgW0ujjLJsoyHAIbwmp3UbIFaJzwgWK1AarNseUtWqtjr6GDo5czhUR2RWI4caQgp6AghczMrWwt9e31kZWXA3j3mXDxn7Acm81X22V/36crrwNwF+OKoTtiwPu5PUcGuEIgudExzvCUWRU44cB0LctwJhGQgowc0kBj6vXdgpq0qjS4g9uYPF85SwLNZXLUoLmFVRRq6WqadiYfulGeXSg8Kckz+DhSLZvN5ND/fALDPBEEAICyFwIA") format("woff2");
+	src: url("data:application/font-woff;base64,d09GMgABAAAAAAJwAA4AAAAABfQAAAIaAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP0ZGVE0cGhwGYACCQggEEQgKWHYLCgABNgIkAxAEIAWEBAcqGxMFAB4HdsNXE7bcDNNY/sXD/+/3bZ/77hPcH2p/SGOeEKtioZBYEyIa8RA1TchAVMtEGmt9eIL7+W6BAz9dgldY848oG/hKtHnqJv8inAD231y6/TFMw1QDDEso6hKKKCAJhIJwV/nyYIO5h+Qh2YkQ8OP968Pwo/YG/vQOvRKA+ZbLSAgEciPumlL2lPcRG+WbFh9cTUtJyjkAAgCOXz3a/Ki2rrqV2fIMEABoBQoUWC9Av0JgvaxFlgXablf6PdP9I4CoCEAkJABAUMguNV4uQXS7EsigQUKDhYCMAxKQ87yZRdcvzubMHzc90yrPfBm7994GXoSD/S/r7G/nRVV+7X9ZJH87XhRNsFQdRlX8738Z8cmBxNvvvU/OLer/18xrrLMvMY50uTwDjQSC8gzMNiBdJgCA3DAOGjQQyBoJJITAsA1goacE0BolINSuEZDUbhBQ2OabAFkdSwUozYuOAJU6jhqLPAfD0GlY6BJIZIYWpv1ptjASLa2MtWEV3mDQmExuUAp4fDW1yyVzrY5DOo7YpzXt6uHtbutrS500yODdZ3Vp/heWfdPXx/u+/W715JDBJYaaIZYz4P3cltyAkxyeRsxQ4imzKUzKpGrZlDwOjnzAIa1e1yZi1bu49X6HJQ89ch9TpZXSc7Rz4FDb286utaFzaP/hwgKeiQjOmlIlQPIwUruqZXaZ8ccT0O1xFQIAQD4OAQAA") format("woff2");
 }
 
 .markdown {
@@ -31,6 +31,57 @@
 	line-break: strict;   /* 厳密な禁則処理 */
 	text-align: justify;  /* 最終行を除いて両端を揃えます */
 	line-height: 1.75rem;
+}
+
+/*
+ * 組版
+ */
+.markdown i.h { /* font-feature-settings: "halt" で役物を半角にする場合の設定です */
+	font-style: inherit;
+	font-feature-settings: "halt";
+}
+.markdown i.l { /* font-feature-settings: "halt" を使わずに役物を半角にする設定です（左側を詰めます）*/
+	font-style: inherit;
+	margin-left: -0.5em;
+}
+.markdown i.r { /* font-feature-settings: "halt" を使わずに役物を半角にする設定です（右側を詰めます）*/
+	font-style: inherit;
+	margin-right: -0.5em;
+}
+.markdown i.lr { /* font-feature-settings: "halt" を使わずに役物を半角にする設定です（左右を詰めます）*/
+	font-style: inherit;
+	margin-left: -0.25em;
+	margin-right: -0.25em;
+}
+.markdown i.s1 { /* 全角アキ */
+	font-style: inherit;
+	font-family: "catalpa";
+	font-size: 100%;
+	line-height: 0;
+}
+.markdown i.s2 { /* 二分アキ */
+	font-style: inherit;
+	font-family: "catalpa";
+	font-size: 50%;
+	line-height: 0;
+}
+.markdown i.s4 { /* 四分アキ */
+	font-style: inherit;
+	font-family: "catalpa";
+	font-size: 25%;
+	line-height: 0;
+}
+.markdown i.e { /* 和字と欧字の間隔 */
+	font-style: inherit;
+	font-family: "catalpa";
+	font-size: 15.625%; /* 25%=4px, 18.75%=3px, 15.625%=2.5px, 12.5%=2px */
+	line-height: 0;
+}
+.markdown i.j { /* 欧字と和字の間隔 */
+	font-style: inherit;
+	font-family: "catalpa";
+	font-size: 15.625%; /* 25%=4px, 18.75%=3px, 15.625%=2.5px, 12.5%=2px */
+	line-height: 0;
 }
 
 .markdown .cancel-padding {

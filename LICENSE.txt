@@ -1,4 +1,4 @@
-(C) 2019-2023 HIRUKAWA Ryo
+(C) 2019-2024 HIRUKAWA Ryo
 
 本ソフトウェアおよび関連するドキュメント（以下「本ソフトウェア」）のコピーを取
 得するすべての人に、本ソフトウェアを無制限に扱うことを無償で許可します。これに
@@ -40,48 +40,12 @@
   https://github.com/vsch/flexmark-java/blob/master/LICENSE.txt
 
 
-* less4j
-  https://github.com/SomMeri/less4j
-
-  Less4j is distributed under following licences, pick whichever you like:
-  
-  - The Apache Software License, Version 2.0
-    http://www.apache.org/licenses/LICENSE-2.0.txt
-
-  - Eclipse Public License (EPL)
-    http://www.eclipse.org/legal/epl-v10.html
-
-  - Gnu General Public License, Version 3
-    http://www.gnu.org/licenses/gpl-3.0.html
-
-
 * freemarker
   https://freemarker.apache.org/
 
   Apache FreeMarker is Free software
   licensed under the Apache License, Version 2.0.
   https://freemarker.apache.org/docs/app_license.html
-
-
-* nanohttpd
-  https://github.com/NanoHttpd/nanohttpd
-
-  Copyright (c) 2012-2013 by Paul S. Hawke,
-  2001,2005-2013 by Jarno Elonen,
-  2010 by Konstantinos Togias
-  All rights reserved.
-
-  NanoHttpd/nanohttpd is
-  licensed under the BSD 3-Clause "New" or "Revised" License
-  https://github.com/NanoHttpd/nanohttpd/blob/master/LICENSE.md
-
-
-* Icon packs for Java applications (ikonli)
-  https://github.com/kordamp/ikonli
-  https://kordamp.org/ikonli/
-
-  licensed under the Apache License Version 2.0, January 2004
-  https://github.com/kordamp/ikonli/blob/master/LICENSE
 
 
 * codehighlight
@@ -94,6 +58,13 @@
   see https://github.com/Codewaves/Highlight.java/blob/master/LICENSE
 
 
+* metadata-extractor
+  https://github.com/drewnoakes/metadata-extractor
+
+  metadata-extractor is licensed under the Apache License, Version 2.0.
+  https://github.com/drewnoakes/metadata-extractor/blob/main/LICENSE
+
+
 * yamlbeans
   https://github.com/EsotericSoftware/yamlbeans
   
@@ -102,34 +73,6 @@
 
   EsotericSoftware/yamlbeans is licensed under the MIT License
   https://github.com/EsotericSoftware/yamlbeans/blob/master/LICENSE
-
-
-* juniversalchardet
-  https://code.google.com/archive/p/juniversalchardet/
-
-  Contributor: Kohei TAKETA <k-tak@void.in> (Java port)
-
-  juniversalchardet is licensed under the Mozilla Public License 1.1
-  https://www.mozilla.org/en-US/MPL/
-
-
-* jzopfli
-  https://github.com/LucCappellaro/jzopfli
-
-  Copyright 2011 Google Inc. All Rights Reserved.
-
-  Licensed under the Apache License, Version 2.0
-  http://www.apache.org/licenses/LICENSE-2.0
-
-
-* brotli
-  https://github.com/google/brotli
-
-
-  Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors.
-  
-  google/brotli is licensed under the MIT License.
-  https://github.com/google/brotli/blob/master/LICENSE
 
 
 * jcifs
@@ -151,6 +94,22 @@
   http://www.jcraft.com/jsch/LICENSE.txt
 
 
+* juniversalchardet
+  https://code.google.com/archive/p/juniversalchardet/
+
+  Contributor: Kohei TAKETA <k-tak@void.in> (Java port)
+
+  juniversalchardet is licensed under the Mozilla Public License 1.1
+  https://www.mozilla.org/en-US/MPL/
+
+
+* Google Auth Library
+  https://github.com/googleapis/google-auth-library-java
+
+  Licensed under BSD 3-Clause.
+  https://github.com/googleapis/google-auth-library-java/blob/main/LICENSE
+
+
 * Jackson  databind, annotations, core
   https://github.com/FasterXML/jackson-databind
   https://github.com/FasterXML/jackson-annotations
@@ -162,11 +121,26 @@
   https://github.com/FasterXML/jackson-core/blob/master/LICENSE
 
 
-* okhttp
-  https://square.github.io/okhttp/
+* Log4j
+  https://logging.apache.org/log4j/2.x/index.html
 
-  Copyright 2019 Square, Inc.
-  
-  Licensed under the Apache License, Version 2.0
-  https://square.github.io/okhttp/#license
+  Apache Log4j is Free software
+  licensed under the Apache License, Version 2.0.
+  https://www.apache.org/licenses/LICENSE-2.0
 
+
+* Icon packs for Java applications (ikonli)
+  https://github.com/kordamp/ikonli
+  https://kordamp.org/ikonli/
+
+  licensed under the Apache License Version 2.0, January 2004
+  https://github.com/kordamp/ikonli/blob/master/LICENSE
+
+
+* Java Native Access (JNA)
+  https://github.com/java-native-access/jna
+
+  This library is licensed under the LGPL, version 2.1 or later,
+  and (from version 4.0 onward) the Apache Software License, version 2.0.
+  Commercial license arrangements are negotiable.
+  https://github.com/java-native-access/jna/blob/master/LICENSE

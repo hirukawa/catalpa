@@ -1,0 +1,13 @@
+{
+	"headers": [{
+		"glob": "**",
+		"headers": {
+			"Cache-Control": "max-age=1800"
+		}
+	}],
+	"redirects": [
+	],
+	"rewrites": [
+	],
+	"cleanUrls": false
+}
