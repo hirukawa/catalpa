@@ -94,10 +94,16 @@ public class FileHandler implements HttpHandler {
     }
 
     private void serveFile(HttpExchange exchange, Path path, boolean writeBody) throws IOException {
+        String mediaType = mediaType(path.toString());
+
         Headers headers = exchange.getResponseHeaders();
         headers.set("Cache-Control", "no-store");
         headers.set("Pragma", "no-cache");
-        headers.set("Content-Type", mediaType(path.toString()));
+        if (mediaType.startsWith("text/")) {
+            headers.set("Content-Type", mediaType + "; charset=UTF-8");
+        } else {
+            headers.set("Content-Type", mediaType);
+        }
         headers.set("Last-Modified", getLastModified(path));
 
         if (writeBody) {

@@ -269,6 +269,18 @@ body {
 }
 
 /*
+ *  コンテント
+ */
+.content {
+	box-sizing: border-box;
+	margin-inline-start: auto;
+	margin-inline-end: auto;
+	padding-inline-start: calc(var(--content-padding-left) + round(up, calc(mod(calc(min(100%, var(--content-width)) - var(--content-padding-left) - var(--content-padding-right)), var(--content-font-size-px)) / 2), 1px));
+	padding-inline-end: calc(var(--content-padding-right) + round(down, calc(mod(calc(min(100%, var(--content-width)) - var(--content-padding-left) - var(--content-padding-right)), var(--content-font-size-px)) / 2), 1px));
+	max-width: var(--content-width);
+}
+
+/*
  * アンカー
  */
 a {
@@ -311,18 +323,6 @@ header .default .content a {
 header .default .content .title {
 	line-height: 1.25;
 	font-size: 1.5em;
-}
-
-/*
- *  メイン
- */
-main .content {
-	box-sizing: border-box;
-	margin-inline-start: auto;
-	margin-inline-end: auto;
-	padding-inline-start: calc(var(--content-padding-left) + round(up, calc(mod(calc(min(100%, var(--content-width)) - var(--content-padding-left) - var(--content-padding-right)), var(--content-font-size-px)) / 2), 1px));
-	padding-inline-end: calc(var(--content-padding-right) + round(down, calc(mod(calc(min(100%, var(--content-width)) - var(--content-padding-left) - var(--content-padding-right)), var(--content-font-size-px)) / 2), 1px));
-	max-width: var(--content-width);
 }
 
 /*

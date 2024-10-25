@@ -242,18 +242,18 @@
 	margin: 0;
 }
 .markdown ul > li::marker {
-	content: "\25cf\2003";
-	color: var(--list-marker-color);
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><circle id="disc" cx="256" cy="320" r="160" style="fill:rgb(40,125,207);"/></svg>') "\2003";
 }
 .markdown ul > li > ul > li::marker {
-	content: "\25a0\2003";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M437.019,312l-181.019,181.019l-181.019,-181.019l181.019,-181.019l181.019,181.019Z" style="fill:rgb(40,125,207);"/></svg>') "\2003";
 }
 .markdown ul > li > ul > li > ul > li::marker {
-	content: "\25c6\2003";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="112" y="168" width="288" height="288" style="fill:rgb(40,125,207);"/></svg>') "\2003";
 }
 .markdown ul > li > ul > li > ul > li > ul > li::marker {
 	content: "\2013\2003";
 	font-weight: bold;
+	color: var(--list-marker-color);
 }
 .markdown ol > li::marker {
 	content: counter(list-item) ".\2003";
@@ -772,11 +772,11 @@
 }
 .markdown .button.hover {
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-	transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+	transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
 }
 .markdown .button.hover:hover {
 	box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.22);
-	transform: translateY(-2px);
+	transform: translateY(-1px);
 }
 .markdown .button.hover:active {
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
