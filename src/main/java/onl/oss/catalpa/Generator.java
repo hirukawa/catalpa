@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -94,7 +93,7 @@ public class Generator {
             return true;
         }
 
-        if (dir.getFileName().startsWith("_")) {
+        if (dir.getFileName().toString().startsWith("_")) {
             // アンダーバーで始まるフォルダーはスキップします。
             return true;
         }
