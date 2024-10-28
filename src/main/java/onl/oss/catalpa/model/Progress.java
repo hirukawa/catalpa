@@ -1,7 +1,6 @@
 package onl.oss.catalpa.model;
 
 import java.nio.file.Path;
-import java.util.function.Consumer;
 
 public class Progress {
 

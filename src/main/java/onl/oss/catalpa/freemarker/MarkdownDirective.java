@@ -13,17 +13,21 @@ import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.data.DataKey;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import freemarker.core.Environment;
+import freemarker.template.DefaultListAdapter;
 import freemarker.template.SimpleScalar;
+import freemarker.template.Template;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateScalarModel;
+import freemarker.template.TemplateSequenceModel;
 import onl.oss.catalpa.flexmark.ext.BasicNodeExtension;
 import onl.oss.catalpa.flexmark.ext.HighlightExtension;
 import onl.oss.catalpa.flexmark.ext.KbdExtension;
 import onl.oss.catalpa.flexmark.ext.SampButtonExtension;
 import onl.oss.catalpa.html.Typesetting;
+import org.checkerframework.checker.units.qual.A;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,8 +37,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -117,6 +123,34 @@ public class MarkdownDirective implements TemplateDirectiveModel {
         INFO("filepath=" + filepath);
 
         //
+        // オプション
+        //
+        Set<String> options = new LinkedHashSet<>();
+        {
+            TemplateModel tm = environment.getDataModel().get("options");
+            if (tm instanceof TemplateSequenceModel seq) {
+                for (int i = 0; i < seq.size(); i++) {
+                    TemplateModel e = seq.get(i);
+                    if (e instanceof TemplateScalarModel tsm) {
+                        String s = tsm.getAsString();
+                        if (s != null && !s.isBlank()) {
+                            options.add(s.trim());
+                        }
+                    }
+                }
+            } else if (tm instanceof TemplateScalarModel tsm) {
+                String s = tsm.getAsString();
+                if (s != null && !s.isBlank()) {
+                    options.add(s.trim());
+                }
+            }
+        }
+
+        // font-feature-settings: halt を使用するオプション
+        boolean halt = options.contains("halt");
+        INFO("option halt=" + halt);
+
+        //
         // Markdown を HTML に変換します。
         //
         Document document = parser.parse(markdown);
@@ -127,7 +161,7 @@ public class MarkdownDirective implements TemplateDirectiveModel {
         //
         // 日本語組版を適用します。
         //
-        html = Typesetting.apply(html, false);
+        html = Typesetting.apply(html, halt);
 
         //
         // 結果を出力します。

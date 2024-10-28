@@ -1,11 +1,5 @@
 package onl.oss.catalpa.flexmark.ext;
 
-import com.drew.imaging.FileType;
-import com.drew.imaging.FileTypeDetector;
-import com.drew.imaging.ImageMetadataReader;
-import com.drew.metadata.Directory;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
 import com.vladsch.flexmark.ast.HardLineBreak;
 import com.vladsch.flexmark.ast.Heading;
 import com.vladsch.flexmark.ast.Image;
@@ -22,20 +16,16 @@ import com.vladsch.flexmark.html.renderer.NodeRendererContext;
 import com.vladsch.flexmark.html.renderer.NodeRenderingHandler;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.DataHolder;
-import com.vladsch.flexmark.util.data.DataKey;
 import onl.oss.catalpa.freemarker.MarkdownDirective;
 import onl.oss.catalpa.model.ImageSize;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
 import static onl.oss.catalpa.Logger.ERROR;
-import static onl.oss.catalpa.Logger.INFO;
-import static onl.oss.catalpa.Logger.WARN;
 
 public class BasicNodeRenderer implements NodeRenderer {
 

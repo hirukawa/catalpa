@@ -7,7 +7,6 @@ import onl.oss.catalpa.GeneratorException;
 import onl.oss.catalpa.Util;
 import onl.oss.catalpa.model.Progress;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,8 +32,6 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.zip.Deflater;
 import java.util.zip.GZIPOutputStream;
-
-import static onl.oss.catalpa.Logger.INFO;
 
 /* Hosting REST API を使用してサイトにデプロイする
  * https://firebase.google.com/docs/hosting/api-deploy?hl=ja#raw-https-request_4

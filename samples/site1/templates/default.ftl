@@ -146,7 +146,7 @@
 		const sticky_header = document.getElementById("sticky-header");
 		if (sticky_header != null) {
 			const resizeObserver = new ResizeObserver((entries) => {
-				if(sticky_header != null) {
+				if (sticky_header != null) {
 					document.documentElement.style.scrollPaddingTop = (sticky_header.clientHeight - 4) + "px";
 				}
 			});

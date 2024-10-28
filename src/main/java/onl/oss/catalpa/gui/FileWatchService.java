@@ -1,7 +1,6 @@
 package onl.oss.catalpa.gui;
 
 import com.sun.nio.file.ExtendedWatchEventModifier;
-import com.vladsch.flexmark.ast.Link;
 
 import java.io.IOException;
 import java.nio.file.ClosedWatchServiceException;
@@ -13,8 +12,6 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;

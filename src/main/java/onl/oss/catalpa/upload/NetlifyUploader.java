@@ -31,7 +31,6 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static onl.oss.catalpa.Logger.INFO;
 import static onl.oss.catalpa.Logger.WARN;
 
 public class NetlifyUploader {

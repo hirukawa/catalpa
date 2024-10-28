@@ -2,9 +2,7 @@ package onl.oss.catalpa.model;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
-import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
 import com.drew.metadata.file.FileTypeDirectory;
 import com.drew.metadata.gif.GifImageDirectory;
 import com.drew.metadata.jpeg.JpegDirectory;
@@ -12,7 +10,6 @@ import com.drew.metadata.png.PngDirectory;
 import com.drew.metadata.webp.WebpDirectory;
 import onl.oss.catalpa.Util;
 
-import javax.imageio.plugins.tiff.TIFFDirectory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
