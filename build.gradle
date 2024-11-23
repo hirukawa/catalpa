@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'onl.oss.catalpa'
-version = '2.0.3'
+version = '2.0.4'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -24,8 +24,17 @@ dependencies {
             includes: ['**/*.jar'],
             excludes: ['**/*-sources.jar', '**/*-javadoc.jar'])
 
+    // flexmark（flexmark-allを使用すると flexmark-pdf-converter などが含まれてライブラリのサイズが非常に大きくなってしまうので必要なライブラリを個別に指定してます）
+    implementation 'com.vladsch.flexmark:flexmark:0.64.8'
+    implementation 'com.vladsch.flexmark:flexmark-ext-attributes:0.64.8'
+    implementation 'com.vladsch.flexmark:flexmark-ext-definition:0.64.8'
+    implementation 'com.vladsch.flexmark:flexmark-ext-tables:0.64.8'
+    implementation 'com.vladsch.flexmark:flexmark-ext-typographic:0.64.8'
+    implementation 'com.vladsch.flexmark:flexmark-ext-wikilink:0.64.8'
+    implementation 'com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.64.8'
+    implementation 'com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.64.8'
+
     implementation 'org.freemarker:freemarker:2.3.33'
-    implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
     implementation 'com.esotericsoftware.yamlbeans:yamlbeans:1.17'
 
     // アイコン
