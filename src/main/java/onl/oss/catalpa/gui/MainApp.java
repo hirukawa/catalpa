@@ -839,7 +839,11 @@ public class MainApp extends Application {
 
                 int uploadCount = uploadConfig.upload(outputPath, MainApp.this::uploadProgressPhase2);
                 INFO("uploadCount=" + uploadCount);
-                showMessage("アップロードが完了しました");
+                if (uploadCount == 0) {
+                    showMessage("アップロードが完了しました（更新はありません）");
+                } else {
+                    showMessage("アップロードが完了しました（更新 " + uploadCount + " 件）");
+                }
             } catch (RuntimeException e) {
                 throw e;
             } catch (Exception e) {

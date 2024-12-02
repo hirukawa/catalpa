@@ -31,6 +31,7 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static onl.oss.catalpa.Logger.INFO;
 import static onl.oss.catalpa.Logger.WARN;
 
 public class NetlifyUploader {
@@ -65,7 +66,7 @@ public class NetlifyUploader {
 
         MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
 
-        try (ExecutorService executor = Executors.newFixedThreadPool(6)) {
+        try (ExecutorService executor = Executors.newFixedThreadPool(1)) {
             HttpClient client = HttpClient.newBuilder()
                     .executor(executor)
                     .build();
@@ -76,19 +77,21 @@ public class NetlifyUploader {
                 throw new GeneratorException(config.getConfigFilePath(), "Netlify: サイト名が見つかりません: " + siteName);
             }
 
-            Map<Path, String> files = new LinkedHashMap<>();
+            Map<Path, String> hashByFile = new LinkedHashMap<>();
+            Map<String, Path> fileByHash = new LinkedHashMap<>();
             try (Stream<Path> stream = Files.walk(uploadPath)) {
                 List<Path> list = stream.toList();
                 for (Path path : list) {
                     if (!Files.isDirectory(path)) {
                         Path file = uploadPath.relativize(path);
                         String hash = getSHA1(sha1, path);
-                        files.put(file, hash);
+                        hashByFile.put(file, hash);
+                        fileByHash.put(hash, file);
                     }
                 }
             }
 
-            CreateSiteDeployResult createSiteDeployResult = createSiteDeploy(client, token, siteId, files);
+            CreateSiteDeployResult createSiteDeployResult = createSiteDeploy(client, token, siteId, hashByFile);
             String deployId = createSiteDeployResult.id;
             List<String> required = createSiteDeployResult.required;
 
@@ -96,29 +99,15 @@ public class NetlifyUploader {
                 progressValue    = 0;
                 progressMax = required.size();
 
-                Map<String, Path> map = new HashMap<>();
-                for(Map.Entry<Path, String> entry : files.entrySet()) {
-                    map.put(entry.getValue(), entry.getKey());
-                }
-                uploadCount = required.size();
-
-                @SuppressWarnings({"rawtypes", "unchecked"})
-                CompletableFuture<HttpResponse<String>>[] futures = new CompletableFuture[uploadCount];
-                int i = 0;
                 for (String hash : required) {
-                    Path file = map.get(hash);
+                    Path file = fileByHash.get(hash);
                     String url = "/" + file.toString().replace('\\', '/');
-
-                    CompletableFuture<HttpResponse<String>> future = uploadDeployFile(client, token, deployId, url, uploadPath.resolve(file));
-                    future.thenAccept(response -> {
-                        if (response.statusCode() == 200) {
-                            double value = ++progressValue / (double)progressMax;
-                            this.consumer.accept(new Progress(value, "アップロードしています", file));
-                        }
-                    });
-                    futures[i++] = future;
+                    double value = ++progressValue / (double)progressMax;
+                    this.consumer.accept(new Progress(value, "アップロードしています", file));
+                    uploadDeployFile(client, token, deployId, url, uploadPath.resolve(file));
                 }
-                CompletableFuture.allOf(futures).get();
+
+                uploadCount = required.size();
             }
         }
         return uploadCount;
@@ -155,18 +144,22 @@ public class NetlifyUploader {
     }
 
 
-    private static CreateSiteDeployResult createSiteDeploy(HttpClient client, String token, String siteId, Map<Path, String> files) throws IOException, InterruptedException {
+    private static CreateSiteDeployResult createSiteDeploy(HttpClient client, String token, String siteId, Map<Path, String> hashByFile) throws IOException, InterruptedException {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
         sb.append("    \"files\": {\n");
-        for(Map.Entry<Path, String> entry : files.entrySet()) {
+        for(Map.Entry<Path, String> entry : hashByFile.entrySet()) {
             Path file = entry.getKey();
             String hash = entry.getValue();
-            sb.append("        \"/" + file.toString().replace('\\', '/') + "\": ");
-            sb.append("\"" + hash + "\"");
+            sb.append("        \"/");
+            sb.append(file.toString().replace('\\', '/'));
+            sb.append("\": ");
+            sb.append("\"");
+            sb.append(hash);
+            sb.append("\"");
             sb.append(",\n");
         }
-        if(files.size() > 0) {
+        if(!hashByFile.isEmpty()) {
             sb.delete(sb.length() - 2, sb.length());
             sb.append("\n");
         }
@@ -195,7 +188,7 @@ public class NetlifyUploader {
     }
 
 
-    private static CompletableFuture<HttpResponse<String>> uploadDeployFile(HttpClient client, String token, String deployId, String url, Path file) throws IOException {
+    private static void uploadDeployFile(HttpClient client, String token, String deployId, String url, Path file) throws IOException, InterruptedException {
         String _url = "https://api.netlify.com" + "/api/v1/deploys/" + deployId + "/files" + URLEncoder.encode(url, StandardCharsets.UTF_8)
                 + "?size=" + Files.size(file);
         HttpRequest request = HttpRequest.newBuilder(URI.create(_url))
@@ -204,7 +197,11 @@ public class NetlifyUploader {
                 .PUT(HttpRequest.BodyPublishers.ofFile(file))
                 .build();
 
-        return client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            throw new IOException(response + "\n" + response.body());
+        }
     }
 
 
