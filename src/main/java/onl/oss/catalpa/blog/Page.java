@@ -1,6 +1,5 @@
 package onl.oss.catalpa.blog;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class Page {

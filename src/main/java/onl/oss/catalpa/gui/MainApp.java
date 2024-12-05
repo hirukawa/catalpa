@@ -771,13 +771,17 @@ public class MainApp extends Application {
 
         executor.execute(() -> {
             try {
+                long start = System.nanoTime();
                 Files.createDirectories(outputPath);
 
                 Map<String, Object> systemDataModel = new HashMap<>();
                 systemDataModel.put("_PREVIEW", true);
                 Generator generator = new Generator(inputPath, outputPath, systemDataModel, this::updateProgress);
                 generator.generate();
-                showMessage("更新処理が完了しました");
+
+                long end = System.nanoTime();
+                double time = (end - start) / 1000000000d;
+                showMessage("更新処理が完了しました（" + String.format("%,.2f", time) + "秒）");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } finally {
