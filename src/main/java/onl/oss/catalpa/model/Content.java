@@ -69,10 +69,6 @@ public class Content {
                     @SuppressWarnings("unchecked")
                     Map<String, Object> m = (Map<String, Object>) obj;
                     yaml.putAll(m);
-
-                    if (file.getFileName().equals(Path.of("config.yml"))) {
-                        yaml.put("config", m);
-                    }
                 }
             }
         }

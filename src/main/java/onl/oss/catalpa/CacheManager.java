@@ -5,13 +5,14 @@ import onl.oss.catalpa.model.SearchIndex;
 
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CacheManager {
 
-    private static final Map<Path, Map.Entry<FileTime, Content>> contents = new HashMap<>();
-    private static final Map<Path, Map.Entry<FileTime, SearchIndex>> searchIndexes = new HashMap<>();
+    private static final Map<Path, Map.Entry<FileTime, Content>> contents = Collections.synchronizedMap(new HashMap<>());
+    private static final Map<Path, Map.Entry<FileTime, SearchIndex>> searchIndexes = Collections.synchronizedMap(new HashMap<>());
 
     public static void clear() {
         contents.clear();

@@ -6,6 +6,11 @@ import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
+import onl.oss.catalpa.blog.Blog;
+import onl.oss.catalpa.blog.Category;
+import onl.oss.catalpa.blog.Page;
+import onl.oss.catalpa.blog.Post;
 import onl.oss.catalpa.freemarker.MarkdownDirective;
 import onl.oss.catalpa.model.Content;
 import onl.oss.catalpa.model.Folder;
@@ -14,6 +19,7 @@ import onl.oss.catalpa.model.SearchIndex;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -37,6 +43,7 @@ public class Generator {
     private final Map<String, Object> systemDataModel;
     private final Configuration freeMarker;
 
+    private Blog blog;
     private List<SearchIndex> searchIndexes = new ArrayList<>();
 
     private Consumer<Progress> consumer;
@@ -52,6 +59,8 @@ public class Generator {
         freeMarker = new Configuration(Configuration.VERSION_2_3_33);
         freeMarker.setDefaultEncoding("UTF-8");
         freeMarker.setURLEscapingCharset("UTF-8");
+        freeMarker.setLogTemplateExceptions(false);
+        freeMarker.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         freeMarker.setSharedVariable("markdown", new MarkdownDirective());
         freeMarker.setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[] {
                 new FileTemplateLoader(input.resolve("templates").toFile()),
@@ -69,15 +78,18 @@ public class Generator {
 
         searchIndexes.clear();
 
+        blog = Blog.create(input);
+
         Folder rootFolder = retrieve(null, input);
 
-        if (Files.exists(input.resolve("templates").resolve("search.ftl"))) {
+        Path searchIndexTemplatePath = input.resolve("templates").resolve("search.ftl");
+        if (Files.exists(searchIndexTemplatePath)) {
             try {
                 applyTemplate(rootFolder, searchIndexes);
-            } catch (RuntimeException e) {
+            } catch (GeneratorException e) {
                 throw e;
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new GeneratorException(searchIndexTemplatePath, e);
             }
         }
     }
@@ -134,7 +146,6 @@ public class Generator {
         if (Files.notExists(targetDirectory)) {
             Files.createDirectories(targetDirectory);
         }
-        System.out.println("targetDirectory=" + targetDirectory);
 
         List<Path> config = new ArrayList<>();
         List<Path> shared = new ArrayList<>();
@@ -181,6 +192,30 @@ public class Generator {
             setProgress(file);
         }
 
+        //
+        // ブログのインデックス・ページを生成します。
+        //
+        if (blog != null && blog.getPath().equals(dir)) {
+            try {
+                for (Page page : blog.getPages()) {
+                    applyTemplate(folder, page);
+                }
+
+                for (Category category : blog.getCategories()) {
+                    Page page = new Page(category.getUrl(), category.getName(), category.getPosts());
+                    applyTemplate(folder, page);
+                }
+            } catch (GeneratorException e) {
+                throw e;
+            } catch (Exception e) {
+                Path blogIndexTemplatePath = input.resolve("templates").resolve("blog-index.ftl");
+                throw new GeneratorException(blogIndexTemplatePath, e);
+            }
+        }
+
+        //
+        // 子ファイルを再帰的に並列処理します。
+        //
         others.parallelStream().forEach(path -> {
             try {
                 if (Files.isDirectory(path)) {
@@ -197,6 +232,7 @@ public class Generator {
                             CacheManager.putContent(path, lastModifiedTime, content);
                         }
                         applyTemplate(folder, content);
+                        setProgress(path);
                     } else {
                         // その他のファイルは、出力ファイルにコピーします。
                         Path target = output.resolve(input.relativize(path));
@@ -292,6 +328,21 @@ public class Generator {
         dataModel.put("_ROOTPATH", folder.getRootPath().toString());
         dataModel.put("_FILEPATH", content.getPath().toString());
 
+        //
+        // ブログ
+        //
+        Post post = null;
+        if (blog != null) {
+            post = blog.getPostBy(content.getPath());
+            if (post != null) {
+                Blog clone = blog.clone();
+                clone.setPost(post);
+                dataModel.put("blog", clone);
+            } else {
+                dataModel.put("blog", blog);
+            }
+        }
+
         // コンテンツを FreeMarker で変数展開します。
         dataModel.putAll(folder.expandBlocks(freeMarker, dataModel));
         dataModel.putAll(content.expandBlocks(freeMarker, dataModel));
@@ -302,16 +353,14 @@ public class Generator {
                 name = name + ".ftl";
             }
             template = freeMarker.getTemplate(name);
+        } else if (post != null) {
+            template = freeMarker.getTemplate("blog-post.ftl");
         } else {
             template = freeMarker.getTemplate("default.ftl");
         }
 
         try (Writer writer = Files.newBufferedWriter(target, StandardCharsets.UTF_8)) {
-            try {
-                template.process(dataModel, writer);
-            } catch (TemplateException e) {
-                throw new IOException(e);
-            }
+            template.process(dataModel, writer);
         }
 
         FileTime sourceLastModifiedTime = Files.getLastModifiedTime(source);
@@ -399,11 +448,71 @@ public class Generator {
         }
 
         try (Writer writer = Files.newBufferedWriter(target, StandardCharsets.UTF_8)) {
-            try {
-                template.process(dataModel, writer);
-            } catch (TemplateException e) {
-                throw new IOException(e);
+            template.process(dataModel, writer);
+        }
+    }
+
+    private void applyTemplate(Folder folder, Page page) throws IOException, TemplateException {
+        Map<String, Object> dataModel = new HashMap<>();
+        dataModel.putAll(systemDataModel);
+        dataModel.putAll(folder.createDataModel());
+        Blog clone = blog.clone();
+        clone.setPage(page);
+        dataModel.put("blog", clone);
+
+        Path relativeOutputPath = Path.of(URLDecoder.decode(page.getUrl(), StandardCharsets.UTF_8).replace('/', '\\'));
+        Path target = output.resolve(relativeOutputPath);
+
+        //
+        // siteurl
+        //
+        String siteurl = "";
+        Object obj = dataModel.get("siteurl");
+        if (obj instanceof String s) {
+            siteurl = s.trim();
+            if (siteurl.endsWith("/")) {
+                siteurl = siteurl.substring(0, siteurl.length() - 1);
             }
+        }
+        dataModel.put("siteurl", siteurl);
+
+        //
+        // baseurl
+        //
+        String baseurl = "../".repeat(relativeOutputPath.getNameCount() - 1);
+        dataModel.put("baseurl", baseurl);
+
+        //
+        // path
+        //
+        String path = relativeOutputPath.toString().replace('\\', '/');
+        dataModel.put("path", path);
+
+        //
+        // url
+        //
+        // URLEncoder.encode ではパス区切り文字 "/" が "%2F" にエンコードされてしまうので、"%2F" を "/" に戻しています。
+        String url = siteurl + "/" + URLEncoder.encode(path, StandardCharsets.UTF_8).replace("%2F", "/");
+        dataModel.put("url", url);
+
+        //
+        // ファイルパス
+        //
+        dataModel.put("_ROOTPATH", folder.getRootPath().toString());
+        dataModel.put("_FILEPATH", null);
+
+        // コンテンツを FreeMarker で変数展開します。
+        dataModel.putAll(folder.expandBlocks(freeMarker, dataModel));
+
+        Template template = freeMarker.getTemplate("blog-index.ftl");
+
+        Path targetDirectory = target.getParent();
+        if (Files.notExists(targetDirectory)) {
+            Files.createDirectories(targetDirectory);
+        }
+
+        try (Writer writer = Files.newBufferedWriter(target, StandardCharsets.UTF_8)) {
+            template.process(dataModel, writer);
         }
     }
 

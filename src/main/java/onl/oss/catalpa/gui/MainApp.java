@@ -239,6 +239,15 @@ public class MainApp extends Application {
                 message = message.substring(0, i);
             }
             message = message.trim();
+
+            // 例外クラス名の部分を取り除き、メッセージ部分のみを表示します。
+            int j = message.indexOf("Exception: ");
+            if (j > 0) {
+                String s = message.substring(j + "Exception: ".length());
+                if (!s.isBlank()) {
+                    message = s;
+                }
+            }
         }
 
         showError(message, exception, path);
@@ -768,7 +777,7 @@ public class MainApp extends Application {
                 systemDataModel.put("_PREVIEW", true);
                 Generator generator = new Generator(inputPath, outputPath, systemDataModel, this::updateProgress);
                 generator.generate();
-
+                showMessage("更新処理が完了しました");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } finally {

@@ -58,8 +58,10 @@ public class Folder {
     public Map<String, Object> createDataModel() {
         Map<String, Object> dataModel = new HashMap<>();
 
+        Map<String, Object> parentDataModel = null;
         if (parent != null) {
-            dataModel.putAll(parent.createDataModel());
+            parentDataModel = parent.createDataModel();
+            dataModel.putAll(parentDataModel);
         }
 
         for (Content content : contents) {
@@ -67,14 +69,13 @@ public class Folder {
         }
 
         Map<String, Object> config = new HashMap<>();
-
-        if (parent != null) {
-            config.putAll(parent.getConfig());
+        if (parentDataModel != null) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> parentConfig = (Map<String, Object>)parentDataModel.get("config");
+            config.putAll(parentConfig);
         }
 
-        if (!this.config.isEmpty()) {
-            config.putAll(this.config);
-        }
+        config.putAll(this.config);
         dataModel.put("config", config);
 
         return dataModel;
