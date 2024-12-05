@@ -2,6 +2,7 @@ package onl.oss.catalpa.freemarker;
 
 import com.vladsch.flexmark.ext.attributes.AttributesExtension;
 import com.vladsch.flexmark.ext.definition.DefinitionExtension;
+import com.vladsch.flexmark.ext.footnotes.FootnoteExtension;
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
 import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
@@ -13,9 +14,6 @@ import com.vladsch.flexmark.util.ast.Document;
 import com.vladsch.flexmark.util.data.DataKey;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import freemarker.core.Environment;
-import freemarker.template.DefaultListAdapter;
-import freemarker.template.SimpleScalar;
-import freemarker.template.Template;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
@@ -27,7 +25,6 @@ import onl.oss.catalpa.flexmark.ext.HighlightExtension;
 import onl.oss.catalpa.flexmark.ext.KbdExtension;
 import onl.oss.catalpa.flexmark.ext.SampButtonExtension;
 import onl.oss.catalpa.html.Typesetting;
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -68,9 +65,11 @@ public class MarkdownDirective implements TemplateDirectiveModel {
         options.set(TaskListExtension.ITEM_NOT_DONE_CLASS, "unchecked");
         options.set(TaskListExtension.ITEM_DONE_MARKER, "");
         options.set(TaskListExtension.ITEM_NOT_DONE_MARKER, "");
+        options.set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "*");
         options.set(Parser.EXTENSIONS, Arrays.asList(
                 AttributesExtension.create(),
                 DefinitionExtension.create(),
+                FootnoteExtension.create(),
                 WikiLinkExtension.create(),
                 StrikethroughExtension.create(),
                 TaskListExtension.create(),
