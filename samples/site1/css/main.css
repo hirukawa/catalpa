@@ -4,7 +4,7 @@
 	--secondary-color:         #B4C540;
 	--secondary-variant-color: #018786;
 
-	--text-black-color:           #333333; /* 薄いまたは明るい背景にテキストを表示するときの黒色です（ライトモードを基準としています） */
+	--text-black-color:           #4c4c4c; /* 薄いまたは明るい背景にテキストを表示するときの黒色です（ライトモードを基準としています） */
 	--text-white-color:           #f2f2f2; /* 濃いまたは暗い背景にテキストを表示するときの白色です（ライトモードを基準としています） */
 
 	--main-text-color:            var(--text-black-color);
@@ -12,7 +12,7 @@
 	--header-text-color:          var(--text-white-color);
 	--header-background-color:    var(--primary-color);
 	--footer-text-color:          var(--text-black-color);
-	--footer-background-color:    var(--main-background-color);
+	--footer-background-color:    #f2f2f2;
 
 	--border-color:               #cccccc;
 
@@ -255,6 +255,7 @@ html {
 	font-kerning: none; /* カーニングを無効にします（Noto Sans JP では和文の一部でもツメ処理がおこなわれてしまうので、それを防ぐためです）*/
 	text-spacing-trim: space-all; /* 役物ツメ処理を無効にします（ブラウザーの機能を使わずに Catalpa の HTML 出力で対応するため）*/
 	text-autospace: no-autospace; /* 和字・欧字の間隔調整を無効にします（ブラウザーの機能を使わずに Catalpa の HTML 出力で対応するため）*/
+	background-color: var(--footer-background-color); /* HTMLにフッター背景色を設定しておくと body の縦が短いときに表示されます。*/
 }
 
 /*
@@ -304,6 +305,14 @@ a:hover {
 }
 
 /*
+ * ヘッダー
+ */
+header {
+	background-color: var(--header-background-color);
+	color: var(--header-text-color);
+}
+
+/*
  *  既定のヘッダー
  */
 header .default {
@@ -324,6 +333,14 @@ header .default .content .title {
 	line-height: 1.25;
 	font-size: 1.5em;
 }
+
+/*
+ * フッター
+ */
+footer {
+	background-color: var(--footer-background-color);
+	color: var(--footer-text-color);
+} 
 
 /*
  *  既定のフッター

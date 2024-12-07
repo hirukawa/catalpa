@@ -1,0 +1,1567 @@
+@media only screen and (max-width: 512px) {
+	/* 横幅の狭いデバイス（スマホ）*/
+	.markdown  {
+		word-break: break-all !important; /* 欧文も任意の位置で折り返せるようにします。*/
+		white-space: normal !important; 
+	}
+	/* 一部の nowrap 指定を無効化します。*/
+	.markdown table > thead > tr > th,
+	.markdown table var,
+	.markdown dl.note > dt,
+	.markdown dl.tip > dt,
+	.markdown dl.info > dt,
+	.markdown dl.warning > dt,
+	.markdown dl.caution > dt,
+	.markdown dl.primary > dt,
+	.markdown dl.primary-variant > dt,
+	.markdown dl.secondary > dt,
+	.markdown dl.secondary-variant > dt,
+	.markdown .button {
+		white-space: normal !important;
+	}
+}
+
+@font-face {
+	font-family: "catalpa"; /* 二分アキ・四分アキを正確に実現するためのカスタムフォントです。*/
+	src: url("data:application/font-woff;base64,d09GMgABAAAAAAJwAA4AAAAABfQAAAIaAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP0ZGVE0cGhwGYACCQggEEQgKWHYLCgABNgIkAxAEIAWEBAcqGxMFAB4HdsNXE7bcDNNY/sXD/+/3bZ/77hPcH2p/SGOeEKtioZBYEyIa8RA1TchAVMtEGmt9eIL7+W6BAz9dgldY848oG/hKtHnqJv8inAD231y6/TFMw1QDDEso6hKKKCAJhIJwV/nyYIO5h+Qh2YkQ8OP968Pwo/YG/vQOvRKA+ZbLSAgEciPumlL2lPcRG+WbFh9cTUtJyjkAAgCOXz3a/Ki2rrqV2fIMEABoBQoUWC9Av0JgvaxFlgXablf6PdP9I4CoCEAkJABAUMguNV4uQXS7EsigQUKDhYCMAxKQ87yZRdcvzubMHzc90yrPfBm7994GXoSD/S/r7G/nRVV+7X9ZJH87XhRNsFQdRlX8738Z8cmBxNvvvU/OLer/18xrrLMvMY50uTwDjQSC8gzMNiBdJgCA3DAOGjQQyBoJJITAsA1goacE0BolINSuEZDUbhBQ2OabAFkdSwUozYuOAJU6jhqLPAfD0GlY6BJIZIYWpv1ptjASLa2MtWEV3mDQmExuUAp4fDW1yyVzrY5DOo7YpzXt6uHtbutrS500yODdZ3Vp/heWfdPXx/u+/W715JDBJYaaIZYz4P3cltyAkxyeRsxQ4imzKUzKpGrZlDwOjnzAIa1e1yZi1bu49X6HJQ89ch9TpZXSc7Rz4FDb286utaFzaP/hwgKeiQjOmlIlQPIwUruqZXaZ8ccT0O1xFQIAQD4OAQAA") format("woff2");
+}
+
+.markdown {
+	overflow-wrap: break-word; /* 行内に分割可能な位置がなくあふれる場合は任意の位置で改行します。*/
+	line-break: strict;   /* 厳密な禁則処理 */
+	text-align: justify;  /* 最終行を除いて両端を揃えます */
+	line-height: 1.75rem;
+}
+
+/*
+ * 組版
+ */
+.markdown i.h { /* font-feature-settings: "halt" で役物を半角にする場合の設定です */
+	font-style: inherit;
+	font-feature-settings: "halt";
+}
+.markdown i.l { /* font-feature-settings: "halt" を使わずに役物を半角にする設定です（左側を詰めます）*/
+	font-style: inherit;
+	margin-left: -0.5em;
+}
+.markdown i.r { /* font-feature-settings: "halt" を使わずに役物を半角にする設定です（右側を詰めます）*/
+	font-style: inherit;
+	margin-right: -0.5em;
+}
+.markdown i.lr { /* font-feature-settings: "halt" を使わずに役物を半角にする設定です（左右を詰めます）*/
+	font-style: inherit;
+	margin-left: -0.25em;
+	margin-right: -0.25em;
+}
+.markdown i.s1 { /* 全角アキ */
+	font-style: inherit;
+	font-family: "catalpa";
+	font-size: 100%;
+	line-height: 0;
+}
+.markdown i.s2 { /* 二分アキ */
+	font-style: inherit;
+	font-family: "catalpa";
+	font-size: 50%;
+	line-height: 0;
+}
+.markdown i.s4 { /* 四分アキ */
+	font-style: inherit;
+	font-family: "catalpa";
+	font-size: 25%;
+	line-height: 0;
+}
+.markdown i.e { /* 和字と欧字の間隔 */
+	font-style: inherit;
+	font-family: "catalpa";
+	font-size: 15.625%; /* 25%=4px, 18.75%=3px, 15.625%=2.5px, 12.5%=2px */
+	line-height: 0;
+}
+.markdown i.j { /* 欧字と和字の間隔 */
+	font-style: inherit;
+	font-family: "catalpa";
+	font-size: 15.625%; /* 25%=4px, 18.75%=3px, 15.625%=2.5px, 12.5%=2px */
+	line-height: 0;
+}
+
+.markdown .cancel-padding {
+	margin-inline-start: calc(0px - var(--content-padding-left) - var(--content-padding-left-adjust));
+	margin-inline-end: calc(0px - var(--content-padding-right) - var(--content-padding-right-adjust));
+}
+
+/*
+ * パラグラフ（段落）
+ */
+ .markdown p {
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+}
+
+/*
+ *  ヘディング（見出し）
+ */
+.markdown h1 {
+	margin-block-start: 4rem;
+	margin-block-end: 4rem;
+	font-size: 2.5em; /* 16px -> 40px */
+	font-weight: bold;
+	line-height: 1.25;
+	text-align: center;
+	word-break: auto-phrase;
+}
+.markdown h2 {
+	margin-block-start: 2.5rem;
+	margin-block-end: 2.5rem;
+	font-size: 1.75em; /* 16px -> 28px */
+	font-weight: bold;
+	line-height: 1.25;
+	text-align: initial;
+	word-break: auto-phrase;
+}
+.markdown h3 {
+	margin-block-start: 2rem;
+	margin-block-end: 2rem;
+	font-size: 1.5em; /* 16px -> 24px */
+	font-weight: bold;
+	line-height: 1.25;
+	text-align: initial;
+	word-break: auto-phrase;
+}
+.markdown h4 {
+	margin-block-start: 2rem;
+	margin-block-end: 2rem;
+	font-size: 1.25em; /* 16px -> 20px */
+	font-weight: bold;
+	line-height: 1.25;
+	text-align: initial;
+	word-break: auto-phrase;
+}
+.markdown h5 {
+	margin-block-start: 1.5rem;
+	margin-block-end: 1.5rem;
+	font-size: 1.125em; /* 16px -> 18px */
+	font-weight: bold;
+	line-height: 1.25;
+	text-align: initial;
+	word-break: auto-phrase;
+}
+.markdown h6 {
+	margin-block-start: 1rem;
+	margin-block-end: 1rem;
+	font-size: 1em; /* 16px -> 16px */
+	font-weight: bold;
+	line-height: 1.25;
+	text-align: initial;
+	word-break: auto-phrase;
+}
+
+/*
+ * 打消し線
+ * <del>テキスト</del>
+ */
+.markdown del {
+	text-decoration: none;
+	background: linear-gradient(var(--main-text-color), var(--main-text-color)) 0 45% / 100% 2px no-repeat;
+}
+
+/*
+ * `コード`
+ * <code>コード</code>
+ */
+.markdown code {
+	padding: 0.15em 0.25em 0.15em 0.25em;
+	font-family: var(--font-family-monospace);
+	letter-spacing: 0.06em;
+	color: var(--code-color);
+	background-color: var(--code-background-color);
+	border-radius: 4px;
+	white-space: pre-wrap;
+}
+.markdown .monospace code {
+	font-family: var(--font-family-monospace);
+}
+
+/*
+ * ['Ctrl'] 
+ * <kbd data-length="4">Ctrl</kbd>
+ */
+ .markdown kbd {
+	vertical-align: middle;
+	margin: 0;
+	padding: 0.35em 0.5em;
+	font-family: var(--font-family-monospace);
+	font-size: 87.5%; /* 16px -> 14px */
+	line-height: 1.0;
+	color: #D0D0D0;
+	text-shadow: -1px -1px 0 rgba(0,0,0,0.5);
+	background-color: #202020;
+	border: 1px solid #000000;
+	border-radius: 3px;
+	box-shadow: 1px 1px 2px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.3) inset;
+	white-space: pre-wrap;
+}
+
+/*
+ * ["ファイル"] 
+ * <samp class="button" data-length="4">ファイル</samp>
+ */
+.markdown samp.button {
+	vertical-align: middle;
+	margin: 0;
+	padding: 0.35em 0.5em;
+	font-family: var(--font-family-monospace);
+	font-size: 87.5%; /* 16px -> 14px */
+	line-height: 1.0;
+	color: #202020;
+	background-color: #E0E0E0;
+	border: 1px solid #606060;
+	border-radius: 3px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,0.5), 1px 1px 2px #FFFFFF inset;
+	white-space: pre-wrap;
+}
+
+/*
+ * 箇条書きリスト・番号リスト・タスクリスト
+ */
+ .markdown ul,
+ .markdown ol {
+	margin-block-start: var(--default-margin-block-start);
+	margin-block-end: var(--default-margin-block-end);
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+	padding-inline-start: min(3em, 10vw);
+}
+.markdown ul > li > ul,
+.markdown ol > li > ol {
+	margin-block-start: 1em;
+	margin-block-end: 0;
+}
+.markdown li {
+	margin-block-start: 1em;
+}
+.markdown li:first-child {
+	margin-block-start: 0;
+}
+.markdown li > p {
+	margin: 0;
+}
+.markdown ul > li::marker {
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><circle id="disc" cx="256" cy="320" r="160" style="fill:rgb(40,125,207);"/></svg>') "\2003";
+}
+.markdown ul > li > ul > li::marker {
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M437.019,312l-181.019,181.019l-181.019,-181.019l181.019,-181.019l181.019,181.019Z" style="fill:rgb(40,125,207);"/></svg>') "\2003";
+}
+.markdown ul > li > ul > li > ul > li::marker {
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="112" y="168" width="288" height="288" style="fill:rgb(40,125,207);"/></svg>') "\2003";
+}
+.markdown ul > li > ul > li > ul > li > ul > li::marker {
+	content: "\2013\2003";
+	font-weight: bold;
+	color: var(--list-marker-color);
+}
+.markdown ol > li::marker {
+	content: counter(list-item) ".\2003";
+	font-weight: bold;
+	color: var(--list-marker-color);
+}
+.markdown .footnotes ol > li::marker {
+	content: "*" counter(list-item) "\2003";
+	font-weight: normal;
+}
+.markdown ul > li.task-list-item.checked::marker {
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(40,125,207);"/></g></g></svg>') "\2003";
+}
+.markdown ul > li.task-list-item.unchecked::marker {
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="checkbox"><path d="M448,160C448,142.339 433.661,128 416,128L96,128C78.339,128 64,142.339 64,160L64,480C64,497.661 78.339,512 96,512L416,512C433.661,512 448,497.661 448,480L448,160ZM416,168C416,163.585 412.415,160 408,160L104,160C99.585,160 96,163.585 96,168L96,472C96,476.415 99.585,480 104,480L408,480C412.415,480 416,476.415 416,472L416,168Z" style="fill:rgb(153,153,153);"/></g></svg>') "\2003";
+}
+
+/*
+ * ファイルツリー
+ * 箇条書きリスト先頭の * の次に {.tree} を付与するとファイルツリーになります。
+ */
+ .markdown ul.tree {
+	margin-block-start: var(--default-margin-block-start);
+	margin-block-end: var(--default-margin-block-end);
+}
+.markdown ul.tree ::marker {
+	content: "";
+}
+.markdown ul.tree,
+.markdown ul.tree ul {
+	margin-inline-start: 0.5em;
+	margin-inline-end: 0;
+	padding: 0;
+	list-style-type: none;
+}
+.markdown ul.tree ul {
+	margin-block-start: 0;
+	margin-block-end: 0;
+	position: relative;
+}
+.markdown ul.tree ul:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0.125em;
+	left: 0;
+	bottom: 0;
+	width: 0;
+	border-left: 0.125em solid #ccc;
+}
+.markdown ul.tree > li:first-child {
+	padding-block-start: 0;
+}
+.markdown ul.tree li {
+	position: relative;
+	margin: 0;
+	padding: 1em 0 0 1.5em;
+	line-height: 1.5;
+}
+.markdown ul.tree ul li:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 1.6em;
+	left: 0;
+	width: 1em;
+	height: 0;
+	border-top: 0.125em solid #ccc;
+}
+.markdown ul.tree ul li:last-child:before {
+	bottom: 0;
+	height: auto;
+	background: var(--main-background-color);
+}
+
+/*
+ * 定義リスト
+ */
+.markdown dl {
+	margin-block-start: var(--default-margin-block-start);
+	margin-block-end: var(--default-margin-block-end);
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+}
+.markdown dt {
+	margin-block-start: 1em;
+	line-height: 1.25;
+}
+.markdown dd {
+	margin-inline-start: min(2em, 3vw);
+}
+
+/*
+ * 画像
+ */
+ .markdown img {
+	max-width: 100%;
+	height: auto;
+	border: 0;
+	vertical-align: middle;
+}
+.markdown img.border {
+	border: 1px solid #808080;
+}
+.markdown img.shadow {
+	box-shadow: 2px 2px 8px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.25);
+}
+.markdown p.images-only {
+	margin-block-start: var(--default-margin-block-start);
+	margin-block-end: var(--default-margin-block-end);
+	text-align: center;
+}
+.markdown p.images-only.right {
+	text-align: right;
+}
+
+/*
+ * 水平線
+ */
+.markdown hr {
+	margin-block-start: var(--default-margin-block-start);
+	margin-block-end: var(--default-margin-block-end);
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+	border: 0;
+	border-top: 1px solid #ccc;
+}
+
+
+/*
+ * テーブル
+ */
+ .markdown table {
+	margin-block-start: var(--default-margin-block-start);
+	margin-block-end: var(--default-margin-block-end);
+	margin-inline-start: auto;
+	margin-inline-end: auto;
+	min-width:  60%;
+	max-width: 100%;
+	border-spacing: 0;
+	border-collapse: collapse;
+	line-height: 1.5;
+	color: var(--table-text-color);
+	background-color: var(--table-background-color);
+}
+.markdown table > thead {
+	font-size: 93.75%; /* 16px -> 15px */
+}
+.markdown table > thead > tr > th {
+	padding: 0 0.5em;
+	vertical-align: bottom;
+	border-bottom: 2px solid var(--table-border-color);
+	white-space: nowrap;
+}
+.markdown table > thead > tr > th:not([align]) {
+	text-align: left;
+}
+.markdown table > tbody > tr:nth-of-type(odd) {
+	background-color: var(--table-background-color-odd);
+}
+.markdown table > tbody > tr > td {
+	vertical-align: baseline;
+	padding: 0.5em 0.5em;
+	border-top:    1px solid var(--table-border-color);
+	border-bottom: 1px solid var(--table-border-color);
+}
+.markdown table var {
+	font-style: normal;
+	white-space: nowrap;
+}
+.markdown table th::after,
+.markdown table td::after {
+	content: ' ';
+}
+.markdown table.left {
+	margin-left: 0;
+}
+.markdown table.right {
+	margin-right: 0;
+}
+
+
+/*
+ * 引用ブロック
+ */
+ .markdown blockquote {
+	margin-block-start:   var(--default-margin-block-start);
+	margin-block-end:     var(--default-margin-block-end);
+	margin-inline-start:  0.5em;
+	margin-inline-end:    0.5em;
+	padding-block-start:  1px;
+	padding-block-end:    1px;
+	padding-inline-start: 1em;
+	padding-inline-end:   0.625em;
+	font-family: var(--blockquote-font-family);
+	font-style: italic;
+	border-left: 0.375em solid var(--blockquote-color);
+}
+
+/*
+ * 付箋
+ */
+.markdown dl.note,
+.markdown dl.tip,
+.markdown dl.info,
+.markdown dl.warning,
+.markdown dl.caution,
+.markdown dl.primary,
+.markdown dl.primary-variant,
+.markdown dl.secondary,
+.markdown dl.secondary-variant {
+	position: relative;
+	display: table;
+	margin-block-start: var(--default-margin-block-start);
+	margin-block-end: var(--default-margin-block-end);
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+}
+.markdown dl.note.has-term,
+.markdown dl.tip.has-term,
+.markdown dl.info.has-term,
+.markdown dl.warning.has-term,
+.markdown dl.caution.has-term,
+.markdown dl.primary.has-term,
+.markdown dl.primary-variant.has-term,
+.markdown dl.secondary.has-term,
+.markdown dl.secondary-variant.has-term {
+	margin-block-start: calc(1.5em + var(--default-margin-block-start));
+}
+.markdown dl.note.mx-auto, .markdown dl.note.center,
+.markdown dl.tip.mx-auto, .markdown dl.tip.center,
+.markdown dl.info.mx-auto, .markdown dl.info.center,
+.markdown dl.warning.mx-auto, .markdown dl.warning.center,
+.markdown dl.caution.mx-auto, .markdown dl.caution.center,
+.markdown dl.primary.mx-auto, .markdown dl.primary.center,
+.markdown dl.primary-variant.mx-auto, .markdown dl.primary-variant.center,
+.markdown dl.secondary.mx-auto, .markdown dl.secondary.center,
+.markdown dl.secondary-variant.mx-auto, .markdown dl.secondary-variant.center {
+	margin-inline-start: auto;
+	margin-inline-end: auto;
+}
+.markdown dl.note.ml-auto, .markdown dl.note.right,
+.markdown dl.tip.ml-auto, .markdown dl.tip.right,
+.markdown dl.info.ml-auto, .markdown dl.info.right,
+.markdown dl.warning.ml-auto, .markdown dl.warning.right,
+.markdown dl.caution.ml-auto, .markdown dl.caution.right,
+.markdown dl.primary.ml-auto, .markdown dl.primary.right,
+.markdown dl.primary-variant.ml-auto, .markdown dl.primary-variant.right,
+.markdown dl.secondary.ml-auto, .markdown dl.secondary.right,
+.markdown dl.secondary-variant.ml-auto, .markdown dl.secondary-variant.right {
+	margin-inline-start: auto;
+}
+.markdown dl.note.mr-auto, .markdown dl.note.left,
+.markdown dl.tip.mr-auto, .markdown dl.tip.left,
+.markdown dl.info.mr-auto, .markdown dl.info.left,
+.markdown dl.warning.mr-auto, .markdown dl.warning.left,
+.markdown dl.caution.mr-auto, .markdown dl.caution.left,
+.markdown dl.primary.mr-auto, .markdown dl.primary.left,
+.markdown dl.primary-variant.mr-auto, .markdown dl.primary-variant.left,
+.markdown dl.secondary.mr-auto, .markdown dl.secondary.left,
+.markdown dl.secondary-variant.mr-auto, .markdown dl.secondary-variant.left {
+	margin-inline-end: auto;
+}
+.markdown dl.note > dt,
+.markdown dl.tip > dt,
+.markdown dl.info > dt,
+.markdown dl.warning > dt,
+.markdown dl.caution > dt,
+.markdown dl.primary > dt,
+.markdown dl.primary-variant > dt,
+.markdown dl.secondary > dt,
+.markdown dl.secondary-variant > dt {
+	position: absolute;
+	display: inline-block;
+	margin-block-start: 1em;
+	padding: 0.5em 1.5em;
+	line-height: 1.25;
+	font-weight: bold;
+	box-shadow: 2px 2px 8px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.25);
+	transform-origin: left bottom;
+	transform: rotate(0);
+	top: -2.5em;
+	left: 1em;
+	white-space: nowrap;
+}
+.markdown dl.note > dt:empty,
+.markdown dl.tip > dt:empty,
+.markdown dl.info > dt:empty,
+.markdown dl.warning > dt:empty,
+.markdown dl.caution > dt:empty,
+.markdown dl.primary > dt:empty,
+.markdown dl.primary-variant > dt:empty,
+.markdown dl.secondary > dt:empty,
+.markdown dl.secondary-variant > dt:empty {
+	display: none;
+}
+.markdown dl.note > dd,
+.markdown dl.tip > dd,
+.markdown dl.info > dd,
+.markdown dl.warning > dd,
+.markdown dl.caution > dd,
+.markdown dl.primary > dd,
+.markdown dl.primary-variant > dd,
+.markdown dl.secondary > dd,
+.markdown dl.secondary-variant > dd {
+	margin: 0;
+	padding: 1em;
+}
+.markdown dl.note.has-term > dd,
+.markdown dl.tip.has-term > dd,
+.markdown dl.info.has-term > dd,
+.markdown dl.warning.has-term > dd,
+.markdown dl.caution.has-term > dd,
+.markdown dl.primary.has-term > dd,
+.markdown dl.primary-variant.has-term > dd,
+.markdown dl.secondary.has-term > dd,
+.markdown dl.secondary-variant.has-term > dd {
+	padding-block-start: 1.75em;
+}
+.markdown dl.deg-0 > dt {
+	transform: rotate(0);
+}
+.markdown dl.deg-1 > dt {
+	transform: rotate(-0.5deg);
+}
+.markdown dl.deg-2 > dt {
+	transform: rotate(-1.0deg);
+}
+.markdown dl.deg-3 > dt {
+	transform: rotate(-1.5deg);
+}
+.markdown dl.deg-4 > dt {
+	transform: rotate(-2.0deg);
+}
+.markdown dl.deg-5 > dt {
+	transform: rotate(-2.5deg);
+}
+.markdown dl.deg-6 > dt {
+	transform: rotate(-3.0deg);
+}
+.markdown dl.deg-7 > dt {
+	transform: rotate(-3.5deg);
+}
+.markdown dl.deg-8 > dt {
+	transform: rotate(-4.0deg);
+}
+.markdown dl.deg-9 > dt {
+	transform: rotate(-4.5deg);
+}
+.markdown dl.note {
+	color: var(--dl-note-color);
+	background-color: var(--dl-note-background-color);
+}
+.markdown dl.note > dt {
+	color: var(--dl-note-dt-color);
+	background-color: var(--dl-note-dt-background-color);
+}
+.markdown dl.note > dt:empty + dd {
+	border-left: 0.5em solid var(--dl-note-border-color);
+}
+.markdown dl.tip {
+	color: var(--dl-tip-color);
+	background-color: var(--dl-tip-background-color);
+}
+.markdown dl.tip > dt {
+	color: var(--dl-tip-dt-color);
+	background-color: var(--dl-tip-dt-background-color);
+}
+.markdown dl.tip > dt:empty + dd {
+	border-left: 0.5em solid var(--dl-tip-border-color);
+}
+.markdown dl.info {
+	color: var(--dl-info-color);
+	background-color: var(--dl-info-background-color);
+}
+.markdown dl.info > dt {
+	color: var(--dl-info-dt-color);
+	background-color: var(--dl-info-dt-background-color);
+}
+.markdown dl.info > dt:empty + dd {
+	border-left: 0.5em solid var(--dl-info-border-color);
+}
+.markdown dl.warning {
+	color: var(--dl-warning-color);
+	background-color: var(--dl-warning-background-color);
+}
+.markdown dl.warning > dt {
+	color: var(--dl-warning-dt-color);
+	background-color: var(--dl-warning-dt-background-color);
+}
+.markdown dl.warning > dt:empty + dd {
+	border-left: 0.5em solid var(--dl-warning-border-color);
+}
+.markdown dl.caution {
+	color: var(--dl-caution-color);
+	background-color: var(--dl-caution-background-color);
+}
+.markdown dl.caution > dt {
+	color: var(--dl-caution-dt-color);
+	background-color: var(--dl-caution-dt-background-color);
+}
+.markdown dl.caution > dt:empty + dd {
+	border-left: 0.5em solid var(--dl-caution-border-color);
+}
+.markdown dl.primary {
+	color: var(--dl-primary-color);
+	background-color: var(--dl-primary-background-color);
+}
+.markdown dl.primary > dt {
+	color: var(--dl-primary-dt-color);;
+	background-color: var(--dl-primary-dt-background-color);
+}
+.markdown dl.primary > dt:empty + dd {
+	border-left: 0.5em solid var(--dl-primary-border-color);
+}
+.markdown dl.primary-variant {
+	color: var(--dl-primary-variant-color);
+	background-color: var(--dl-primary-variant-background-color);
+}
+.markdown dl.primary-variant > dt {
+	color: var(--dl-primary-variant-dt-color);
+	background-color: var(--dl-primary-variant-background-color);
+}
+.markdown dl.primary-variant > dt:empty + dd {
+	border-left: 0.5em solid var(--dl-primary-variant-border-color);
+}
+.markdown dl.secondary {
+	color: var(--dl-secondary-color);
+	background-color: var(--dl-secondary-background-color);
+}
+.markdown dl.secondary > dt {
+	color: var(--dl-secondary-dt-color);
+	background-color: var(--dl-secondary-dt-background-color);
+}
+.markdown dl.secondary > dt:empty + dd {
+	border-left: 0.5em solid var(--dl-secondary-border-color);
+}
+.markdown dl.secondary-variant {
+	color: var(--dl-secondary-variant-color);
+	background-color: var(--dl-secondary-variant-border-color);
+}
+.markdown dl.secondary-variant > dt {
+	color: var(--dl-secondary-variant-dt-color);
+	background-color: var(--dl-secondary-variant-dt-background-color);
+}
+.markdown dl.secondary-variant > dt:empty + dd {
+	border-left: 0.5em solid var(--dl-secondary-variant-border-color);
+}
+
+
+/*
+ * ルビ
+ */
+.markdown ruby[data-rt] {
+	position: relative;
+}
+.markdown ruby[data-rt]::before {
+	content: attr(data-rt);
+	position: absolute;
+	top: calc(-0.5em - var(--is-mac) * 0.5em);
+	left: -2.5em;
+	right: -2.5em;
+	font-size: 50%;
+	text-align: center;
+	line-height: 1em;
+	color: var(--ruby-text-color);
+}
+.markdown ruby[data-rt] rt {
+	display: none;
+}
+
+/*
+ * ボタン
+ * .primary .primary-variant .secondary .secondary-variant
+ * .tiny .small .large .huge
+ * .round
+ * .hover
+ * .previous .next
+ */
+.markdown .button {
+	display: inline-block;
+	margin-block-start: 0; /* inline-block ではマージンが相殺されないので 0 設定としています。*/
+	margin-block-end: 0;
+	margin-inline-start: 1em;
+	margin-inline-end: 1em;
+	padding: 1.25em 2em;
+	line-height: 1;
+	vertical-align: middle;
+	white-space: nowrap;
+	color: var(--button-text-color);
+	background-color: var(--button-background-color);
+}
+.markdown .button.primary {
+	background-color: var(--primary-color);
+}
+.markdown .button.primary-variant {
+	background-color: var(--primary-variant-color);
+}
+.markdown .button.secondary {
+	background-color: var(--secondary-color);
+}
+.markdown .button.secondary-variant {
+	background-color: var(--secondary-variant-color);
+}
+.markdown .button.tiny {
+	font-size: 75%; /* 16px -> 12px */
+}
+.markdown .button.small {
+	font-size: 87.5%; /* 16px -> 14px */
+}
+.markdown .button.large {
+	font-size: 112.5%; /* 16px -> 18px */
+}
+.markdown .button.huge {
+	font-size: 125%; /* 16px -> 20px */
+}
+.markdown .button.round {
+	padding: 1.25em 2em;
+	border-radius: 999px;
+}
+.markdown .button.hover {
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+.markdown .button.hover:hover {
+	box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.22);
+	transform: translateY(-1px);
+}
+.markdown .button.hover:active {
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	transform: translateY(0px);
+	transition: transform 0s, box-shadow 0s;
+}
+.markdown .button.image {
+	height: 3em;
+	padding: 0 1em 0 0;
+}
+.markdown .button.image > img {
+	width: auto;
+	height: 100%;
+}
+.markdown .button.image > img + em {
+	display: inline-block;
+	vertical-align: middle;
+	font-weight: normal;
+	font-style: normal;
+	line-height: 1.5;
+}
+.markdown .button.previous {
+	position: relative;
+	padding: 1.25em 2em 1.25em 4em;
+}
+.markdown .button.previous::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 0.625em;
+	width: 2.25em;
+	height: 2.25em;
+	transform: translateY(-50%);
+	background-color: #fefefe;
+}
+.markdown .button.previous.round::before {
+	left: 0.5em;
+	width: 2.5em;
+	height: 2.5em;
+	border-radius: 1.25em;
+}
+.markdown .button.previous::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 1.5em;
+	width: 0.7em;
+	height: 0.7em;
+	transform: translateY(-50%) rotate(-45deg);
+	box-sizing: border-box;
+	border-top: 0.25em solid var(--button-background-color);
+	border-left: 0.25em solid var(--button-background-color);
+}
+.markdown .button.previous.primary::after {
+	border-top: 0.25em solid var(--primary-color);
+	border-left: 0.25em solid var(--primary-color);
+}
+.markdown .button.previous.primary-variant::after {
+	border-top: 0.25em solid var(--primary-variant-color);
+	border-left: 0.25em solid var(--primary-variant-color);
+}
+.markdown .button.previous.secondary::after {
+	border-top: 0.25em solid var(--secondary-color);
+	border-left: 0.25em solid var(--secondary-color);
+}
+.markdown .button.previous.secondary-variant::after {
+	border-top: 0.25em solid var(--secondary-variant-color);
+	border-left: 0.25em solid var(--secondary-variant-color);
+}
+.markdown .button.next {
+	position: relative;
+	padding: 1.25em 4em 1.25em 2em;
+}
+.markdown .button.next::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	right: 0.625em;
+	width: 2.25em;
+	height: 2.25em;
+	transform: translateY(-50%);
+	background-color: #fefefe;
+}
+.markdown .button.next.round::before {
+	right: 0.5em;
+	width: 2.5em;
+	height: 2.5em;
+	border-radius: 1.25em;
+}
+.markdown .button.next::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	right: 1.5em;
+	transform: translateY(-50%) rotate(45deg);
+	width: 0.7em;
+	height: 0.7em;
+	box-sizing: border-box;
+	border-top: 0.25em solid var(--button-background-color);
+	border-right: 0.25em solid var(--button-background-color);
+}
+.markdown .button.next.primary::after {
+	border-top: 0.25em solid var(--primary-color);
+	border-right: 0.25em solid var(--primary-color);
+}
+.markdown .button.next.primary-variant::after {
+	border-top: 0.25em solid var(--primary-variant-color);
+	border-right: 0.25em solid var(--primary-variant-color);
+}
+.markdown .button.next.secondary::after {
+	border-top: 0.25em solid var(--secondary-color);
+	border-right: 0.25em solid var(--secondary-color);
+}
+.markdown .button.next.secondary-variant::after {
+	border-top: 0.25em solid var(--secondary-variant-color);
+	border-right: 0.25em solid var(--secondary-variant-color);
+}
+
+/* 
+ * ナビゲーション
+ * 
+ * {.nav .border-bottom}
+ * [リンクテキスト1](link1.html)
+ *
+ */
+ .markdown p.nav {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1px;
+	background-color: var(--nav-background-color);
+}
+.markdown p.nav > span[style*=catalpa] {
+	display: none;
+}
+.markdown p.nav.border {
+	padding: 1px;
+}
+.markdown p.nav.border-top {
+	padding-top: 1px;
+}
+.markdown p.nav.border-right {
+	padding-right: 1px;
+}
+.markdown p.nav.border-bottom {
+	padding-bottom: 1px;
+}
+.markdown p.nav.border-left {
+	padding-left: 1px;
+}
+.markdown p.nav a {
+	margin: 0;
+	padding: 0.5em;
+	display: block;
+	flex-grow: 1;
+	line-height: 1;
+	text-align: center;
+	color: var(--nav-link-color);
+	background-color: var(--nav-link-background-color);
+}
+.markdown p.nav a:visited {
+	color: var(--nav-link-visited-color);
+	background-color: var(--nav-link-visited-background-color);
+}
+.markdown p.nav a:hover {
+	color: var(--nav-link-hover-color);
+	background-color: var(--nav-link-hover-background-color);
+}
+
+
+/*
+ * 画像とテキストのリンクをカード形式にします。
+ * 画像とテキストは横に並びます。画像の縦横比は 1:1 です。
+ */
+.markdown p.card {
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+	margin-inline-start: calc(0px - var(--content-padding-left) - var(--content-padding-left-adjust));
+	margin-inline-end: calc(0px - var(--content-padding-right) - var(--content-padding-right-adjust));
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+	gap: 1em 0;
+}
+.markdown p.card a {
+	display: block;
+	border-radius: 4px;
+	color: var(--card-text-color);
+	background-color: var(--card-background-color);
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+.markdown p.card a:hover {
+	box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.22);
+	transform: translateY(-2px);
+}
+.markdown p.card a:active {
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	transform: translateY(0px);
+	transition: transform 0s, box-shadow 0s;
+}
+.markdown p.card a > img {
+	border-radius: 4px 0 0 4px;
+	object-fit: cover;
+	width: 80px;
+	height: 80px;
+}
+.markdown p.card a > img + em {
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 1.25;
+	font-weight: normal;
+	font-style: normal;
+	padding: 0 1em;
+	width: 176px;
+}
+.markdown p.card a.padding {
+	width: 288px;
+	height: 0;
+}
+
+/*
+ * 画像とテキストのリンクをカード形式にします。
+ * 画像とテキストは縦に並びます。画像の縦横比は 16:10（landscape）です。
+ */
+ .markdown p.card.landscape {
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+	margin-inline-start: calc(0px - var(--content-padding-left) - var(--content-padding-left-adjust));
+	margin-inline-end: calc(0px - var(--content-padding-right) - var(--content-padding-right-adjust));
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+	gap: 1em 0;
+}
+.markdown p.card.landscape a {
+	display: block;
+	border-radius: 4px;
+	color: var(--main-text-color);
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+.markdown p.card.landscape a:hover {
+	box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.22);
+	transform: translateY(-2px);
+}
+.markdown p.card.landscape a:active {
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	transform: translateY(0px);
+	transition: transform 0s, box-shadow 0s;
+}
+.markdown p.card.landscape a > img {
+	border-radius: 4px 4px 0 0;
+	object-fit: cover;
+	width: 176px;
+	height: 110px;
+}
+.markdown p.card.landscape a > img + em {
+	display: table-cell;
+	width: calc(176px - 0.5em * 2);
+	height: 72px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 1.25;
+	font-weight: normal;
+	font-style: normal;
+	padding: 0 0.5em;
+}
+.markdown p.card.landscape a.padding {
+	width: 176px;
+	height: 0;
+}
+@media screen and (max-width: 500px) {
+	.markdown p.card.landscape a {
+		display: flex;
+		width: calc(100vw - 2em);
+	}
+	.markdown p.card.landscape a > img {
+		border-radius: 4px 0 0 4px;
+		width: 128px;
+		height: 80px;
+	}
+	.markdown p.card.landscape a > img + em {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		height: 80px;
+		padding: 0 0 0 0.75em;
+		text-align: left;
+	}
+	.markdown p.card.landscape a > img + em br,
+	.markdown p.card.landscape a > img + em span[style="font-family:monospace;font-size:50%;"],
+	.markdown p.card.landscape a > img + em span[style="font-family:catalpa;font-size:100%;line-height:0"]
+	{
+		display: none;
+	}
+}
+
+
+
+/*
+ * その他・汎用
+ */
+.markdown .center {
+	text-align: center !important;
+}
+.markdown .left {
+	text-align: left !important;
+}
+.markdown .right {
+	text-align: right !important;
+}
+
+.nowrap {
+	white-space: nowrap !important;
+}
+
+.inline-block {
+	display: inline-block !important;
+}
+.block {
+	display: block !important;
+}
+.table {
+	display: table !important;
+}
+
+.markdown .tiny {
+	font-size: 75% !important; /* 16px -> 12px */
+}
+.markdown .small {
+	font-size: 87.5% !important; /* 16px -> 14px */
+}
+.markdown .large {
+	font-size: 112.5% !important; /* 16px -> 18px */
+}
+.markdown .huge {
+	font-size: 125% !important; /* 16px -> 20px */
+}
+
+.markdown .flex-center {
+	justify-content: center !important;
+	column-gap: 1em !important;
+}
+.markdown .flex-space-evenly {
+	justify-content: space-evenly !important;
+}
+
+
+.markdown div.column-2 {
+	display: flex;
+	flex-wrap: wrap;
+	column-gap: var(--content-padding-left);
+}
+.markdown div.column-2 > div {
+	margin-inline-start: auto;
+	margin-inline-end: auto;
+	width: calc((var(--content-width) - (var(--content-padding-left) * 2) - var(--content-padding-left-adjust) - var(--content-padding-right) - var(--content-padding-right-adjust)) / 2);
+}
+
+
+.markdown .m-0 {
+	margin: 0 !important;
+}
+.markdown .m-1 {
+	margin: 1em !important;
+}
+.markdown .m-2 {
+	margin: 2em !important;
+}
+.markdown .m-3 {
+	margin: 3em !important;
+}
+.markdown .m-4 {
+	margin: 4em !important;
+}
+.markdown .m-5 {
+	margin: 5em !important;
+}
+.markdown .m-small {
+	margin: 0.5em !important;
+}
+.markdown .m-tiny {
+	margin: 0.25em !important;
+}
+.markdown .m-auto {
+	margin: auto !important;
+}
+.markdown .mt-0 {
+	margin-top: 0 !important;
+}
+.markdown .mt-1 {
+	margin-top: 1em !important;
+}
+.markdown .mt-2 {
+	margin-top: 2em !important;
+}
+.markdown .mt-3 {
+	margin-top: 3em !important;
+}
+.markdown .mt-4 {
+	margin-top: 4em !important;
+}
+.markdown .mt-5 {
+	margin-top: 5em !important;
+}
+.markdown .mt-small {
+	margin-top: 0.5em !important;
+}
+.markdown .mt-tiny {
+	margin-top: 0.25em !important;
+}
+.markdown .mt-auto {
+	margin-top: auto !important;
+}
+.markdown .mb-0 {
+	margin-bottom: 0 !important;
+}
+.markdown .mb-1 {
+	margin-bottom: 1em !important;
+}
+.markdown .mb-2 {
+	margin-bottom: 2em !important;
+}
+.markdown .mb-3 {
+	margin-bottom: 3em !important;
+}
+.markdown .mb-4 {
+	margin-bottom: 4em !important;
+}
+.markdown .mb-5 {
+	margin-bottom: 5em !important;
+}
+.markdown .mb-small {
+	margin-bottom: 0.5em !important;
+}
+.markdown .mb-tiny {
+	margin-bottom: 0.25em !important;
+}
+.markdown .mb-auto {
+	margin-bottom: auto !important;
+}
+.markdown .ml-0 {
+	margin-left: 0 !important;
+}
+.markdown .ml-1 {
+	margin-left: 1em !important;
+}
+.markdown .ml-2 {
+	margin-left: 2em !important;
+}
+.markdown .ml-3 {
+	margin-left: 3em !important;
+}
+.markdown .ml-4 {
+	margin-left: 4em !important;
+}
+.markdown .ml-5 {
+	margin-left: 5em !important;
+}
+.markdown .ml-small {
+	margin-left: 0.5em !important;
+}
+.markdown .ml-tiny {
+	margin-left: 0.25em !important;
+}
+.markdown .ml-auto {
+	margin-left: auto !important;
+}
+.markdown .mr-0 {
+	margin-right: 0 !important;
+}
+.markdown .mr-1 {
+	margin-right: 1em !important;
+}
+.markdown .mr-2 {
+	margin-right: 2em !important;
+}
+.markdown .mr-3 {
+	margin-right: 3em !important;
+}
+.markdown .mr-4 {
+	margin-right: 4em !important;
+}
+.markdown .mr-5 {
+	margin-right: 5em !important;
+}
+.markdown .mr-small {
+	margin-right: 0.5em !important;
+}
+.markdown .mr-tiny {
+	margin-right: 0.25em !important;
+}
+.markdown .mr-auto {
+	margin-right: auto !important;
+}
+.markdown .mx-0 {
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+.markdown .mx-1 {
+	margin-left: 1em !important;
+	margin-right: 1em !important;
+}
+.markdown .mx-2 {
+	margin-left: 2em !important;
+	margin-right: 2em !important;
+}
+.markdown .mx-3 {
+	margin-left: 3em !important;
+	margin-right: 3em !important;
+}
+.markdown .mx-4 {
+	margin-left: 4em !important;
+	margin-right: 4em !important;
+}
+.markdown .mx-5 {
+	margin-left: 5em !important;
+	margin-right: 5em !important;
+}
+.markdown .mx-small {
+	margin-left: 0.5em !important;
+	margin-right: 0.5em !important;
+}
+.markdown .mx-tiny {
+	margin-left: 0.25em !important;
+	margin-right: 0.25em !important;
+}
+.markdown .mx-auto {
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+.markdown .my-0 {
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+}
+.markdown .my-1 {
+	margin-top: 1em !important;
+	margin-bottom: 1em !important;
+}
+.markdown .my-2 {
+	margin-top: 2em !important;
+	margin-bottom: 2em !important;
+}
+.markdown .my-3 {
+	margin-top: 3em !important;
+	margin-bottom: 3em !important;
+}
+.markdown .my-4 {
+	margin-top: 4em !important;
+	margin-bottom: 4em !important;
+}
+.markdown .my-5 {
+	margin-top: 5em !important;
+	margin-bottom: 5em !important;
+}
+.markdown .my-small {
+	margin-top: 0.5em !important;
+	margin-bottom: 0.5em !important;
+}
+.markdown .my-small {
+	margin-top: 0.25em !important;
+	margin-bottom: 0.25em !important;
+}
+.markdown .my-auto {
+	margin-top: auto !important;
+	margin-bottom: auto !important;
+}
+.markdown .p-0 {
+	padding: 0 !important;
+}
+.markdown .p-1 {
+	padding: 1em !important;
+}
+.markdown .p-2 {
+	padding: 2em !important;
+}
+.markdown .p-3 {
+	padding: 3em !important;
+}
+.markdown .p-4 {
+	padding: 4em !important;
+}
+.markdown .p-5 {
+	padding: 5em !important;
+}
+.markdown .p-small {
+	padding: 0.5em !important;
+}
+.markdown .p-tiny {
+	padding: 0.25em !important;
+}
+.markdown .p-auto {
+	padding: auto !important;
+}
+.markdown .pt-0 {
+	padding-top: 0 !important;
+}
+.markdown .pt-1 {
+	padding-top: 1em !important;
+}
+.markdown .pt-2 {
+	padding-top: 2em !important;
+}
+.markdown .pt-3 {
+	padding-top: 3em !important;
+}
+.markdown .pt-4 {
+	padding-top: 4em !important;
+}
+.markdown .pt-5 {
+	padding-top: 5em !important;
+}
+.markdown .pt-small {
+	padding-top: 0.5em !important;
+}
+.markdown .pt-tiny {
+	padding-top: 0.25em !important;
+}
+.markdown .pt-auto {
+	padding-top: auto !important;
+}
+.markdown .pt-0 {
+	padding-bottom: 0 !important;
+}
+.markdown .pb-1 {
+	padding-bottom: 1em !important;
+}
+.markdown .pb-2 {
+	padding-bottom: 2em !important;
+}
+.markdown .pb-3 {
+	padding-bottom: 3em !important;
+}
+.markdown .pb-4 {
+	padding-bottom: 4em !important;
+}
+.markdown .pb-5 {
+	padding-bottom: 5em !important;
+}
+.markdown .pb-small {
+	padding-bottom: 0.5em !important;
+}
+.markdown .pb-tiny {
+	padding-bottom: 0.25em !important;
+}
+.markdown .pb-auto {
+	padding-bottom: auto !important;
+}
+.markdown .pl-0 {
+	padding-left: 0 !important;
+}
+.markdown .pl-1 {
+	padding-left: 1em !important;
+}
+.markdown .pl-2 {
+	padding-left: 2em !important;
+}
+.markdown .pl-3 {
+	padding-left: 3em !important;
+}
+.markdown .pl-4 {
+	padding-left: 4em !important;
+}
+.markdown .pl-5 {
+	padding-left: 5em !important;
+}
+.markdown .pl-small {
+	padding-left: 0.5em !important;
+}
+.markdown .pl-tiny {
+	padding-left: 0.25em !important;
+}
+.markdown .pl-auto {
+	padding-left: auto !important;
+}
+.markdown .pr-0 {
+	padding-right: 0 !important;
+}
+.markdown .pr-1 {
+	padding-right: 1em !important;
+}
+.markdown .pr-2 {
+	padding-right: 2em !important;
+}
+.markdown .pr-3 {
+	padding-right: 3em !important;
+}
+.markdown .pr-4 {
+	padding-right: 4em !important;
+}
+.markdown .pr-5 {
+	padding-right: 5em !important;
+}
+.markdown .pr-small {
+	padding-right: 0.5em !important;
+}
+.markdown .pr-tiny {
+	padding-right: 0.25em !important;
+}
+.markdown .pr-auto {
+	padding-right: auto !important;
+}
+.markdown .px-0 {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+.markdown .px-1 {
+	padding-left: 1em !important;
+	padding-right: 1em !important;
+}
+.markdown .px-2 {
+	padding-left: 2em !important;
+	padding-right: 2em !important;
+}
+.markdown .px-3 {
+	padding-left: 3em !important;
+	padding-right: 3em !important;
+}
+.markdown .px-4 {
+	padding-left: 4em !important;
+	padding-right: 4em !important;
+}
+.markdown .px-5 {
+	padding-left: 5em !important;
+	padding-right: 5em !important;
+}
+.markdown .px-small {
+	padding-left: 0.5em !important;
+	padding-right: 0.5em !important;
+}
+.markdown .px-tiny {
+	padding-left: 0.25em !important;
+	padding-right: 0.25em !important;
+}
+.markdown .px-auto {
+	padding-left: auto !important;
+	padding-right: auto !important;
+}
+.markdown .py-0 {
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
+.markdown .py-1 {
+	padding-top: 1em !important;
+	padding-bottom: 1em !important;
+}
+.markdown .py-2 {
+	padding-top: 2em !important;
+	padding-bottom: 2em !important;
+}
+.markdown .py-3 {
+	padding-top: 3em !important;
+	padding-bottom: 3em !important;
+}
+.markdown .py-4 {
+	padding-top: 4em !important;
+	padding-bottom: 4em !important;
+}
+.markdown .py-5 {
+	padding-top: 5em !important;
+	padding-bottom: 5em !important;
+}
+.markdown .py-small {
+	padding-top: 0.5em !important;
+	padding-bottom: 0.5em !important;
+}
+.markdown .py-tiny {
+	padding-top: 0.25em !important;
+	padding-bottom: 0.25em !important;
+}
+.markdown .py-auto {
+	padding-top: auto !important;
+	padding-bottom: auto !important;
+}

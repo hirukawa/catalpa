@@ -1,0 +1,400 @@
+:root {
+	--primary-color:           #007F85;
+	--primary-variant-color:   #3700B3;
+	--secondary-color:         #B4C540;
+	--secondary-variant-color: #018786;
+
+	--text-black-color:           #4c4c4c; /* 薄いまたは明るい背景にテキストを表示するときの黒色です（ライトモードを基準としています） */
+	--text-white-color:           #f2f2f2; /* 濃いまたは暗い背景にテキストを表示するときの白色です（ライトモードを基準としています） */
+
+	--main-text-color:            var(--text-black-color);
+	--main-background-color:      #fdfdfd;
+	--header-text-color:          var(--text-white-color);
+	--header-background-color:    var(--primary-color);
+	--footer-text-color:          var(--text-black-color);
+	--footer-background-color:    #f2f2f2;
+
+	--border-color:               #cccccc;
+
+	--list-marker-color:          #287DCF;
+
+	/* リンク */
+	--text-link-color:            #01509d;
+	--text-link-visited-color:    #01509d;
+	--text-link-hover-color:      #ef4e00;
+
+	/* コード（インライン） */
+	--code-color:                 #c7254e;
+	--code-background-color:      rgba(128, 0, 32, 0.05);
+
+	/* テーブル */
+	--table-text-color:           var(--text-black-color);
+	--table-background-color:     var(--main-background-color);
+	--table-background-color-odd: rgba(0,0,0,0.02);
+	--table-border-color:         var(--border-color);
+
+	/* 引用 */
+	--blockquote-font-family:     var(--font-family-sans-serif-italic);
+	--blockquote-color:           #e8e8e8;
+
+	/* ボタン */
+	--button-text-color:          var(--text-white-color);
+	--button-background-color:    #287DCF;
+
+	/* 付箋 */
+	--dl-note-color:                 var(--text-black-color);
+	--dl-note-background-color:      hsl(0, 0%, 96%);
+	--dl-note-border-color:          hsl(300, 48%, 32%);
+	--dl-note-dt-color:              var(--text-white-color);
+	--dl-note-dt-background-color:   hsl(300, 48%, 32%);
+	--dl-tip-color:                  #006D10;
+	--dl-tip-background-color:       hsl(153, 99%, 96%);
+	--dl-tip-border-color:           hsl(153, 99%, 29%);
+	--dl-tip-dt-color:               var(--text-white-color);
+	--dl-tip-dt-background-color:    hsl(153, 99%, 29%);
+	--dl-info-color:                 #003B73;
+	--dl-info-background-color:      hsl(210, 99%, 96%);
+	--dl-info-border-color:          hsl(210, 99%, 31%);
+	--dl-info-dt-color:              var(--text-white-color);
+	--dl-info-dt-background-color:   hsl(210, 99%, 31%);
+	--dl-warning-color:              #B46D01;
+	--dl-warning-background-color:   hsl(36, 98%, 96%);
+	--dl-warning-border-color:       hsl(36, 98%, 51%);
+	--dl-warning-dt-color:           var(--text-white-color);
+	--dl-warning-dt-background-color:hsl(36, 98%, 51%);
+	--dl-caution-color:              #A60026;
+	--dl-caution-background-color:   hsl(344, 100%, 96%);
+	--dl-caution-border-color:       hsl(344, 100%, 45%);
+	--dl-caution-dt-color:           var(--text-white-color);
+	--dl-caution-dt-background-color:hsl(344, 100%, 45%);
+	--dl-primary-color:                        var(--text-black-color);
+	--dl-primary-background-color:             hsl(0, 0%, 96%);
+	--dl-primary-border-color:                 var(--primary-color);
+	--dl-primary-dt-color:                     var(--text-white-color);
+	--dl-primary-dt-background-color:          var(--primary-color);
+	--dl-primary-variant-color:                var(--text-black-color);
+	--dl-primary-variant-background-color:     hsl(0, 0%, 96%);
+	--dl-primary-variant-border-color:         var(--primary-variant-color);
+	--dl-primary-variant-dt-color:             var(--text-white-color);
+	--dl-primary-variant-dt-background-color:  var(--primary-variant-color);
+	--dl-secondary-color:                      var(--text-black-color);
+	--dl-secondary-background-color:           hsl(0, 0%, 96%);
+	--dl-secondary-border-color:               var(--secondary-color);
+	--dl-secondary-dt-color:                   var(--text-white-color);
+	--dl-secondary-dt-background-color:        var(--secondary-color);
+	--dl-secondary-variant-color:              var(--text-black-color);
+	--dl-secondary-variant-background-color:   hsl(0, 0%, 96%);
+	--dl-secondary-variant-border-color:       var(--secondary-variant-color);
+	--dl-secondary-variant-dt-color:           var(--text-white-color);
+	--dl-secondary-variant-dt-background-color:var(--secondary-variant-color);
+
+	/* ナビゲーション・メニュー */
+	--nav-background-color:             #ccc;
+	--nav-link-color:                   var(--text-link-color);
+	--nav-link-background-color:        #f2f2f2;
+	--nav-link-visited-color:           var(--text-link-visited-color);
+	--nav-link-visited-background-color:#f2f2f2;
+	--nav-link-hover-color:             var(--text-link-hover-color);
+	--nav-link-hover-background-color:  #e8e8e8;
+	--nav-link-active-color:            #ffffff;
+	--nav-link-active-background-color: var(--text-link-hover-color);
+
+	/* カード */
+	--card-text-color:                  var(--main-text-color);
+	--card-background-color:            var(--main-background-color);
+
+	/* 検索 */
+	--search-box-color:            var(--main-text-color);
+	--search-box-background-color: var(--main-background-color);
+}
+
+@media (prefers-color-scheme: dark) { :root {
+	--primary-color:#007F85;
+	--primary-variant-color:#3700B3;
+	--secondary-color:#B4C540;
+	--secondary-variant-color:#018786;
+
+	--text-black-color:           #e0e0e0; /* 薄いまたは明るい背景にテキストを表示するときの黒色です（ダークモードでは白色を設定してください） */
+	--text-white-color:           #333333; /* 濃いまたは暗い背景にテキストを表示するときの白色です（ダークモードでは黒色を設定してください） */
+
+	--main-text-color:            var(--text-black-color);
+	--main-background-color:      #212529;
+	--header-text-color:          var(--text-black-color);
+	--header-background-color:    var(--primary-color);
+	--footer-text-color:          var(--text-black-color);
+	--footer-background-color:    #fdfdfd;
+
+	--border-color:               #404040;
+
+	--list-marker-color:          #6EA9E3;
+
+	/* リンク */
+	--text-link-color:            #7EBEFF;
+	--text-link-visited-color:    #7EBEFF;
+	--text-link-hover-color:      #FF9931;
+
+	/* コード（インライン） */
+	--code-color:                 #e685b5;
+	--code-background-color:      rgba(255, 255, 255, 0.075);
+
+	/* テーブル */
+	--table-text-color:           var(--text-black-color);
+	--table-background-color:     var(--main-background-color);
+	--table-background-color-odd: rgba(0,0,0,0.1);
+	--table-border-color:         var(--border-color);
+
+	/* 引用 */
+	--blockquote-font-family:     var(--font-family-sans-serif-italic);
+	--blockquote-color:           #606060;
+
+	/* ボタン */
+	--button-text-color:          #fefefe;
+	--button-background-color:    #287DCF;
+
+	/* 付箋 */
+	--dl-note-color:                 var(--text-black-color);
+	--dl-note-background-color:      #2f2f2f;
+	--dl-note-border-color:          hsl(300, 100%, 18%);
+	--dl-note-dt-color:              var(--text-black-color);
+	--dl-note-dt-background-color:   hsl(300, 100%, 18%);
+	--dl-tip-color:                  #9CE086;
+	--dl-tip-background-color:       #1A351B;
+	--dl-tip-border-color:           var(--dl-tip-color);
+	--dl-tip-dt-color:               var(--text-black-color);
+	--dl-tip-dt-background-color:    hsl(153, 100%, 18%);
+	--dl-info-color:                 #97CBFF;
+	--dl-info-background-color:      #1E2F3E;
+	--dl-info-border-color:          var(--dl-info-color);
+	--dl-info-dt-color:              var(--text-black-color);
+	--dl-info-dt-background-color:   hsl(210, 100%, 18%);
+	--dl-warning-color:              #E0CA86;
+	--dl-warning-background-color:   #323018;
+	--dl-warning-border-color:       var(--dl-warning-color);
+	--dl-warning-dt-color:           var(--text-black-color);
+	--dl-warning-dt-background-color:hsl(60, 100%, 25%);
+	--dl-caution-color:              #FFC2C2;
+	--dl-caution-background-color:   #401D1D;
+	--dl-caution-border-color:       var(--dl-caution-color);
+	--dl-caution-dt-color:           var(--text-black-color);
+	--dl-caution-dt-background-color:hsl(0, 98%, 25%);
+	--dl-primary-color:                        var(--text-black-color);
+	--dl-primary-background-color:             hsl(0, 0%, 20%);
+	--dl-primary-border-color:                 var(--primary-color);
+	--dl-primary-dt-color:                     var(--text-black-color);
+	--dl-primary-dt-background-color:          var(--primary-color);
+	--dl-primary-variant-color:                var(--text-black-color);
+	--dl-primary-variant-background-color:     hsl(0, 0%, 20%);
+	--dl-primary-variant-border-color:         var(--primary-variant-color);
+	--dl-primary-variant-dt-color:             var(--text-black-color);
+	--dl-primary-variant-dt-background-color:  var(--primary-variant-color);
+	--dl-secondary-color:                      var(--text-black-color);
+	--dl-secondary-background-color:           hsl(0, 0%, 20%);
+	--dl-secondary-border-color:               var(--secondary-color);
+	--dl-secondary-dt-color:                   var(--text-black-color);
+	--dl-secondary-dt-background-color:        var(--secondary-color);
+	--dl-secondary-variant-color:              var(--text-black-color);
+	--dl-secondary-variant-background-color:   hsl(0, 0%, 20%);
+	--dl-secondary-variant-border-color:       var(--secondary-variant-color);
+	--dl-secondary-variant-dt-color:           var(--text-black-color);
+	--dl-secondary-variant-dt-background-color:var(--secondary-variant-color);
+
+	/* ナビゲーション・メニュー */
+	--nav-background-color:             var(--border-color);
+	--nav-link-color:                   var(--text-link-color);
+	--nav-link-background-color:        #2B3035;
+	--nav-link-visited-color:           var(--text-link-visited-color);
+	--nav-link-visited-background-color:#2B3035;
+	--nav-link-hover-color:             var(--text-link-hover-color);
+	--nav-link-hover-background-color:  #202020;
+	--nav-link-active-color:            #2B3035;
+	--nav-link-active-background-color: var(--text-link-hover-color);
+
+	/* カード */
+	--card-text-color:                  var(--main-text-color);
+	--card-background-color:            rgba(255,255,255,0.03);
+
+	/* 検索ボックス */
+	--search-box-color:            #333;
+	--search-box-background-color: #fdfdfd;
+}}
+
+:root {
+	--font-family-sans-serif: "Noto Sans JP", "Meiryo", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", 'YuGothic', "Roboto", "Droid Sans", sans-serif;
+	--font-family-sans-serif-italic: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", 'YuGothic', "Roboto", "Droid Sans", sans-serif;
+	--font-family-serif: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho Medium", "Yu Mincho", "YuMincho", serif;
+	--font-family-monospace: "Noto Snas Mono", "Consolas", "Meiryo", "monaco", "Osaka−等幅", "Osaka-mono", monospace;
+	--font-family-arial: "Arial", "Helvetica Neue", "Helvetica", sans-serif;
+	--font-family-baskerville: "Baskerville", "Baskerville Old Face", "Garamond", "Times New Roman", serif;
+	--font-family-bodoni: "Bodoni MT", "Bodoni 72", "Didot", "Didot LT STD", "Hoefler Text", "Garamond", "Times New Roman", serif;
+	--font-family-candara: "Candara", "Calibri", "Segoe", "Segoe UI", "Optima", "Arial", sans-serif;
+	--font-family-century-gothic: "Century Gothic", "CenturyGothic", "AppleGothic", sans-serif;
+	--font-family-georgia: "Georgia", "Times", "Times New Roman", serif;
+	--font-family-datetime: "Georgia", "Times", "Times New Roman", serif;
+
+	--content-width: 960px;
+	--content-font-size-px:  16px;
+	--content-padding-left:  16px;
+	--content-padding-right: 16px;
+	--default-margin-block-start: 2em;
+	--default-margin-block-end:   2em;
+
+	--is-windows: 0;
+	--is-mac:     0;
+	--is-android: 0;
+	--is-iphone:  0;
+}
+
+/*
+ * ルート
+ */
+html {
+	overflow-y: scroll; /* 常にスクロールバーを表示します */
+	scroll-behavior: smooth; /* スムースにスクロールします */
+	font-family: var(--font-family-sans-serif);
+	font-size: var(--content-font-size-px); /* html または :root css で font-size を指定すると 1rem が変更されます。*/
+	font-kerning: none; /* カーニングを無効にします（Noto Sans JP では和文の一部でもツメ処理がおこなわれてしまうので、それを防ぐためです）*/
+	text-spacing-trim: space-all; /* 役物ツメ処理を無効にします（ブラウザーの機能を使わずに Catalpa の HTML 出力で対応するため）*/
+	text-autospace: no-autospace; /* 和字・欧字の間隔調整を無効にします（ブラウザーの機能を使わずに Catalpa の HTML 出力で対応するため）*/
+	background-color: var(--footer-background-color); /* HTMLにフッター背景色を設定しておくと body の縦が短いときに表示されます。*/
+}
+
+/*
+ * ボディ
+ */
+body {
+	margin: 0;
+	padding: 0;
+	line-height: 1.75rem;
+	color: var(--main-text-color);
+	background-color: var(--main-background-color);
+}
+
+/*
+ * コンテント
+ */
+.content {
+	box-sizing: border-box;
+	margin-inline-start: auto;
+	margin-inline-end: auto;
+	padding-inline-start: calc(var(--content-padding-left) + round(up, calc(mod(calc(min(100%, var(--content-width)) - var(--content-padding-left) - var(--content-padding-right)), var(--content-font-size-px)) / 2), 1px));
+	padding-inline-end: calc(var(--content-padding-right) + round(down, calc(mod(calc(min(100%, var(--content-width)) - var(--content-padding-left) - var(--content-padding-right)), var(--content-font-size-px)) / 2), 1px));
+	max-width: var(--content-width);
+}
+
+/*
+ * アンカー
+ */
+a {
+	text-decoration: none;
+	color: var(--text-link-color);
+}
+a:visited {
+	color: var(--text-link-visited-color);
+}
+a:hover {
+	color: var(--text-link-hover-color);
+}
+
+/*
+ * テレタイプ・テキスト
+ */
+.markdown tt {
+	font-family: var(--font-family-monospace);
+	white-space: pre-wrap;
+	font-size: 106.25%; /* 16px -> 17px monospace は文字が小さいので大きくしてます */ 
+}
+
+/*
+ * ヘッダー
+ */
+header {
+	background-color: var(--header-background-color);
+	color: var(--header-text-color);
+}
+
+/*
+ *  既定のヘッダー
+ */
+header .default {
+	background-color: var(--header-background-color);
+}
+header .default .content {
+	padding-block-start: 0.75em;
+	padding-block-end:   0.75em;
+	display: flex;
+	flex-flow: wrap;
+	gap: 0.75em;
+	align-items: center;
+}
+header .default .content a {
+	color: var(--header-text-color);
+}
+header .default .content .title {
+	line-height: 1.25;
+	font-size: 1.5em;
+}
+
+/*
+ * フッター
+ */
+footer {
+	background-color: var(--footer-background-color);
+	color: var(--footer-text-color);
+} 
+
+/*
+ *  既定のフッター
+ */
+footer .default {
+	padding: 1.5em 0;
+	border-top: 1px solid var(--border-color);
+}
+footer .default .content {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5em;
+}
+footer .default .content .copyright {
+	margin-inline-start: auto;
+	padding: 0.5em;
+}
+footer .default .content address {
+	display: inline;
+	font-style: normal;
+}
+
+/*
+ *  検索ボックス
+ */
+form.search {
+	margin-inline-start: auto;
+}
+input[type="search"] {
+	font-size: 16px;
+	line-height: 1.0;
+	margin: auto;
+	padding: 0.6em 1em 0.5em 1em;
+	width: 14em;
+	border-style: none;
+	border-radius: 2em;
+	box-shadow: inset 1px 1px 3px rgba(0,0,0,.5);
+	appearance: textfield;
+	color: var(--search-box-color);
+	background-color: var(--search-box-background-color);
+}
+input[type="search"]:focus {
+	outline: 0;
+}
+input:focus::placeholder {
+	color: transparent;
+}
+input[type="search"]::-webkit-search-cancel-button {
+	appearance: none;
+}
+input[type="search"]::-webkit-search-decoration {
+	display: none;
+}
+input[type="search"]::-ms-clear {
+	display: none;
+}

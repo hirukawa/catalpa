@@ -37,6 +37,7 @@ public class Blog implements Cloneable {
     private Map<Path, Post> postByPath;
     private Post post;
     private Page page;
+    private Category category;
 
     private Blog(Path path, List<Post> posts, List<Category> categories, List<Page> pages) {
         this.path = path;
@@ -85,6 +86,14 @@ public class Blog implements Cloneable {
 
     public Page getPage() {
         return page;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Category getCategory() {
+        return category;
     }
 
     @Override
@@ -314,15 +323,14 @@ public class Blog implements Cloneable {
         }
 
         List<Page> pages = new ArrayList<>();
-        int last = Math.ceilDivExact(posts.size(), paginate);
-        int current = last;
+        int current = 1;
         int fromIndex = 0;
         int toIndex;
         while (fromIndex < posts.size()) {
             toIndex = Math.min(fromIndex + paginate, posts.size());
 
             Path path;
-            if (current == last) {
+            if (current == 1) {
                 path = blogConfig.getPath().getParent().resolve("index.html");
             } else {
                 path = blogConfig.getPath().getParent().resolve("page").resolve(current + ".html");
@@ -334,7 +342,7 @@ public class Blog implements Cloneable {
             Page page = new Page(url, name, posts.subList(fromIndex, toIndex));
             pages.add(page);
 
-            current--;
+            current++;
             fromIndex = toIndex;
         }
 
@@ -344,14 +352,14 @@ public class Blog implements Cloneable {
         for (int i = 0; i < pages.size(); i++) {
             Page page = pages.get(i);
 
-            int p = i + 1;
-            if (p < pages.size()) {
+            int p = i - 1;
+            if (p >= 0) {
                 Page previous = pages.get(p);
                 page.setPrevious(previous);
             }
 
-            int n = i - 1;
-            if (n >= 0) {
+            int n = i + 1;
+            if (n < pages.size()) {
                 Page next = pages.get(n);
                 page.setNext(next);
             }

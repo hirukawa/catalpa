@@ -198,12 +198,12 @@ public class Generator {
         if (blog != null && blog.getPath().equals(dir)) {
             try {
                 for (Page page : blog.getPages()) {
-                    applyTemplate(folder, page);
+                    applyTemplate(folder, page, null);
                 }
 
                 for (Category category : blog.getCategories()) {
                     Page page = new Page(category.getUrl(), category.getName(), category.getPosts());
-                    applyTemplate(folder, page);
+                    applyTemplate(folder, page, category);
                 }
             } catch (GeneratorException e) {
                 throw e;
@@ -452,12 +452,13 @@ public class Generator {
         }
     }
 
-    private void applyTemplate(Folder folder, Page page) throws IOException, TemplateException {
+    private void applyTemplate(Folder folder, Page page, Category category) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.putAll(systemDataModel);
         dataModel.putAll(folder.createDataModel());
         Blog clone = blog.clone();
         clone.setPage(page);
+        clone.setCategory(category);
         dataModel.put("blog", clone);
 
         Path relativeOutputPath = Path.of(URLDecoder.decode(page.getUrl(), StandardCharsets.UTF_8).replace('/', '\\'));
