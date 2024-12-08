@@ -16,6 +16,7 @@ import onl.oss.catalpa.model.Content;
 import onl.oss.catalpa.model.Folder;
 import onl.oss.catalpa.model.Progress;
 import onl.oss.catalpa.model.SearchIndex;
+import onl.oss.catalpa.model.SitemapItem;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -28,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,8 +45,10 @@ public class Generator {
     private final Map<String, Object> systemDataModel;
     private final Configuration freeMarker;
 
+    private String siteurl;
     private Blog blog;
-    private List<SearchIndex> searchIndexes = new ArrayList<>();
+    private List<SearchIndex> searchIndexes = Collections.synchronizedList(new ArrayList<>());
+    private List<SitemapItem> sitemapItems = Collections.synchronizedList(new ArrayList<>());
 
     private Consumer<Progress> consumer;
     private long progressMax;
@@ -76,6 +80,7 @@ public class Generator {
         progressMax = countFiles(input);
         progressValue.set(0L);
 
+        sitemapItems.clear();
         searchIndexes.clear();
 
         blog = Blog.create(input);
@@ -85,11 +90,24 @@ public class Generator {
         Path searchIndexTemplatePath = input.resolve("templates").resolve("search.ftl");
         if (Files.exists(searchIndexTemplatePath)) {
             try {
-                applyTemplate(rootFolder, searchIndexes);
+                createSearchIndex(rootFolder, searchIndexes);
             } catch (GeneratorException e) {
                 throw e;
             } catch (Exception e) {
                 throw new GeneratorException(searchIndexTemplatePath, e);
+            }
+        }
+
+        if (!sitemapItems.isEmpty()) {
+            Path sitemapTemplatePath = input.resolve("templates").resolve("sitemap.ftl");
+            if (Files.exists(sitemapTemplatePath)) {
+                try {
+                    createSitemap(rootFolder, sitemapItems);
+                } catch (GeneratorException e) {
+                    throw e;
+                } catch (Exception e) {
+                    throw new GeneratorException(sitemapTemplatePath, e);
+                }
             }
         }
     }
@@ -178,6 +196,17 @@ public class Generator {
                 CacheManager.putContent(file, lastModifiedTime, content);
             }
             folder.addContent(content);
+
+            if (siteurl == null) {
+                if (content.getYaml().get("siteurl") instanceof String s) {
+                    s = s.trim();
+                    if (s.endsWith("/")) {
+                        s = s.substring(0, s.length() - 1);
+                    }
+                    siteurl = s;
+                }
+            }
+
             setProgress(file);
         }
 
@@ -262,6 +291,22 @@ public class Generator {
         Path source = content.getPath();
         Path target = output.resolve(input.relativize(source)).resolveSibling(filename);
 
+        Path relativeInputPath = input.relativize(content.getPath());
+        Path relativeOutputPath = relativeInputPath.resolveSibling(filename);
+
+        // path
+        String path = relativeOutputPath.toString().replace('\\', '/');
+
+        // url
+        // URLEncoder.encode ではパス区切り文字 "/" が "%2F" にエンコードされてしまうので、"%2F" を "/" に戻しています。
+        String url = (siteurl != null ? siteurl : "") + "/" + URLEncoder.encode(path, StandardCharsets.UTF_8).replace("%2F", "/");
+
+        // サイトマップ
+        if (siteurl != null) {
+            SitemapItem sitemapItem = new SitemapItem(url, content.getLastModifiedTime(), SitemapItem.ChangeFreq.Daily, 1.0);
+            sitemapItems.add(sitemapItem);
+        }
+
         // 最終更新日時に一致する検索インデックスがあり、出力HTMLが存在する場合、出力HTMLを再作成する必要はありません。
         FileTime cacheLastModifiedTime = getLastModifiedTime(folder, content);
         SearchIndex searchIndex = CacheManager.getSearchIndex(target, cacheLastModifiedTime);
@@ -275,21 +320,10 @@ public class Generator {
         dataModel.putAll(folder.createDataModel());
         dataModel.putAll(content.getYaml());
 
-        Path relativeInputPath = input.relativize(content.getPath());
-        Path relativeOutputPath = relativeInputPath.resolveSibling(filename);
-
         //
         // siteurl
         //
-        String siteurl = "";
-        Object obj = dataModel.get("siteurl");
-        if (obj instanceof String s) {
-            siteurl = s.trim();
-            if (siteurl.endsWith("/")) {
-                siteurl = siteurl.substring(0, siteurl.length() - 1);
-            }
-        }
-        dataModel.put("siteurl", siteurl);
+        dataModel.put("siteurl", (siteurl != null ? siteurl : ""));
 
         //
         // baseurl
@@ -300,14 +334,11 @@ public class Generator {
         //
         // path
         //
-        String path = relativeOutputPath.toString().replace('\\', '/');
         dataModel.put("path", path);
 
         //
         // url
         //
-        // URLEncoder.encode ではパス区切り文字 "/" が "%2F" にエンコードされてしまうので、"%2F" を "/" に戻しています。
-        String url = siteurl + "/" + URLEncoder.encode(path, StandardCharsets.UTF_8).replace("%2F", "/");
         dataModel.put("url", url);
 
         //
@@ -366,7 +397,7 @@ public class Generator {
         FileTime sourceLastModifiedTime = Files.getLastModifiedTime(source);
         Files.setLastModifiedTime(target, sourceLastModifiedTime);
 
-        obj = content.getYaml().get("title");
+        Object obj = content.getYaml().get("title");
         String title = obj instanceof String ? (String)obj : null;
         searchIndex = SearchIndex.create(path, title, target);
         if (searchIndex != null) {
@@ -375,7 +406,7 @@ public class Generator {
         }
     }
 
-    private void applyTemplate(Folder rootFolder, List<SearchIndex> searchIndexes) throws IOException, TemplateException {
+    private void createSearchIndex(Folder rootFolder, List<SearchIndex> searchIndexes) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.putAll(systemDataModel);
         dataModel.putAll(rootFolder.createDataModel());
@@ -385,15 +416,7 @@ public class Generator {
         //
         // siteurl
         //
-        String siteurl = "";
-        Object obj = dataModel.get("siteurl");
-        if (obj instanceof String s) {
-            siteurl = s.trim();
-            if (siteurl.endsWith("/")) {
-                siteurl = siteurl.substring(0, siteurl.length() - 1);
-            }
-        }
-        dataModel.put("siteurl", siteurl);
+        dataModel.put("siteurl", (siteurl != null ? siteurl : ""));
 
         //
         // baseurl
@@ -409,7 +432,7 @@ public class Generator {
         // url
         //
         // URLEncoder.encode ではパス区切り文字 "/" が "%2F" にエンコードされてしまうので、"%2F" を "/" に戻しています。
-        String url = siteurl + "/" + URLEncoder.encode(path, StandardCharsets.UTF_8).replace("%2F", "/");
+        String url = (siteurl != null ? siteurl : "") + "/" + URLEncoder.encode(path, StandardCharsets.UTF_8).replace("%2F", "/");
         dataModel.put("url", url);
 
         //
@@ -452,6 +475,55 @@ public class Generator {
         }
     }
 
+    private void createSitemap(Folder rootFolder, List<SitemapItem> sitemapItems) throws IOException, TemplateException {
+        Map<String, Object> dataModel = new HashMap<>();
+        dataModel.putAll(systemDataModel);
+        dataModel.putAll(rootFolder.createDataModel());
+
+        String path = "sitemap.xml";
+
+        dataModel.put("sitemap", sitemapItems);
+
+        //
+        // siteurl
+        //
+        dataModel.put("siteurl", (siteurl != null ? siteurl : ""));
+
+        //
+        // baseurl
+        //
+        dataModel.put("baseurl", "");
+
+        //
+        // path
+        //
+        dataModel.put("path", path);
+
+        //
+        // url
+        //
+        // URLEncoder.encode ではパス区切り文字 "/" が "%2F" にエンコードされてしまうので、"%2F" を "/" に戻しています。
+        String url = (siteurl != null ? siteurl : "") + "/" + URLEncoder.encode(path, StandardCharsets.UTF_8).replace("%2F", "/");
+        dataModel.put("url", url);
+
+        //
+        // ファイルパス
+        //
+        dataModel.put("_FILEPATH", rootFolder.getRootPath().resolve(path));
+
+        Template template = freeMarker.getTemplate("sitemap.ftl");
+
+        Path target = output.resolve(path);
+        Path targetDirectory = target.getParent();
+        if (Files.notExists(targetDirectory)) {
+            Files.createDirectories(targetDirectory);
+        }
+
+        try (Writer writer = Files.newBufferedWriter(target, StandardCharsets.UTF_8)) {
+            template.process(dataModel, writer);
+        }
+    }
+
     private void applyTemplate(Folder folder, Page page, Category category) throws IOException, TemplateException {
         Map<String, Object> dataModel = new HashMap<>();
         dataModel.putAll(systemDataModel);
@@ -467,15 +539,7 @@ public class Generator {
         //
         // siteurl
         //
-        String siteurl = "";
-        Object obj = dataModel.get("siteurl");
-        if (obj instanceof String s) {
-            siteurl = s.trim();
-            if (siteurl.endsWith("/")) {
-                siteurl = siteurl.substring(0, siteurl.length() - 1);
-            }
-        }
-        dataModel.put("siteurl", siteurl);
+        dataModel.put("siteurl", (siteurl != null ? siteurl : ""));
 
         //
         // baseurl
@@ -493,7 +557,7 @@ public class Generator {
         // url
         //
         // URLEncoder.encode ではパス区切り文字 "/" が "%2F" にエンコードされてしまうので、"%2F" を "/" に戻しています。
-        String url = siteurl + "/" + URLEncoder.encode(path, StandardCharsets.UTF_8).replace("%2F", "/");
+        String url = (siteurl != null ? siteurl : "") + "/" + URLEncoder.encode(path, StandardCharsets.UTF_8).replace("%2F", "/");
         dataModel.put("url", url);
 
         //
