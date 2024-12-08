@@ -143,9 +143,10 @@
 				</div>
 			</div>
 
-			<#-- pager -->
+			<#-- 前の記事・次の記事 -->
 			<#if blog.post.previous?? || blog.post.next??>
 			<div class="blog-pager">
+			    <#-- 前の記事 -->
 				<#if blog.post.previous??>
 				<a class="post-previous" href="${baseurl}${blog.post.previous.url}">
 					<div class="part1">
@@ -167,6 +168,7 @@
 					</div>
 				</a>
 				</#if>
+				<#-- 次の記事 -->
 				<#if blog.post.next??>
 				<a class="post-next" href="${baseurl}${blog.post.next.url}">
 					<div class="part1">
@@ -191,14 +193,14 @@
 			</div>
 			</#if>
 
-			<#-- category -->
+			<#-- カテゴリー -->
 			<div class="blog-categories">
 			<#list blog.categories as category>
 				<a class="blog-category" href="${baseurl}${category.url}">${category.name}&nbsp;<span class="label" style="font-feature-settings:'halt'">（${category.posts?size}）</span></a>
 			</#list>
 			</div>
 
-			<#-- related -->
+			<#-- 関連記事 -->
 			<div class="blog-related-container">
 				<#list blog.post.related as post>
 					<#if post?index == 12>
@@ -206,10 +208,14 @@
 					</#if>
 					<a class="blog-related-post" href="${baseurl}${post.url}">
 						<div class="part1">
-							<#if post.thumbnail?has_content && post.thumbnail?starts_with("data:") >
+							<#if post.thumbnail?has_content>
+							<#if post.thumbnail?starts_with("data:") >
 							<img src="${post.thumbnail!}">
 							<#else>
 							<img src="${baseurl}${post.thumbnail!}">
+							</#if>
+							<#else>
+							<img>
 							</#if>
 						</div>
 						<div class="part2">

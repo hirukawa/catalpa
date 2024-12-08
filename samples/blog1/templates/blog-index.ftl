@@ -71,10 +71,11 @@
 	<main>
 		<div class="content">
 
+			<#-- カテゴリーページ以外 かつ ページ数が 1 より多い場合にページャーを表示します -->
+			<#if !blog.category?? && blog.pages?size gt 1>
 			<#-- pager -->
 			<div class="blog-pager">
-				<#-- カテゴリーページ以外 かつ ページ数が 1より多いときにページャーを表示します -->
-				<#if !blog.category?? && blog.pages?size gt 1>
+				<#if blog.pages?size gt 1>
 				<a class="page-previous" <#if blog.page.previous??>href="${baseurl}${blog.page.previous.url}"</#if>></a>
 				<#list blog.pages as page>
 					<a class="page-jump <#if page.url == blog.page.url>current</#if>" <#if page.url != blog.page.url>href="${baseurl}${page.url}"</#if>>${page.name}</a>
@@ -82,6 +83,10 @@
 				<a class="page-next" <#if blog.page.next??>href="${baseurl}${blog.page.next.url}"</#if>></a>
 				</#if>
 			</div>
+			<#else>
+			<#-- ページャーを表示しないときは代わりに余白を追加します -->
+			<div style="height:0;margin-top:2em;"></div>
+			</#if>
 
 			<#-- article -->
 			<div class="blog-card-container">
@@ -115,10 +120,11 @@
 				<div class="blog-card blog-page hidden"></div>
 			</div>
 
+			<#-- カテゴリーページ以外 かつ ページ数が 1 より多い場合にページャーを表示します -->
+			<#if !blog.category?? && blog.pages?size gt 1>
 			<#-- pager -->
 			<div class="blog-pager">
-				<#-- カテゴリーページ以外 かつ ページ数が 1より多いときにページャーを表示します -->
-				<#if !blog.category?? && blog.pages?size gt 1>
+				<#if blog.pages?size gt 1>
 				<a class="page-previous" <#if blog.page.previous??>href="${baseurl}${blog.page.previous.url}"</#if>></a>
 				<#list blog.pages as page>
 					<a class="page-jump <#if page.url == blog.page.url>current</#if>" <#if page.url != blog.page.url>href="${baseurl}${page.url}"</#if>>${page.name}</a>
@@ -126,6 +132,10 @@
 				<a class="page-next" <#if blog.page.next??>href="${baseurl}${blog.page.next.url}"</#if>></a>
 				</#if>
 			</div>
+			<#else>
+			<#-- ページャーを表示しないときは代わりに余白を追加します -->
+			<div style="height:0;margin-bottom:2em"></div>
+			</#if>
 		</div>
 	</main>
 

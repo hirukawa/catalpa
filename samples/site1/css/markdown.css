@@ -34,6 +34,13 @@
 }
 
 /*
+ * アンカー
+ */
+a {
+	line-break: anywhere;
+} 
+
+/*
  * 組版
  */
 .markdown i.h { /* font-feature-settings: "halt" で役物を半角にする場合の設定です */
@@ -178,6 +185,7 @@
 	background-color: var(--code-background-color);
 	border-radius: 4px;
 	white-space: pre-wrap;
+	line-break: anywhere;
 }
 .markdown .monospace code {
 	font-family: var(--font-family-monospace);

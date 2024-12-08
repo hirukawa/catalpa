@@ -180,13 +180,13 @@
  * ページャー
  */
 .blog-pager {
-	margin: 1em 0;
+	margin: 2em 0;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
 	padding-inline-start: 1em;
 	padding-inline-end: 1em;
-	gap: 16px;
+	gap: 12px;
 }
 .blog-pager .page-jump {
 	display: block;
@@ -415,7 +415,7 @@ article .blog-header .title::first-letter {
 .blog-related-post .title {
 	flex-grow: 1;
 	display: block;
-	margin: 0.5em;
+	margin: 0.5em 0.4em 0 0.4em;
 	padding: 0;
 	font-size: 0.9375rem; /* 16px -> 15px */
 	font-weight: normal;
@@ -434,4 +434,9 @@ article .blog-header .title::first-letter {
 	font-size: 14px;
 	line-height: 1;
 	color: #808080;
+}
+@media only screen and (max-width: 500px) {
+	.blog-related-post {
+		width: 100%;
+	}
 }
