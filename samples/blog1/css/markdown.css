@@ -36,9 +36,9 @@
 /*
  * アンカー
  */
-.markdown a {
+a {
 	line-break: anywhere;
-}
+} 
 
 /*
  * 組版

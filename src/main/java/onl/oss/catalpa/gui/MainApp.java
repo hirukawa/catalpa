@@ -248,6 +248,9 @@ public class MainApp extends Application {
                     message = s;
                 }
             }
+
+            // メッセージ名の先頭に例外クラス名（パッケージ名を除く）を付加します。
+            message = exception.getClass().getSimpleName() + ": " + message;
         }
 
         showError(message, exception, path);

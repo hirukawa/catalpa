@@ -112,9 +112,17 @@
 	color: #f8f8f2;
 	background-color: #414339;
 }
+.markdown pre.cmd {
+	background-color: #202020;
+}
 .markdown pre.cmd > div.title {
 	background-color: #2e3e4d;
+	color: #f2f2f2;
 	border-bottom: 1px solid #C0C0C0;
+}
+.markdown pre.cmd > code.language-cmd {
+	background-color: #202020;
+	color: #f2f2f2;
 }
 .markdown pre > div.title > span.copy-button {
 	color: #999;
