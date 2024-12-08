@@ -38,7 +38,19 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static onl.oss.catalpa.Logger.INFO;
+
 public class Generator {
+
+    /* Markdown 処理をせずにそのまま出力フォルダーにコピーするフォルダーです。
+     * jsOnlyLightbox などの JavaScript ライブラリをこのフォルダーに格納しておけば、内部の README.md などが .html に変換されるのを防げます。
+     */
+    private static List<String> copyOnlyDirectoryNames = List.of("lib");
+
+    /* 出力フォルダーにコピーしないファイルの拡張子です。（小文字で定義する必要があります）
+     * 秘密鍵ファイルなどインターネット上にアップロードすべきではないファイルを誤ってアップロードしてしまうのを防げます。
+     */
+    private static List<String> copyExclueFileExtensions = List.of(".ppk");
 
     private final Path input;
     private final Path output;
@@ -85,7 +97,7 @@ public class Generator {
 
         blog = Blog.create(input);
 
-        Folder rootFolder = retrieve(null, input);
+        Folder rootFolder = retrieve(null, input, false);
 
         Path searchIndexTemplatePath = input.resolve("templates").resolve("search.ftl");
         if (Files.exists(searchIndexTemplatePath)) {
@@ -131,6 +143,18 @@ public class Generator {
         return false;
     }
 
+    private boolean isExcludeFile(Path file) {
+        String filename = file.getFileName().toString();
+        int i = filename.lastIndexOf('.');
+        if (i >= 0) {
+            String ext = filename.substring(i).toLowerCase();
+            if (copyExclueFileExtensions.contains(ext)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private long countFiles(Path dir) throws IOException {
         long count = 1;
         try (Stream<Path> stream = Files.list(dir)) {
@@ -139,7 +163,7 @@ public class Generator {
                     if (!isSkip(path)) {
                         count += countFiles(path);
                     }
-                } else {
+                } else if (!isExcludeFile(path)) {
                     count++;
                 }
             }
@@ -155,10 +179,14 @@ public class Generator {
         }
     }
 
-    private Folder retrieve(Folder parent, Path dir) throws IOException {
+    private Folder retrieve(Folder parent, Path dir, boolean isAncestorCopyOnly) throws IOException {
         setProgress(dir);
 
         Folder folder = new Folder(parent, dir);
+
+        // このディレクトリの名前が copyOnlyDirectoryNames に含まれている場合、
+        // このディレクトリ下位のファイルは Markdown 処理をせずに、そのままコピーされます。
+        boolean copyOnly = isAncestorCopyOnly || copyOnlyDirectoryNames.contains(dir.getFileName().toString());
 
         Path targetDirectory = output.resolve(input.relativize(dir));
         if (Files.notExists(targetDirectory)) {
@@ -249,10 +277,10 @@ public class Generator {
             try {
                 if (Files.isDirectory(path)) {
                     // ディレクトリ
-                    retrieve(folder, path);
+                    retrieve(folder, path, copyOnly);
                 } else {
-                    // ファイル
-                    if (Util.isMarkdownFile(path)) {
+                    // Markdownファイル（かつ、コピーオンリーの指定がない場合）
+                    if (!copyOnly && Util.isMarkdownFile(path)) {
                         // Markdownファイルは、テンプレートを適用します。
                         FileTime lastModifiedTime = Files.getLastModifiedTime(path);
                         Content content = CacheManager.getContent(path, lastModifiedTime);
@@ -262,6 +290,9 @@ public class Generator {
                         }
                         applyTemplate(folder, content);
                         setProgress(path);
+                    } else if (isExcludeFile(path)) {
+                        // 除外ファイルの拡張子に該当する場合は出力ファイルにコピーしません。
+                        INFO("SKIP: " + path);
                     } else {
                         // その他のファイルは、出力ファイルにコピーします。
                         Path target = output.resolve(input.relativize(path));
