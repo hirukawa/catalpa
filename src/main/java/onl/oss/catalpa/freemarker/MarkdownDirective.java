@@ -61,11 +61,13 @@ public class MarkdownDirective implements TemplateDirectiveModel {
         options.set(HtmlRenderer.FENCED_CODE_NO_LANGUAGE_CLASS, "nohighlight");
         //TODO:
         //options.set(HighlightExtension.REPLACE_YEN_SIGN, true);
+        options.set(FootnoteExtension.FOOTNOTE_REF_PREFIX, ""); // 脚注前後の記号は CSS で付加できるので、ここでは指定しません。
+        options.set(FootnoteExtension.FOOTNOTE_REF_SUFFIX, ""); // 脚注前後の記号は CSS で付加できるので、ここでは指定しません。
+        options.set(FootnoteExtension.FOOTNOTE_BACK_REF_STRING, "\u21E7"); // 上矢印 ⇧
         options.set(TaskListExtension.ITEM_DONE_CLASS, "checked");
         options.set(TaskListExtension.ITEM_NOT_DONE_CLASS, "unchecked");
         options.set(TaskListExtension.ITEM_DONE_MARKER, "");
         options.set(TaskListExtension.ITEM_NOT_DONE_MARKER, "");
-        options.set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "*");
         options.set(Parser.EXTENSIONS, Arrays.asList(
                 AttributesExtension.create(),
                 DefinitionExtension.create(),

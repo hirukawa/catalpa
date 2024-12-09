@@ -96,7 +96,7 @@
 		<div class="content" style="padding:0">
 			<#-- sns -->
 			<div style="margin:1rem 0;padding:1em;background-color:#f2f2f2">
-				<div style="margin-block-end:0.5em">この記事を共有しませんか？</div>
+				<div style="margin-block-end:1em;line-height:1">この記事を共有しませんか？</div>
 				<div style="display:flex;flex-wrap:wrap;align-items:center;gap:0.5em">
 					<a class="sns button hatena"
 						href="https://b.hatena.ne.jp/add?mode=confirm&url=${url?remove_ending('index.html')}&title=${title!}" target="_blank"

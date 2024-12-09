@@ -183,7 +183,7 @@ public class Blog implements Cloneable {
             });
         }
 
-        posts.sort(Comparator.comparing(Post::getDate).reversed().thenComparing(Post::getLastModifiedTime));
+        posts.sort(Comparator.comparing(Post::getDate).thenComparing(Post::getLastModifiedTime).reversed());
 
 
         //
@@ -253,7 +253,7 @@ public class Blog implements Cloneable {
             String relative = input.relativize(path).toString().replace('\\', '/');
             String url = URLEncoder.encode(relative, StandardCharsets.UTF_8).replace("%2F", "/");
             category.setUrl(url);
-            category.getPosts().sort(Comparator.comparing(Post::getDate).reversed().thenComparing(Post::getLastModifiedTime));
+            category.getPosts().sort(Comparator.comparing(Post::getDate).thenComparing(Post::getLastModifiedTime).reversed());
         }
 
         categories.sort(Comparator.comparing(Category::getLastDate).thenComparing(c -> c.getPosts().size()).reversed());

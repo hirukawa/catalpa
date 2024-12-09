@@ -45,12 +45,12 @@ public class Generator {
     /* Markdown 処理をせずにそのまま出力フォルダーにコピーするフォルダーです。
      * jsOnlyLightbox などの JavaScript ライブラリをこのフォルダーに格納しておけば、内部の README.md などが .html に変換されるのを防げます。
      */
-    private static List<String> copyOnlyDirectoryNames = List.of("lib");
+    private static final List<String> copyOnlyDirectoryNames = List.of("lib");
 
     /* 出力フォルダーにコピーしないファイルの拡張子です。（小文字で定義する必要があります）
      * 秘密鍵ファイルなどインターネット上にアップロードすべきではないファイルを誤ってアップロードしてしまうのを防げます。
      */
-    private static List<String> copyExclueFileExtensions = List.of(".ppk");
+    private static final List<String> copyExcludeFileExtensions = List.of(".ppk");
 
     private final Path input;
     private final Path output;
@@ -148,7 +148,7 @@ public class Generator {
         int i = filename.lastIndexOf('.');
         if (i >= 0) {
             String ext = filename.substring(i).toLowerCase();
-            if (copyExclueFileExtensions.contains(ext)) {
+            if (copyExcludeFileExtensions.contains(ext)) {
                 return true;
             }
         }
