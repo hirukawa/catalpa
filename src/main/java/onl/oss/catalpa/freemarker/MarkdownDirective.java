@@ -51,6 +51,7 @@ public class MarkdownDirective implements TemplateDirectiveModel {
     private static final Pattern TABLE_BLOCK_PATTERN = Pattern.compile("(^\\|[^\n]*\n)(^(\\||\\s{2})[^\n]*\n)*(^\\|[^\n]*\n)(^\\{[^\n]*}\\s*\n)?(^\\s*)\n", Pattern.MULTILINE | Pattern.DOTALL);
     private static final Pattern RUBY_PATTERN_1 = Pattern.compile("｜(.+?)《(.+?)》");
     private static final Pattern RUBY_PATTERN_2 = Pattern.compile("([\\u4E00-\\u9FFF\\u3005-\\u3007\\u30F6]+)《(.+?)》");
+    private static final Pattern RUBY_PATTERN_3 = Pattern.compile("([-+.,:;_!?#%&@$a-zA-Z0-9]+)《(.+?)》");
 
     private final MutableDataSet options;
     private final Parser parser;
@@ -315,6 +316,30 @@ public class MarkdownDirective implements TemplateDirectiveModel {
             start = m.end();
         }
         sb.append(input.subSequence(start, input.length()));
+
+        input = sb.toString();
+        sb = new StringBuilder();
+        m = RUBY_PATTERN_3.matcher(input);
+        start = 0;
+        while (m.find(start)) {
+            sb.append(input.subSequence(start, m.start()));
+
+            if (m.group(1).isBlank()) {
+                sb.append(m.group(0));
+            } else {
+                String rb = m.group(1);
+                String rt = m.group(2);
+                sb.append("<ruby>");
+                sb.append(rb);
+                sb.append("<rp>（</rp>");
+                sb.append("<rt>").append(rt).append("</rt>");
+                sb.append("<rp>）</rp>");
+                sb.append("</ruby>");
+            }
+            start = m.end();
+        }
+        sb.append(input.subSequence(start, input.length()));
+
         return sb.toString();
     }
 }

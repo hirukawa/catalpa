@@ -30,6 +30,7 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -469,6 +470,8 @@ public class Generator {
         //
         // db
         //
+        searchIndexes.sort(Comparator.comparing(SearchIndex::getLastModifiedTime).reversed());
+
         StringBuilder db = new StringBuilder("\n");
         for (int i = 0; i < searchIndexes.size(); i++) {
             SearchIndex si = searchIndexes.get(i);

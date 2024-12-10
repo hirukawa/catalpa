@@ -11,8 +11,11 @@
 	<#include "templates/webfont" ignore_missing=true>
 
 	<style><@compress single_line=true>
+		<#include "css/system.css">
+		<#include "css/color.css">
 		<#include "css/main.css">
 		<#include "css/search.css">
+		<#include "css/custom.css" ignore_missing=true>
 		${css!}
 	</@compress></style>
 </head>
