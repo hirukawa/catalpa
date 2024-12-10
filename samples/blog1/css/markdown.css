@@ -440,6 +440,9 @@
 .markdown img.shadow {
 	box-shadow: 2px 2px 8px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.25);
 }
+.markdown img.drop-shadow {
+	filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.4));
+}
 .markdown p.images-only {
 	margin-block-start: var(--default-margin-block-start);
 	margin-block-end: var(--default-margin-block-end);
