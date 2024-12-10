@@ -3,9 +3,7 @@
 <head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<#if siteurl?has_content>
-	<link rel="canonical" href="${siteurl}/${blog.post.url}">
-	</#if>
+	<link rel="canonical" href="${url?remove_ending('index.html')}">
 	<link rel="icon" href="${baseurl}favicon.ico">
 	<title>${title!}</title>
 	<meta name="description" content="${(description!)?replace('\n', '')}">
@@ -16,14 +14,20 @@
 	<meta property="og:url" content="${siteurl!}/${blog.post.url}">
 	<meta property="og:title" content="${title!}">
 	<meta property="og:description" content="${(description!)?replace('\n', '')}">
-	<#if blog.post.image?has_content><meta property="og:image" content="${siteurl!}/${blog.post.image}"></#if>
+	<#if blog.post.image?has_content>
+	<meta property="og:image" content="${siteurl!}/${blog.post.image}">
+	<#elseif image?has_content>
+	<meta property="og:image" content="${siteurl!}/${image}">
+	</#if>
 
-	<!-- Web Fonts  Noto Sans JP, Noto Serif JP, Noto Sans Mono -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&family=Noto+Sans+Mono:wdth,wght@62.5,100..900&display=swap" rel="stylesheet">
+	<!-- X (Twitter) card -->
+	<meta name="twitter:card" content="summary_large_image" />
+
+	<#include "templates/webfont" ignore_missing=true>
 
 	<style><@compress single_line=true>
+		<#include "css/system.css">
+		<#include "css/color.css">
 		<#include "css/main.css">
 		<#include "css/blog.css">
 		<#include "css/markdown.css">
@@ -50,6 +54,8 @@
 			background-color: #f2f2f2;
 			color: var(--text-link-hover-color);
 		}
+
+		<#include "css/custom.css" ignore_missing=true>
 		${css!}
 	</@compress></style>
 </head>
@@ -98,11 +104,12 @@
 			<div style="margin:1rem 0;padding:1em;background-color:#f2f2f2">
 				<div style="margin-block-end:1em;line-height:1">この記事を共有しませんか？</div>
 				<div style="display:flex;flex-wrap:wrap;align-items:center;gap:0.5em">
+					<#-- SNS はてなブックマーク -->
 					<a class="sns button hatena"
 						href="https://b.hatena.ne.jp/add?mode=confirm&url=${url?remove_ending('index.html')}&title=${title!}" target="_blank"
 						alt="はてなブックマーク"
 						title="はてなブックマークに追加する"
-						style="font-family:'Yu Gothic Medium','Yu Gothic','YuGothic';font-weight:bold;font-size:14px;line-height:1;margin:0;padding:6px 8px;border-radius:0.25em;color:white;background-color:#00A4DE">
+						style="font-family:var(--font-family-sans-serif);font-weight:500;font-size:14px;line-height:1;margin:0;padding:6px 8px;border-radius:4px;color:white;background-color:#00A4DE">
 						<svg width="18px" height="14px" viewBox="0 0 1800 1400" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="vertical-align:top;fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
 							<g transform="matrix(34.1982,0,0,34.1982,-638.92,-838.889)">
 								<path d="M50.076,46.458C48.309,44.572 45.859,43.469 43.276,43.398C45.429,42.948 47.398,41.864 48.928,40.284C50.173,38.721 50.802,36.753 50.692,34.758C50.721,33.057 50.31,31.376 49.5,29.88C48.682,28.464 47.485,27.305 46.044,26.532C44.57,25.755 42.976,25.231 41.328,24.984C38.12,24.615 34.89,24.471 31.662,24.552L20.448,24.552L20.448,65.452L32,65.452C35.355,65.52 38.71,65.364 42.044,64.984C43.837,64.739 45.576,64.198 47.192,63.384C48.859,62.52 50.232,61.179 51.134,59.532C52.084,57.757 52.562,55.767 52.52,53.754C52.66,51.101 51.786,48.491 50.076,46.458ZM30.816,33.606L33.21,33.606C35.982,33.606 37.842,33.918 38.79,34.542C39.8,35.296 40.341,36.528 40.212,37.782C40.334,39.029 39.741,40.244 38.682,40.914C37.674,41.526 35.782,41.814 33.03,41.814L30.816,41.814L30.816,33.606ZM40.316,57.06C39.216,57.726 37.346,58.05 34.716,58.05L30.816,58.05L30.816,49.14L34.884,49.14C37.584,49.14 39.456,49.482 40.446,50.166C41.53,51.029 42.101,52.388 41.958,53.766C42.119,55.1 41.465,56.408 40.3,57.078L40.316,57.06Z" style="fill:white;fill-rule:nonzero;"/>
@@ -116,11 +123,12 @@
 						</svg>
 						ブックマーク
 					</a>
+					<#-- SNS Facebook -->
 					<a class="sns button facebook"
 						href="https://www.facebook.com/share.php?u=${url?remove_ending('index.html')}" target="_blank"
 						alt="Facebookシェア"
 						title="Facebookでシェアする"
-						style="font-family:'Yu Gothic Medium','Yu Gothic','YuGothic';font-weight:bold;font-size:87.5%;line-height:1;margin:0;padding:6px 8px;border-radius:0.25em;color:white;background-color:#1877F2">
+						style="font-family:var(--font-family-sans-serif);font-weight:500;font-size:14px;line-height:1;margin:0;padding:6px 8px;border-radius:4px;color:white;background-color:#1877F2">
 						<svg width="18px" height="14px" viewBox="0 0 1800 1400" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="vertical-align:top;fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
 							<g transform="matrix(1.37554,0,0,1.37554,195.722,-0.302579)">
 								<path d="M1024,512.22C1024,229.45 794.77,0.22 512,0.22C229.23,0.22 0,229.45 0,512.22C0,767.774 187.231,979.59 432,1018L432,660.22L302,660.22L302,512.22L432,512.22L432,399.42C432,271.1 508.438,200.22 625.39,200.22C681.407,200.22 740,210.22 740,210.22L740,336.22L675.438,336.22C611.835,336.22 592,375.687 592,416.177L592,512.22L734,512.22L711.3,660.22L592,660.22L592,1018C836.769,979.59 1024,767.774 1024,512.22Z" style="fill:white;fill-rule:nonzero;"/>
@@ -128,17 +136,16 @@
 						</svg>
 						シェア
 					</a>
-					<a class="sns button twitter"
-						href="https://twitter.com/intent/tweet?url=${url?remove_ending('index.html')}&text=${title!}" target="_blank"
-						alt="Twitter"
-						title="ツイートする"
-						style="font-family:'Yu Gothic Medium','Yu Gothic','YuGothic';font-weight:bold;font-size:87.5%;line-height:1;margin:0;padding:6px 8px;border-radius:0.25em;color:white;background-color:#1D9BF0">
+					<#-- SNS X (Twitter) -->
+					<a class="sns button x"
+						href="https://x.com/intent/post?url=${url?remove_ending('index.html')}&text=${title!}" target="_blank"
+						alt="X (Twitter)"
+						title="Xにポストする"
+						style="font-family:var(--font-family-sans-serif);font-weight:500;font-size:14px;line-height:1;margin:0;padding:6px 8px;border-radius:4px;color:white;background-color:#000000">
 						<svg width="18px" height="14px" viewBox="0 0 1800 1400" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="vertical-align:top;fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
-							<g id="twitter" transform="matrix(6.99956,0,0,6.99956,31.5298,-10.481)">
-								<path d="M221.95,51.29C222.1,53.46 222.1,55.63 222.1,57.82C222.1,124.55 171.3,201.51 78.41,201.51L78.41,201.47C50.97,201.51 24.1,193.65 1,178.83C4.99,179.31 9,179.55 13.02,179.56C35.76,179.58 57.85,171.95 75.74,157.9C54.13,157.49 35.18,143.4 28.56,122.83C36.13,124.29 43.93,123.99 51.36,121.96C27.8,117.2 10.85,96.5 10.85,72.46L10.85,71.82C17.87,75.73 25.73,77.9 33.77,78.14C11.58,63.31 4.74,33.79 18.14,10.71C43.78,42.26 81.61,61.44 122.22,63.47C118.15,45.93 123.71,27.55 136.83,15.22C157.17,-3.9 189.16,-2.92 208.28,17.41C219.59,15.18 230.43,11.03 240.35,5.15C236.58,16.84 228.69,26.77 218.15,33.08C228.16,31.9 237.94,29.22 247.15,25.13C240.37,35.29 231.83,44.14 221.95,51.29Z" style="fill:white;fill-rule:nonzero;"/>
-							</g>
+							<path d="M1030.26,592.5l509.713,-592.5l-120.785,0l-442.584,514.459l-353.49,-514.459l-407.71,0l534.547,777.954l-534.547,621.327l120.793,0l467.38,-543.287l373.311,543.287l407.71,0l-554.367,-806.781l0.029,0Zm-165.442,192.308l-54.16,-77.467l-430.938,-616.41l185.53,0l347.772,497.463l54.161,77.466l452.062,646.626l-185.531,0l-368.896,-527.649l0,-0.029Z" style="fill:white;fill-rule:nonzero;"/>
 						</svg>
-						ツイート
+						ポスト
 					</a>
 				</div>
 			</div>

@@ -3,14 +3,8 @@
 <head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-
-	<#-- 2ページ目以降は noindex を設定します。（次ページがあるかどうかで2ページ目以降かどうかを判定できます。）-->
-	<#if blog.page.next??>
 	<meta name="robots" content="noindex">
-	<#elseif siteurl?has_content>
-	<link rel="canonical" href="${siteurl}">
-	</#if>
-
+	<link rel="canonical" href="${url?remove_ending('index.html')}">
 	<link rel="icon" href="${baseurl}favicon.ico">
 	<title>${title!}</title>
 	<meta name="description" content="${(description!)?replace('\n', '')}">
@@ -23,12 +17,11 @@
 	<meta property="og:description" content="${(description!)?replace('\n', '')}">
 	<#if image?has_content><meta property="og:image" content="${siteurl!}/${image}"></#if>
 
-	<!-- Web Fonts  Noto Sans JP, Noto Serif JP, Noto Sans Mono -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&family=Noto+Sans+Mono:wdth,wght@62.5,100..900&display=swap" rel="stylesheet">
+	<#include "templates/webfont" ignore_missing=true>
 
 	<style><@compress single_line=true>
+		<#include "css/system.css">
+		<#include "css/color.css">
 		<#include "css/main.css">
 		<#include "css/blog.css">
 
@@ -38,6 +31,8 @@
 		main .content {
 			padding: 0;
 		}
+
+		<#include "css/custom.css" ignore_missing=true>
 		${css!}
 	</@compress></style>
 </head>

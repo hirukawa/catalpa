@@ -8,10 +8,7 @@
 	<title>${title!}</title>
 	<meta name="description" content="${(description!)?replace('\n', '')}">
 
-	<!-- Web Fonts  Noto Sans JP, Noto Serif JP, Noto Sans Mono -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900&family=Noto+Sans+Mono:wdth,wght@62.5,100..900&display=swap" rel="stylesheet">
+	<#include "templates/webfont" ignore_missing=true>
 
 	<style><@compress single_line=true>
 		<#include "css/main.css">

@@ -21,11 +21,6 @@
 	}
 }
 
-@font-face {
-	font-family: "catalpa"; /* 二分アキ・四分アキを正確に実現するためのカスタムフォントです。*/
-	src: url("data:application/font-woff;base64,d09GMgABAAAAAAJwAA4AAAAABfQAAAIaAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP0ZGVE0cGhwGYACCQggEEQgKWHYLCgABNgIkAxAEIAWEBAcqGxMFAB4HdsNXE7bcDNNY/sXD/+/3bZ/77hPcH2p/SGOeEKtioZBYEyIa8RA1TchAVMtEGmt9eIL7+W6BAz9dgldY848oG/hKtHnqJv8inAD231y6/TFMw1QDDEso6hKKKCAJhIJwV/nyYIO5h+Qh2YkQ8OP968Pwo/YG/vQOvRKA+ZbLSAgEciPumlL2lPcRG+WbFh9cTUtJyjkAAgCOXz3a/Ki2rrqV2fIMEABoBQoUWC9Av0JgvaxFlgXablf6PdP9I4CoCEAkJABAUMguNV4uQXS7EsigQUKDhYCMAxKQ87yZRdcvzubMHzc90yrPfBm7994GXoSD/S/r7G/nRVV+7X9ZJH87XhRNsFQdRlX8738Z8cmBxNvvvU/OLer/18xrrLMvMY50uTwDjQSC8gzMNiBdJgCA3DAOGjQQyBoJJITAsA1goacE0BolINSuEZDUbhBQ2OabAFkdSwUozYuOAJU6jhqLPAfD0GlY6BJIZIYWpv1ptjASLa2MtWEV3mDQmExuUAp4fDW1yyVzrY5DOo7YpzXt6uHtbutrS500yODdZ3Vp/heWfdPXx/u+/W715JDBJYaaIZYz4P3cltyAkxyeRsxQ4imzKUzKpGrZlDwOjnzAIa1e1yZi1bu49X6HJQ89ch9TpZXSc7Rz4FDb286utaFzaP/hwgKeiQjOmlIlQPIwUruqZXaZ8ccT0O1xFQIAQD4OAQAA") format("woff2");
-}
-
 .markdown {
 	overflow-wrap: break-word; /* 行内に分割可能な位置がなくあふれる場合は任意の位置で改行します。*/
 	line-break: strict;   /* 厳密な禁則処理 */
@@ -36,65 +31,9 @@
 /*
  * アンカー
  */
-a {
+.markdown a {
 	line-break: anywhere;
 } 
-
-/*
- * 組版
- */
-.markdown i.h { /* font-feature-settings: "halt" で役物を半角にする場合の設定です */
-	font-style: inherit;
-	font-feature-settings: "halt";
-}
-.markdown i.l { /* font-feature-settings: "halt" を使わずに役物を半角にする設定です（左側を詰めます）*/
-	font-style: inherit;
-	margin-left: -0.5em;
-}
-.markdown i.r { /* font-feature-settings: "halt" を使わずに役物を半角にする設定です（右側を詰めます）*/
-	font-style: inherit;
-	margin-right: -0.5em;
-}
-.markdown i.lr { /* font-feature-settings: "halt" を使わずに役物を半角にする設定です（左右を詰めます）*/
-	font-style: inherit;
-	margin-left: -0.25em;
-	margin-right: -0.25em;
-}
-.markdown i.s1 { /* 全角アキ */
-	font-style: inherit;
-	font-family: "catalpa";
-	font-size: 100%;
-	line-height: 0;
-}
-.markdown i.s2 { /* 二分アキ */
-	font-style: inherit;
-	font-family: "catalpa";
-	font-size: 50%;
-	line-height: 0;
-}
-.markdown i.s4 { /* 四分アキ */
-	font-style: inherit;
-	font-family: "catalpa";
-	font-size: 25%;
-	line-height: 0;
-}
-.markdown i.e { /* 和字と欧字の間隔 */
-	font-style: inherit;
-	font-family: "catalpa";
-	font-size: 15.625%; /* 25%=4px, 18.75%=3px, 15.625%=2.5px, 12.5%=2px */
-	line-height: 0;
-}
-.markdown i.j { /* 欧字と和字の間隔 */
-	font-style: inherit;
-	font-family: "catalpa";
-	font-size: 15.625%; /* 25%=4px, 18.75%=3px, 15.625%=2.5px, 12.5%=2px */
-	line-height: 0;
-}
-
-.markdown .cancel-padding {
-	margin-inline-start: calc(0px - var(--content-padding-left) - var(--content-padding-left-adjust));
-	margin-inline-end: calc(0px - var(--content-padding-right) - var(--content-padding-right-adjust));
-}
 
 /*
  * パラグラフ（段落）
@@ -247,7 +186,6 @@ a {
 .markdown ol > li > ol {
 	margin-block-start: 1em;
 	margin-block-end: 0;
-	padding-inline-start: 2em;
 }
 .markdown li {
 	margin-block-start: 1em;
@@ -383,9 +321,31 @@ a {
 .markdown ul > li.task-list-item.unchecked::marker {
 	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="checkbox"><path d="M448,160C448,142.339 433.661,128 416,128L96,128C78.339,128 64,142.339 64,160L64,480C64,497.661 78.339,512 96,512L416,512C433.661,512 448,497.661 448,480L448,160ZM416,168C416,163.585 412.415,160 408,160L104,160C99.585,160 96,163.585 96,168L96,472C96,476.415 99.585,480 104,480L408,480C412.415,480 416,476.415 416,472L416,168Z" style="fill:rgb(153,153,153);"/></g></svg>') "\2002";
 }
+
+/*
+ * 脚注
+ */
+.markdown sup[id^=fnref-] {
+	font-size: 0.7em;
+	font-weight: bold;
+}
+.markdown .footnote-ref::before {
+	content: "[";
+}
+.markdown .footnote-ref::after {
+	content: "]";
+}
 .markdown .footnotes ol > li::marker {
-	content: "*" counter(list-item) "\2002\2005";
-	font-weight: normal;
+	content: counter(list-item) ".\2002";
+	font-weight: bold;
+}
+.markdown .footnotes p {
+	display: inline-block;
+}
+@media print {
+	.markdown .footnote-backref {
+		display: none;
+	}
 }
 
 /*
@@ -499,7 +459,6 @@ a {
 	border-top: 1px solid #ccc;
 }
 
-
 /*
  * テーブル
  */
@@ -551,7 +510,6 @@ a {
 .markdown table.right {
 	margin-right: 0;
 }
-
 
 /*
  * 引用ブロック
@@ -820,28 +778,6 @@ a {
 	border-left: 0.5em solid var(--dl-secondary-variant-border-color);
 }
 
-
-/*
- * ルビ
- */
-.markdown ruby[data-rt] {
-	position: relative;
-}
-.markdown ruby[data-rt]::before {
-	content: attr(data-rt);
-	position: absolute;
-	top: calc(-0.5em - var(--is-mac) * 0.5em);
-	left: -2.5em;
-	right: -2.5em;
-	font-size: 50%;
-	text-align: center;
-	line-height: 1em;
-	color: var(--ruby-text-color);
-}
-.markdown ruby[data-rt] rt {
-	display: none;
-}
-
 /*
  * ボタン
  * .primary .primary-variant .secondary .secondary-variant
@@ -1068,23 +1004,23 @@ a {
 	background-color: var(--nav-link-hover-background-color);
 }
 
-
 /*
  * 画像とテキストのリンクをカード形式にします。
  * 画像とテキストは横に並びます。画像の縦横比は 1:1 です。
  */
 .markdown p.card {
-	margin-block-start: 1em;
-	margin-block-end: -1em;
+	margin-block-start: -1em;
+	margin-block-end: 1em;
 	margin-inline-start: calc(0px - var(--content-padding-left) - var(--content-padding-left-adjust));
 	margin-inline-end: calc(0px - var(--content-padding-right) - var(--content-padding-right-adjust));
 	padding: 0;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-evenly;
-	gap: 1em 0;
+	gap: 0;
 }
 .markdown p.card a {
+	margin-block-start: 1em;
 	display: block;
 	border-radius: 4px;
 	color: var(--card-text-color);
@@ -1117,6 +1053,7 @@ a {
 	width: 176px;
 }
 .markdown p.card a.padding {
+	margin: 0;
 	width: 288px;
 	height: 0;
 }
@@ -1126,17 +1063,18 @@ a {
  * 画像とテキストは縦に並びます。画像の縦横比は 16:10（landscape）です。
  */
  .markdown p.card.landscape {
-	margin-block-start: 1em;
-	margin-block-end: -1em;
+	margin-block-start: -1em;
+	margin-block-end: 1em;
 	margin-inline-start: calc(0px - var(--content-padding-left) - var(--content-padding-left-adjust));
 	margin-inline-end: calc(0px - var(--content-padding-right) - var(--content-padding-right-adjust));
 	padding: 0;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-evenly;
-	gap: 1em 0;
+	gap: 0;
 }
 .markdown p.card.landscape a {
+	margin-block-start: 1em;
 	display: block;
 	border-radius: 4px;
 	color: var(--main-text-color);
@@ -1170,6 +1108,7 @@ a {
 	padding: 0 0.5em;
 }
 .markdown p.card.landscape a.padding {
+	margin: 0;
 	width: 176px;
 	height: 0;
 }
@@ -1198,8 +1137,6 @@ a {
 		display: none;
 	}
 }
-
-
 
 /*
  * その他・汎用
@@ -1249,7 +1186,6 @@ a {
 	justify-content: space-evenly !important;
 }
 
-
 .markdown div.column-2 {
 	display: flex;
 	flex-wrap: wrap;
@@ -1260,7 +1196,6 @@ a {
 	margin-inline-end: auto;
 	width: calc((var(--content-width) - (var(--content-padding-left) * 2) - var(--content-padding-left-adjust) - var(--content-padding-right) - var(--content-padding-right-adjust)) / 2);
 }
-
 
 .markdown .m-0 {
 	margin: 0 !important;

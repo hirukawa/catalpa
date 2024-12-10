@@ -15,6 +15,12 @@
 
   * <?xml?> タグ
   * <!DOCTYPE> タグ
+  * xml:space="presrve"
+  * xmlns:serif="http://www.serif.com/"
+
+# 追加するもの
+
+  * style に vertical-align:top; が含まれていない場合は追加したほうがいいかも。
 
 # li::marker の content で使うときの例
 
