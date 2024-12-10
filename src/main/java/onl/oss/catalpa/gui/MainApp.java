@@ -428,7 +428,8 @@ public class MainApp extends Application {
         INFO("btnReload_onAction");
 
         try {
-            // 更新ボタンを押下した場合はキャッシュをクリアしてから更新します。
+            // 更新ボタンを押下した場合は、キャッシュとプレビュー用テンポラリをクリアしてから更新します。
+            Util.deleteDirectory(temporaryPath.resolve("preview"));
             CacheManager.clear();
 
             update();
@@ -703,6 +704,8 @@ public class MainApp extends Application {
         preferences.put("RecentFiles", FilePreferences.toString(recentFiles));
         updateRecentFiles(recentFiles);
 
+        // フォルダーを開いたときに、キャッシュとプレビュー用テンポラリをクリアしてから更新します。
+        Util.deleteDirectory(temporaryPath.resolve("preview"));
         CacheManager.clear();
 
         update();
@@ -728,7 +731,8 @@ public class MainApp extends Application {
 
         executor.execute(() -> {
             try {
-                Util.deleteDirectory(outputPath);
+                // 名前を付けて保存を選択したときに、ユーザーのフォルダーを勝手に削除してはいけない！
+                // Util.deleteDirectory(outputPath);
                 Files.createDirectories(outputPath);
 
                 Map<String, Object> systemDataModel = new HashMap<>();
@@ -846,6 +850,8 @@ public class MainApp extends Application {
 
         executor.execute(() -> {
             try {
+                // アップロード用フォルダーを削除して再作成します。
+                Util.deleteDirectory(outputPath);
                 Files.createDirectories(outputPath);
 
                 Map<String, Object> systemDataModel = new HashMap<>();
