@@ -135,16 +135,17 @@
  * <kbd data-length="4">Ctrl</kbd>
  */
  .markdown kbd {
-	vertical-align: middle;
+	display: inline;
+	vertical-align: baseline;
 	margin: 0;
-	padding: 0.35em 0.5em;
+	padding: 0.2em 0.5em;
 	font-family: var(--font-family-monospace);
 	font-size: 87.5%; /* 16px -> 14px */
-	line-height: 1.0;
-	color: #D0D0D0;
+	line-height: 1;
+	color: var(--kbd-color);
 	text-shadow: -1px -1px 0 rgba(0,0,0,0.5);
-	background-color: #202020;
-	border: 1px solid #000000;
+	background-color: var(--kbd-background-color);
+	border: 1px solid var(--kbd-border-color);
 	border-radius: 3px;
 	box-shadow: 1px 1px 2px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.3) inset;
 	white-space: pre-wrap;
@@ -155,15 +156,16 @@
  * <samp class="button" data-length="4">ファイル</samp>
  */
 .markdown samp.button {
-	vertical-align: middle;
+	display: inline;
+	vertical-align: baseline;
 	margin: 0;
-	padding: 0.35em 0.5em;
+	padding: 0.2em 0.5em;
 	font-family: var(--font-family-monospace);
 	font-size: 87.5%; /* 16px -> 14px */
-	line-height: 1.0;
-	color: #202020;
-	background-color: #E0E0E0;
-	border: 1px solid #606060;
+	line-height: 1;
+	color: var(--menu-bar-item-color);
+	background-color: var(--menu-bar-item-background-color);
+	border: 1px solid var(--menu-bar-item-border-color);
 	border-radius: 3px;
 	box-shadow: 1px 1px 1px rgba(0,0,0,0.5), 1px 1px 2px #FFFFFF inset;
 	white-space: pre-wrap;
@@ -379,7 +381,7 @@
 	left: 0;
 	bottom: 0;
 	width: 0;
-	border-left: 0.125em solid #ccc;
+	border-left: var(--tree-line-width) solid var(--tree-line-color);
 }
 .markdown ul.tree > li:first-child {
 	padding-block-start: 0;
@@ -398,7 +400,7 @@
 	left: 0;
 	width: 1em;
 	height: 0;
-	border-top: 0.125em solid #ccc;
+	border-top: var(--tree-line-width) solid var(--tree-line-color);
 }
 .markdown ul.tree ul li:last-child:before {
 	bottom: 0;
@@ -433,7 +435,7 @@
 	vertical-align: middle;
 }
 .markdown img.border {
-	border: 1px solid #808080;
+	border: var(--img-border-width) solid var(--img-border-color);
 }
 .markdown img.shadow {
 	box-shadow: 2px 2px 8px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.25);
@@ -456,7 +458,7 @@
 	margin-inline-start: 0;
 	margin-inline-end: 0;
 	border: 0;
-	border-top: 1px solid #ccc;
+	border-top: 1px solid var(--border-color);
 }
 
 /*
@@ -867,7 +869,7 @@
 	width: 2.25em;
 	height: 2.25em;
 	transform: translateY(-50%);
-	background-color: #fefefe;
+	background-color: var(--button-icon-background-color);
 }
 .markdown .button.previous.round::before {
 	left: 0.5em;
@@ -915,7 +917,7 @@
 	width: 2.25em;
 	height: 2.25em;
 	transform: translateY(-50%);
-	background-color: #fefefe;
+	background-color: var(--button-icon-background-color);
 }
 .markdown .button.next.round::before {
 	right: 0.5em;

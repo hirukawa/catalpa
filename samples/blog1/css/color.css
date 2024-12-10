@@ -1,8 +1,8 @@
 :root {
-	--primary-color:           #007F85;
-	--primary-variant-color:   #3700B3;
-	--secondary-color:         #B4C540;
-	--secondary-variant-color: #018786;
+	--primary-color:              #007F85;
+	--primary-variant-color:      #3700B3;
+	--secondary-color:            #B4C540;
+	--secondary-variant-color:    #018786;
 
 	--text-black-color:           #4c4c4c; /* 薄いまたは明るい背景にテキストを表示するときの黒色です（ライトモードを基準としています） */
 	--text-white-color:           #f2f2f2; /* 濃いまたは暗い背景にテキストを表示するときの白色です（ライトモードを基準としています） */
@@ -14,6 +14,7 @@
 	--footer-text-color:          var(--text-black-color);
 	--footer-background-color:    #f2f2f2;
 
+	/* ボーダー、水平線 */
 	--border-color:               #cccccc;
 
 	--list-marker-color:          #287DCF;
@@ -22,6 +23,10 @@
 	--text-link-color:            #01509d;
 	--text-link-visited-color:    #01509d;
 	--text-link-hover-color:      #ef4e00;
+
+	/* 画像 */
+	--img-border-width:           1px;
+	--img-border-color:           #808080;
 
 	/* コード（インライン） */
 	--code-color:                 #c7254e;
@@ -38,8 +43,9 @@
 	--blockquote-color:           #e8e8e8;
 
 	/* ボタン */
-	--button-text-color:          var(--text-white-color);
-	--button-background-color:    #287DCF;
+	--button-text-color:             var(--text-white-color);
+	--button-background-color:       #287DCF;
+	--button-icon-background-color:  #fefefe;
 
 	/* 付箋 */
 	--dl-note-color:                 var(--text-black-color);
@@ -106,4 +112,50 @@
 	/* 検索 */
 	--search-box-color:            var(--main-text-color);
 	--search-box-background-color: var(--main-background-color);
+	--search-result-divider-color: var(--border-color);
+	--search-result-url-color:     #006621;
+	--search-result-highlight-color: var(--code-color);
+	--search-result-highlight-background-color: var(--code-background-color);
+
+	/* ツリー */
+	--tree-line-width: 0.125em; /* 2px */
+	--tree-line-color: #ccc;
+
+	/* キーボード・ボタン kbd */
+	--kbd-color: #d0d0d0;
+	--kbd-background-color: #202020;
+	--kbd-border-color: #000000;
+
+	/* メニューバーアイテム samp.button */
+	--menu-bar-item-color: #202020;
+	--menu-bar-item-background-color: #e0e0e0;
+	--menu-bar-item-border-color: #606060;
+
+	/* ブログ */
+	--blog-index-card-background-color: #ffffff;
+	--blog-index-card-color: var(--text-black-color);
+	--blog-index-card-category-background-color: var(--primary-color);
+	--blog-index-card-category-color: var(--text-white-color);
+	--blog-index-card-date-color: #808080;
+
+	--blog-pager-button-background-color: #ffffff;
+	--blog-pager-button-color: #aaaaaa;
+	--blog-pager-button-current-background-color: var(--primary-color);
+	--blog-pager-button-current-color: var(--text-white-color);
+	--blog-pager-button-hover-background-color: color-mix(in srgb, var(--blog-pager-button-current-background-color), white);
+	--blog-pager-button-hover-color: var(--blog-pager-button-current-color);
+	--blog-pager-arrow-color: #aaaaaa;
+	--blog-pager-arrow-hover-color: #287DCF;
+
+	--blog-post-header-category-background-color: var(--primary-color);
+	--blog-post-header-category-color: var(--text-white-color);
+	--blog-post-header-category-hover-background-color: color-mix(in srgb, var(--blog-post-header-category-background-color), white 25%);
+	--blog-post-header-category-hover-color: var(--text-white-color);
+	--blog-post-header-title-color: var(--text-black-color);
+	--blog-post-pager-button-background-color: #39739d;
+	--blog-post-pager-button-color: var(--text-white-color);
+	--blog-post-pager-button-hover-background-color: #ef4e00;
+	--blog-post-pager-button-hover-color: var(--text-white-color);
+
+	--blog-post-related-date-color: #808080;
 }
