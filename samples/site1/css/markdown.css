@@ -332,6 +332,9 @@
 	font-size: 0.7em;
 	font-weight: bold;
 }
+.markdown .footnote-ref {
+	white-space: nowrap;
+}
 .markdown .footnote-ref::before {
 	content: "[";
 }
