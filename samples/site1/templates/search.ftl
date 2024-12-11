@@ -7,6 +7,7 @@
 	<link rel="icon" href="${baseurl}favicon.ico">
 	<title>${title!}</title>
 	<meta name="description" content="${(description!)?replace('\n', '')}">
+	<#if theme_color?has_content><meta name="theme-color" content="${theme_color}"></#if>
 
 	<#include "templates/webfont" ignore_missing=true>
 

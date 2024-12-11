@@ -180,7 +180,7 @@
 	margin-block-end: var(--default-margin-block-end);
 	margin-inline-start: 0;
 	margin-inline-end: 0;
-	padding-inline-start: 2em;
+	padding-inline-start: 3em;
 }
 .markdown ul > li > ul,
 .markdown ul > li > ol,
@@ -188,6 +188,7 @@
 .markdown ol > li > ol {
 	margin-block-start: 1em;
 	margin-block-end: 0;
+	padding-inline-start: 2em;
 }
 .markdown li {
 	margin-block-start: 1em;
@@ -199,91 +200,91 @@
 	margin: 0;
 }
 .markdown ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><circle id="disc" cx="256" cy="320" r="160" style="fill:rgb(40,125,207);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><circle id="disc" cx="256" cy="320" r="160" style="fill:rgb(40,125,207);"/></svg>') "\2002\2005";
 }
 .markdown dl.note ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><circle id="disc" cx="256" cy="320" r="160" style="fill:rgb(121,42,121);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><circle id="disc" cx="256" cy="320" r="160" style="fill:rgb(121,42,121);"/></svg>') "\2002\2005";
 }
 .markdown dl.tip ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><circle id="disc" cx="256" cy="320" r="160" style="fill:rgb(1,147,81);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><circle id="disc" cx="256" cy="320" r="160" style="fill:rgb(1,147,81);"/></svg>') "\2002\2005";
 }
 .markdown dl.info ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><circle id="disc" cx="256" cy="320" r="160" style="fill:rgb(1,79,157);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><circle id="disc" cx="256" cy="320" r="160" style="fill:rgb(1,79,157);"/></svg>') "\2002\2005";
 }
 .markdown dl.warning ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><circle id="disc" cx="256" cy="320" r="160" style="fill:rgb(253,155,8);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><circle id="disc" cx="256" cy="320" r="160" style="fill:rgb(253,155,8);"/></svg>') "\2002\2005";
 }
 .markdown dl.caution ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><circle id="disc" cx="256" cy="320" r="160" style="fill:rgb(230,0,61);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><circle id="disc" cx="256" cy="320" r="160" style="fill:rgb(230,0,61);"/></svg>') "\2002\2005";
 }
 .markdown ul > li > ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M437.019,312l-181.019,181.019l-181.019,-181.019l181.019,-181.019l181.019,181.019Z" style="fill:rgb(40,125,207);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M437.019,312l-181.019,181.019l-181.019,-181.019l181.019,-181.019l181.019,181.019Z" style="fill:rgb(40,125,207);"/></svg>') "\2002\2005";
 }
 .markdown dl.note ul > li > ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M437.019,312l-181.019,181.019l-181.019,-181.019l181.019,-181.019l181.019,181.019Z" style="fill:rgb(121,42,121);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M437.019,312l-181.019,181.019l-181.019,-181.019l181.019,-181.019l181.019,181.019Z" style="fill:rgb(121,42,121);"/></svg>') "\2002\2005";
 }
 .markdown dl.tip ul > li > ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M437.019,312l-181.019,181.019l-181.019,-181.019l181.019,-181.019l181.019,181.019Z" style="fill:rgb(1,147,81);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M437.019,312l-181.019,181.019l-181.019,-181.019l181.019,-181.019l181.019,181.019Z" style="fill:rgb(1,147,81);"/></svg>') "\2002\2005";
 }
 .markdown dl.info ul > li > ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M437.019,312l-181.019,181.019l-181.019,-181.019l181.019,-181.019l181.019,181.019Z" style="fill:rgb(1,79,157);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M437.019,312l-181.019,181.019l-181.019,-181.019l181.019,-181.019l181.019,181.019Z" style="fill:rgb(1,79,157);"/></svg>') "\2002\2005";
 }
 .markdown dl.warning ul > li > ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M437.019,312l-181.019,181.019l-181.019,-181.019l181.019,-181.019l181.019,181.019Z" style="fill:rgb(253,155,8);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M437.019,312l-181.019,181.019l-181.019,-181.019l181.019,-181.019l181.019,181.019Z" style="fill:rgb(253,155,8);"/></svg>') "\2002\2005";
 }
 .markdown dl.caution ul > li > ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M437.019,312l-181.019,181.019l-181.019,-181.019l181.019,-181.019l181.019,181.019Z" style="fill:rgb(230,0,61);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M437.019,312l-181.019,181.019l-181.019,-181.019l181.019,-181.019l181.019,181.019Z" style="fill:rgb(230,0,61);"/></svg>') "\2002\2005";
 }
 .markdown ul > li > ul > li > ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="112" y="168" width="288" height="288" style="fill:rgb(40,125,207);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="112" y="168" width="288" height="288" style="fill:rgb(40,125,207);"/></svg>') "\2002\2005";
 }
 .markdown dl.note ul > li > ul > li > ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="112" y="168" width="288" height="288" style="fill:rgb(121,42,121);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="112" y="168" width="288" height="288" style="fill:rgb(121,42,121);"/></svg>') "\2002\2005";
 }
 .markdown dl.tip ul > li > ul > li > ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="112" y="168" width="288" height="288" style="fill:rgb(1,147,81);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="112" y="168" width="288" height="288" style="fill:rgb(1,147,81);"/></svg>') "\2002\2005";
 }
 .markdown dl.info ul > li > ul > li > ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="112" y="168" width="288" height="288" style="fill:rgb(1,79,157);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="112" y="168" width="288" height="288" style="fill:rgb(1,79,157);"/></svg>') "\2002\2005";
 }
 .markdown dl.warning ul > li > ul > li > ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="112" y="168" width="288" height="288" style="fill:rgb(253,155,8);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="112" y="168" width="288" height="288" style="fill:rgb(253,155,8);"/></svg>') "\2002\2005";
 }
 .markdown dl.caution ul > li > ul > li > ul > li::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="112" y="168" width="288" height="288" style="fill:rgb(230,0,61);"/></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="112" y="168" width="288" height="288" style="fill:rgb(230,0,61);"/></svg>') "\2002\2005";
 }
 .markdown ul > li > ul > li > ul > li > ul > li::marker {
-	content: "\2013\2002";
+	content: "\2013\2002\2005";
 	font-weight: bold;
 	color: var(--list-marker-color);
 }
 .markdown dl.note ul > li > ul > li > ul > li > ul > li::marker {
-	content: "\2013\2002";
+	content: "\2013\2002\2005";
 	font-weight: bold;
 	color: var(--dl-note-border-color);
 }
 .markdown dl.tip ul > li > ul > li > ul > li > ul > li::marker {
-	content: "\2013\2002";
+	content: "\2013\2002\2005";
 	font-weight: bold;
 	color: var(--dl-tip-border-color);
 }
 .markdown dl.info ul > li > ul > li > ul > li > ul > li::marker {
-	content: "\2013\2002";
+	content: "\2013\2002\2005";
 	font-weight: bold;
 	color: var(--dl-info-border-color);
 }
 .markdown dl.warning ul > li > ul > li > ul > li > ul > li::marker {
-	content: "\2013\2002";
+	content: "\2013\2002\2005";
 	font-weight: bold;
 	color: var(--dl-warning-border-color);
 }
 .markdown dl.caution ul > li > ul > li > ul > li > ul > li::marker {
-	content: "\2013\2002";
+	content: "\2013\2002\2005";
 	font-weight: bold;
 	color: var(--dl-caution-border-color);
 }
 .markdown ol > li::marker {
-	content: counter(list-item) ".\2002";
+	content: counter(list-item) ".\2002\2005";
 	font-weight: bold;
 	color: var(--list-marker-color);
 }
@@ -303,25 +304,25 @@
 	color: var(--dl-caution-border-color);
 }
 .markdown ul > li.task-list-item.checked::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(40,125,207);"/></g></g></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(40,125,207);"/></g></g></svg>') "\2002\2005";
 }
 .markdown dl.note ul > li.task-list-item.checked::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(121,42,121);"/></g></g></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(121,42,121);"/></g></g></svg>') "\2002\2005";
 }
 .markdown dl.tip ul > li.task-list-item.checked::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(1,147,81);"/></g></g></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(1,147,81);"/></g></g></svg>') "\2002\2005";
 }
 .markdown dl.info ul > li.task-list-item.checked::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(1,79,157);"/></g></g></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(1,79,157);"/></g></g></svg>') "\2002\2005";
 }
 .markdown dl.warning ul > li.task-list-item.checked::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(253,155,8);"/></g></g></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(253,155,8);"/></g></g></svg>') "\2002\2005";
 }
 .markdown dl.caution ul > li.task-list-item.checked::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(230,0,61);"/></g></g></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g transform="matrix(-0.678823,-0.678823,0.678823,-0.678823,206,512)"><g id="checkbox"><path id="check" d="M300,0L-0,-0L-0,450L150,450L150,150L300,150L300,0Z" style="fill:rgb(230,0,61);"/></g></g></svg>') "\2002\2005";
 }
 .markdown ul > li.task-list-item.unchecked::marker {
-	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="checkbox"><path d="M448,160C448,142.339 433.661,128 416,128L96,128C78.339,128 64,142.339 64,160L64,480C64,497.661 78.339,512 96,512L416,512C433.661,512 448,497.661 448,480L448,160ZM416,168C416,163.585 412.415,160 408,160L104,160C99.585,160 96,163.585 96,168L96,472C96,476.415 99.585,480 104,480L408,480C412.415,480 416,476.415 416,472L416,168Z" style="fill:rgb(153,153,153);"/></g></svg>') "\2002";
+	content: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="checkbox"><path d="M448,160C448,142.339 433.661,128 416,128L96,128C78.339,128 64,142.339 64,160L64,480C64,497.661 78.339,512 96,512L416,512C433.661,512 448,497.661 448,480L448,160ZM416,168C416,163.585 412.415,160 408,160L104,160C99.585,160 96,163.585 96,168L96,472C96,476.415 99.585,480 104,480L408,480C412.415,480 416,476.415 416,472L416,168Z" style="fill:rgb(153,153,153);"/></g></svg>') "\2002\2005";
 }
 
 /*
@@ -337,8 +338,11 @@
 .markdown .footnote-ref::after {
 	content: "]";
 }
+.markdown .footnotes ol {
+	padding-inline-start: 2em;
+}
 .markdown .footnotes ol > li::marker {
-	content: counter(list-item) ".\2002";
+	content: counter(list-item) ".\2002\2005";
 	font-weight: bold;
 }
 .markdown .footnotes p {
