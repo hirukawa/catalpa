@@ -2,12 +2,9 @@ package onl.oss.catalpa.model;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
-import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
 import com.drew.metadata.file.FileTypeDirectory;
 import com.drew.metadata.gif.GifHeaderDirectory;
-import com.drew.metadata.gif.GifImageDirectory;
 import com.drew.metadata.jpeg.JpegDirectory;
 import com.drew.metadata.png.PngDirectory;
 import com.drew.metadata.webp.WebpDirectory;
@@ -157,7 +154,7 @@ public class ImageSize {
                 WARN("height not found: " + path);
             }
         } else if (fileTypeName.equalsIgnoreCase("GIF")) {
-            for (GifImageDirectory directory : metadata.getDirectoriesOfType(GifImageDirectory.class)) {
+            for (GifHeaderDirectory directory : metadata.getDirectoriesOfType(GifHeaderDirectory.class)) {
                 if (directory.containsTag(GifHeaderDirectory.TAG_IMAGE_WIDTH)) {
                     width = directory.getInteger(GifHeaderDirectory.TAG_IMAGE_WIDTH);
                 }
