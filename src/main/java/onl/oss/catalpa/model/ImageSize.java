@@ -2,8 +2,11 @@ package onl.oss.catalpa.model;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
+import com.drew.metadata.Tag;
 import com.drew.metadata.file.FileTypeDirectory;
+import com.drew.metadata.gif.GifHeaderDirectory;
 import com.drew.metadata.gif.GifImageDirectory;
 import com.drew.metadata.jpeg.JpegDirectory;
 import com.drew.metadata.png.PngDirectory;
@@ -82,7 +85,6 @@ public class ImageSize {
             throw new IOException("metadata not found: " + path);
         }
 
-        /*
         //DEBUG PRINT
         System.out.println("path=" + path);
         for (Directory directory : metadata.getDirectories()) {
@@ -92,7 +94,6 @@ public class ImageSize {
             }
             System.out.println();
         }
-        */
 
         String fileTypeName = null;
         for (FileTypeDirectory directory : metadata.getDirectoriesOfType(FileTypeDirectory.class)) {
@@ -155,11 +156,11 @@ public class ImageSize {
             }
         } else if (fileTypeName.equalsIgnoreCase("GIF")) {
             for (GifImageDirectory directory : metadata.getDirectoriesOfType(GifImageDirectory.class)) {
-                if (directory.containsTag(GifImageDirectory.TAG_WIDTH)) {
-                    width = directory.getInteger(GifImageDirectory.TAG_WIDTH);
+                if (directory.containsTag(GifHeaderDirectory.TAG_IMAGE_WIDTH)) {
+                    width = directory.getInteger(GifHeaderDirectory.TAG_IMAGE_WIDTH);
                 }
-                if (directory.containsTag(GifImageDirectory.TAG_HEIGHT)) {
-                    height = directory.getInteger(GifImageDirectory.TAG_HEIGHT);
+                if (directory.containsTag(GifHeaderDirectory.TAG_IMAGE_HEIGHT)) {
+                    height = directory.getInteger(GifHeaderDirectory.TAG_IMAGE_HEIGHT);
                 }
             }
             if (width == null) {
