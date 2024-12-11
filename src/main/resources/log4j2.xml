@@ -22,7 +22,7 @@
             <DirectWriteRolloverStrategy>
                 <Delete basePath="${sys:log.directory}">
                     <IfFileName regex="\d{4}-\d{2}-\d{2}\.log"/>
-                    <IfAccumulatedFileCount exceeds="35"/>
+                    <IfAccumulatedFileCount exceeds="14"/>
                 </Delete>
             </DirectWriteRolloverStrategy>
             <TimeBasedTriggeringPolicy/>

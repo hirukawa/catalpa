@@ -258,6 +258,20 @@ public class MainApp extends Application {
 
     private void fileWatchService_onChanged(List<Path> list) {
         // このメソッドはワーカースレッドからコールバックされます。
+
+        // フォルダーと desktop.ini は無視します。
+        for (int i = list.size() - 1; i >= 0; i--) {
+            Path path = list.get(i);
+            if (Files.isDirectory(path)) {
+                list.remove(i);
+            } else {
+                String filename = path.getFileName().toString();
+                if (filename.equalsIgnoreCase("desktop.ini")) {
+                    list.remove(i);
+                }
+            }
+        }
+
         Platform.runLater(() -> {
             INFO("ファイルの更新を検出しました: " + list);
 
@@ -283,7 +297,8 @@ public class MainApp extends Application {
                     continue;
                 } else if (Util.isTemplateFile(path) || Util.isCssFile(path)) {
                     // ftl または css が更新された場合はキャッシュをクリアして、コンテンツが再作成されるようにします。
-                    INFO(Util.getFileExtension(path) + " ファイルが更新されたためキャッシュをクリアします");
+                    INFO(Util.getFileExtension(path) + " ファイルが更新されたためキャッシュとテンポラリをクリアします");
+                    Util.deleteDirectory(temporaryPath.resolve("preview"));
                     CacheManager.clear();
                     update = true;
                     break;

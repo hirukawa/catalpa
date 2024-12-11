@@ -123,6 +123,7 @@ public class FirebaseUploader {
                 }
             }
 
+            this.consumer.accept(new Progress(0.4 * progressValue / progressMax, "アップロード対象のファイルを確認しています..."));
             PopulateFilesResult populateFilesResult = populateFiles(client, token, siteId, versionId, files);
 
             if (populateFilesResult.uploadRequiredHashes != null) {
