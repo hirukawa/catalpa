@@ -189,10 +189,8 @@ public class Blog implements Cloneable {
         // ドラフト記事が存在する場合は、それ以外の記事にスキップを設定します。
         for (Post post1 : posts) {
             if (post1.isDraft()) {
-                System.out.println("draft: " + post1);
                 for (Post post2 : posts) {
                     if (!post2.isDraft()) {
-                        System.out.println(" skip: " + post2);
                         post2.setSkip(true);
                     }
                 }
@@ -238,7 +236,6 @@ public class Blog implements Cloneable {
             post.getCategories().clear();
             post.getCategories().addAll(set);
         }
-
 
         //
         // 前の記事、次の記事

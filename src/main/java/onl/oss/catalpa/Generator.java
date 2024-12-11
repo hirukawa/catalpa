@@ -312,6 +312,18 @@ public class Generator {
     }
 
     private void applyTemplate(Folder folder, Content content) throws IOException, TemplateException {
+        //
+        // ブログ
+        //
+        Post post = null;
+        if (blog != null) {
+            post = blog.getPostBy(content.getPath());
+            if (post != null && post.isSkip()) {
+                return;
+            }
+        }
+
+        // filename
         String filename = content.getPath().getFileName().toString();
         int i = filename.lastIndexOf('.');
         if (i < 0) {
@@ -394,16 +406,12 @@ public class Generator {
         //
         // ブログ
         //
-        Post post = null;
-        if (blog != null) {
-            post = blog.getPostBy(content.getPath());
-            if (post != null) {
-                Blog clone = blog.clone();
-                clone.setPost(post);
-                dataModel.put("blog", clone);
-            } else {
-                dataModel.put("blog", blog);
-            }
+        if (post != null) {
+            Blog clone = blog.clone();
+            clone.setPost(post);
+            dataModel.put("blog", clone);
+        } else {
+            dataModel.put("blog", blog);
         }
 
         // コンテンツを FreeMarker で変数展開します。
