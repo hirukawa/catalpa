@@ -39,7 +39,8 @@ public class Blog implements Cloneable {
     private Page page;
     private Category category;
 
-    private Blog(Path path, List<Post> posts, List<Category> categories, List<Page> pages) {
+    private Blog(Path path, Map<Path, Post> postByPath, List<Post> posts, List<Category> categories, List<Page> pages) {
+        this.postByPath = postByPath;
         this.path = path;
         this.posts = posts;
         this.categories = categories;
@@ -63,12 +64,6 @@ public class Blog implements Cloneable {
     }
 
     public Post getPostBy(Path path) {
-        if (postByPath == null) {
-            postByPath = new HashMap<>();
-            for (Post post : posts) {
-                postByPath.put(post.getPath(), post);
-            }
-        }
         return postByPath.get(path);
     }
 
@@ -98,11 +93,7 @@ public class Blog implements Cloneable {
 
     @Override
     public Blog clone() {
-        Path path = getPath();
-        List<Post> posts = getPosts();
-        List<Category> categories = getCategories();
-        List<Page> pages = getPages();
-        return new Blog(path, posts, categories, pages);
+        return new Blog(path, postByPath, posts, categories, pages);
     }
 
 
@@ -155,6 +146,7 @@ public class Blog implements Cloneable {
             return null;
         }
 
+        Map<Path, Post> postByPath = new HashMap<>();
         List<Post> posts = new ArrayList<>();
         List<Category> categories = new ArrayList<>();
 
@@ -182,6 +174,34 @@ public class Blog implements Cloneable {
                 }
             });
         }
+
+        //
+        // ドラフト
+        //
+
+        // ドラフト記事が存在する場合は、それ以外の記事にスキップを設定します。
+        for (Post post1 : posts) {
+            if (post1.isDraft()) {
+                System.out.println("draft: " + post1);
+                for (Post post2 : posts) {
+                    if (!post2.isDraft()) {
+                        System.out.println(" skip: " + post2);
+                        post2.setSkip(true);
+                    }
+                }
+                break;
+            }
+        }
+
+        // スキップが設定されている記事を取り除きます。
+        for (int i = posts.size() - 1; i >= 0; i--) {
+            Post post = posts.get(i);
+            if (post.isSkip()) {
+                posts.remove(i);
+            }
+        }
+
+        System.out.println("posts.size()=" + posts.size());
 
         posts.sort(Comparator.comparing(Post::getDate).thenComparing(Post::getLastModifiedTime).reversed());
 
@@ -366,7 +386,7 @@ public class Blog implements Cloneable {
         }
 
         Path path = blogConfig.getPath().getParent();
-        return new Blog(path, posts, categories, pages);
+        return new Blog(path, postByPath, posts, categories, pages);
     }
 
     private static Post getPost(Path input, Content content) {
@@ -497,6 +517,19 @@ public class Blog implements Cloneable {
         }
 
         Post post = new Post(content.getPath(), url, date, title, categories, thumbnail, image);
+
+        //
+        // draft
+        //
+        if (content.getYaml().containsKey("draft")) {
+            Object draft = content.getYaml().get("draft");
+            if (draft != null && draft.toString().trim().equalsIgnoreCase("skip")) {
+                post.setSkip(true);
+            } else {
+                post.setDraft(true);
+            }
+        }
+
         return post;
     }
 }

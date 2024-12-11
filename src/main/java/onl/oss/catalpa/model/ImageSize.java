@@ -85,6 +85,7 @@ public class ImageSize {
             throw new IOException("metadata not found: " + path);
         }
 
+        /*
         //DEBUG PRINT
         System.out.println("path=" + path);
         for (Directory directory : metadata.getDirectories()) {
@@ -94,6 +95,7 @@ public class ImageSize {
             }
             System.out.println();
         }
+        */
 
         String fileTypeName = null;
         for (FileTypeDirectory directory : metadata.getDirectoriesOfType(FileTypeDirectory.class)) {

@@ -21,6 +21,8 @@ public class Post {
     private Set<Category> categories;
     private String thumbnail;
     private String image;
+    private boolean isDraft;
+    private boolean isSkip;
     private Post previous;
     private Post next;
     private List<Post> related;
@@ -64,6 +66,22 @@ public class Post {
 
     public String getImage() {
         return image;
+    }
+
+    public void setDraft(boolean isDraft) {
+        this.isDraft = isDraft;
+    }
+
+    public boolean isDraft() {
+        return isDraft;
+    }
+
+    public void setSkip(boolean isSkip) {
+        this.isSkip = isSkip;
+    }
+
+    public boolean isSkip() {
+        return isSkip;
     }
 
     public void setPrevious(Post previous) {
