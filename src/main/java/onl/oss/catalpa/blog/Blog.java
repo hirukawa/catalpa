@@ -176,9 +176,16 @@ public class Blog implements Cloneable {
         }
 
         //
+        // パスから記事を検索するためのマップを作成します。
+        // このマップにはスキップ記事も含まれます。
+        //
+        for (Post post : posts) {
+            postByPath.put(post.getPath(), post);
+        }
+
+        //
         // ドラフト
         //
-
         // ドラフト記事が存在する場合は、それ以外の記事にスキップを設定します。
         for (Post post1 : posts) {
             if (post1.isDraft()) {
@@ -192,7 +199,6 @@ public class Blog implements Cloneable {
                 break;
             }
         }
-
         // スキップが設定されている記事を取り除きます。
         for (int i = posts.size() - 1; i >= 0; i--) {
             Post post = posts.get(i);
@@ -200,8 +206,6 @@ public class Blog implements Cloneable {
                 posts.remove(i);
             }
         }
-
-        System.out.println("posts.size()=" + posts.size());
 
         posts.sort(Comparator.comparing(Post::getDate).thenComparing(Post::getLastModifiedTime).reversed());
 
