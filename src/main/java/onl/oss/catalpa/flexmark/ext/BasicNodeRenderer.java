@@ -6,7 +6,9 @@ import com.vladsch.flexmark.ast.Heading;
 import com.vladsch.flexmark.ast.Image;
 import com.vladsch.flexmark.ast.ImageRef;
 import com.vladsch.flexmark.ast.Link;
+import com.vladsch.flexmark.ast.LinkRef;
 import com.vladsch.flexmark.ast.Paragraph;
+import com.vladsch.flexmark.ast.Reference;
 import com.vladsch.flexmark.ast.SoftLineBreak;
 import com.vladsch.flexmark.ast.Text;
 import com.vladsch.flexmark.ext.attributes.AttributesNode;
@@ -68,6 +70,12 @@ public class BasicNodeRenderer implements NodeRenderer {
 		set.add(new NodeRenderingHandler<Link>(Link.class, new NodeRenderingHandler.CustomNodeRenderer<Link>() {
 			@Override
 			public void render(@NotNull Link node, @NotNull NodeRendererContext context, @NotNull HtmlWriter html) {
+				BasicNodeRenderer.this.render(node, context, html);
+			}
+		}));
+		set.add(new NodeRenderingHandler<LinkRef>(LinkRef.class, new NodeRenderingHandler.CustomNodeRenderer<LinkRef>() {
+			@Override
+			public void render(@NotNull LinkRef node, @NotNull NodeRendererContext context, @NotNull HtmlWriter html) {
 				BasicNodeRenderer.this.render(node, context, html);
 			}
 		}));
@@ -188,6 +196,7 @@ public class BasicNodeRenderer implements NodeRenderer {
 	}
 
 	protected void render(Link node, NodeRendererContext context, HtmlWriter html) {
+		// [text](http://www.example.com/) 形式
 		String url = node.getUrl().toString().toLowerCase();
 		if (url.startsWith("http://") || url.startsWith("https://")) {
 			if (generator == null || generator.siteurl == null || !url.startsWith(generator.siteurl.toLowerCase())) {
@@ -197,7 +206,23 @@ public class BasicNodeRenderer implements NodeRenderer {
 		context.delegateRender();
 	}
 
+	protected void render(LinkRef node, NodeRendererContext context, HtmlWriter html) {
+		// [LINK_ID]: http://www.example.com/
+		// [text][LINK_ID] , [LINK_ID][] , [LINK_ID] 形式
+		Reference ref = node.getReferenceNode(node.getDocument());
+		if (ref != null) {
+			String url = ref.getUrl().toString().toLowerCase();
+			if (url.startsWith("http://") || url.startsWith("https://")) {
+				if (generator == null || generator.siteurl == null || !url.startsWith(generator.siteurl.toLowerCase())) {
+					html.attr("target", "_blank");
+				}
+			}
+		}
+		context.delegateRender();
+	}
+
 	protected void render(AutoLink node, NodeRendererContext context, HtmlWriter html) {
+		// <http://www.example.com/> 形式
 		String url = node.getUrl().toString().toLowerCase();
 		if (url.startsWith("http://") || url.startsWith("https://")) {
 			if (generator == null || generator.siteurl == null || !url.startsWith(generator.siteurl.toLowerCase())) {
