@@ -463,7 +463,7 @@ public class Blog implements Cloneable {
             // YAML に thumbnail が定義されていない場合は、同じフォルダーに "thumbnail.webp" などの候補ファイルが存在しているか確認して、存在するファイルを採用します。
             if (file == null) {
                 String[] names = new String[] { "thumbnail", "image" };
-                String[] scales = new String[] { "@4x", "@3x", "@2x" };
+                String[] scales = new String[] { "@4x", "@3x", "@2x", "" };
                 String[] extensions = new String[] { ".webp", ".png", ".jpg", ".jpeg", ".gif" };
 
                 for (String name : names) {
@@ -503,7 +503,7 @@ public class Blog implements Cloneable {
             // YAML に image が定義されていない場合は、同じフォルダーに "image.webp" などの候補ファイルが存在しているか確認して、存在するファイルを採用します。
             if (file == null) {
                 String[] names = new String[] { "image", "thumbnail" };
-                String[] scales = new String[] { "@4x", "@3x", "@2x" };
+                String[] scales = new String[] { "@4x", "@3x", "@2x", "" };
                 String[] extensions = new String[] { ".webp", ".png", ".jpg", ".jpeg", ".gif" };
 
                 for (String name : names) {
