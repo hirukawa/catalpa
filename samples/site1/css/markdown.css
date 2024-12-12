@@ -19,6 +19,10 @@
 	.markdown .button {
 		white-space: normal !important;
 	}
+	.markdown kbd,
+	.markdown samp.button {
+	    white-space: pre-wrap;
+	}
 }
 
 .markdown {
@@ -148,7 +152,7 @@
 	border: 1px solid var(--kbd-border-color);
 	border-radius: 3px;
 	box-shadow: 1px 1px 2px rgba(0,0,0,0.5), 1px 1px 1px rgba(255,255,255,0.3) inset;
-	white-space: pre-wrap;
+	white-space: pre;
 }
 
 /*
@@ -168,7 +172,7 @@
 	border: 1px solid var(--menu-bar-item-border-color);
 	border-radius: 3px;
 	box-shadow: 1px 1px 1px rgba(0,0,0,0.5), 1px 1px 2px #FFFFFF inset;
-	white-space: pre-wrap;
+	white-space: pre;
 }
 
 /*
