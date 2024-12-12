@@ -1,9 +1,11 @@
 package onl.oss.catalpa.flexmark.ext;
 
+import com.vladsch.flexmark.ast.AutoLink;
 import com.vladsch.flexmark.ast.HardLineBreak;
 import com.vladsch.flexmark.ast.Heading;
 import com.vladsch.flexmark.ast.Image;
 import com.vladsch.flexmark.ast.ImageRef;
+import com.vladsch.flexmark.ast.Link;
 import com.vladsch.flexmark.ast.Paragraph;
 import com.vladsch.flexmark.ast.SoftLineBreak;
 import com.vladsch.flexmark.ast.Text;
@@ -16,6 +18,7 @@ import com.vladsch.flexmark.html.renderer.NodeRendererContext;
 import com.vladsch.flexmark.html.renderer.NodeRenderingHandler;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.DataHolder;
+import onl.oss.catalpa.Generator;
 import onl.oss.catalpa.freemarker.MarkdownDirective;
 import onl.oss.catalpa.model.ImageSize;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +32,10 @@ import static onl.oss.catalpa.Logger.ERROR;
 
 public class BasicNodeRenderer implements NodeRenderer {
 
-	public BasicNodeRenderer(DataHolder options) {
+	private final Generator generator;
+
+	public BasicNodeRenderer(Generator generator, DataHolder options) {
+		this.generator = generator;
 	}
 
 	@Override
@@ -56,6 +62,18 @@ public class BasicNodeRenderer implements NodeRenderer {
 		set.add(new NodeRenderingHandler<Image>(Image.class, new NodeRenderingHandler.CustomNodeRenderer<Image>() {
 			@Override
 			public void render(@NotNull Image node, @NotNull NodeRendererContext context, @NotNull HtmlWriter html) {
+				BasicNodeRenderer.this.render(node, context, html);
+			}
+		}));
+		set.add(new NodeRenderingHandler<Link>(Link.class, new NodeRenderingHandler.CustomNodeRenderer<Link>() {
+			@Override
+			public void render(@NotNull Link node, @NotNull NodeRendererContext context, @NotNull HtmlWriter html) {
+				BasicNodeRenderer.this.render(node, context, html);
+			}
+		}));
+		set.add(new NodeRenderingHandler<AutoLink>(AutoLink.class, new NodeRenderingHandler.CustomNodeRenderer<AutoLink>() {
+			@Override
+			public void render(@NotNull AutoLink node, @NotNull NodeRendererContext context, @NotNull HtmlWriter html) {
 				BasicNodeRenderer.this.render(node, context, html);
 			}
 		}));
@@ -167,6 +185,32 @@ public class BasicNodeRenderer implements NodeRenderer {
 		} finally {
 			context.delegateRender();
 		}
+	}
+
+	protected void render(Link node, NodeRendererContext context, HtmlWriter html) {
+		if (generator != null && generator.siteurl != null) {
+			String url = node.getUrl().toString().toLowerCase();
+			if (url.startsWith("http://") || url.startsWith("https://")) {
+				String s = generator.siteurl.toLowerCase();
+				if (!url.startsWith(s)) {
+					html.attr("target", "_blank");
+				}
+			}
+		}
+		context.delegateRender();
+	}
+
+	protected void render(AutoLink node, NodeRendererContext context, HtmlWriter html) {
+		if (generator != null && generator.siteurl != null) {
+			String url = node.getUrl().toString().toLowerCase();
+			if (url.startsWith("http://") || url.startsWith("https://")) {
+				String s = generator.siteurl.toLowerCase();
+				if (!url.startsWith(s)) {
+					html.attr("target", "_blank");
+				}
+			}
+		}
+		context.delegateRender();
 	}
 
 	public static Path getRootPath(NodeRendererContext context) {

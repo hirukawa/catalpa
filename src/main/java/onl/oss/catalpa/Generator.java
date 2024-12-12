@@ -58,7 +58,8 @@ public class Generator {
     private final Map<String, Object> systemDataModel;
     private final Configuration freeMarker;
 
-    private String siteurl;
+    public String siteurl;
+
     private Blog blog;
     private List<SearchIndex> searchIndexes = Collections.synchronizedList(new ArrayList<>());
     private List<SitemapItem> sitemapItems = Collections.synchronizedList(new ArrayList<>());
@@ -67,6 +68,7 @@ public class Generator {
     private long progressMax;
     private AtomicLong progressValue = new AtomicLong(0L);
 
+    @SuppressWarnings("this-escape")
     public Generator(Path input, Path output, Map<String, Object> systemDataModel, Consumer<Progress> consumer) throws IOException {
         this.input = input.toRealPath(LinkOption.NOFOLLOW_LINKS);
         this.output = output.toRealPath(LinkOption.NOFOLLOW_LINKS);
@@ -78,7 +80,7 @@ public class Generator {
         freeMarker.setURLEscapingCharset("UTF-8");
         freeMarker.setLogTemplateExceptions(false);
         freeMarker.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        freeMarker.setSharedVariable("markdown", new MarkdownDirective());
+        freeMarker.setSharedVariable("markdown", new MarkdownDirective(this));
         freeMarker.setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[] {
                 new FileTemplateLoader(input.resolve("templates").toFile()),
                 new FileTemplateLoader(input.toFile())

@@ -20,6 +20,7 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
+import onl.oss.catalpa.Generator;
 import onl.oss.catalpa.flexmark.ext.BasicNodeExtension;
 import onl.oss.catalpa.flexmark.ext.HighlightExtension;
 import onl.oss.catalpa.flexmark.ext.KbdExtension;
@@ -53,11 +54,14 @@ public class MarkdownDirective implements TemplateDirectiveModel {
     private static final Pattern RUBY_PATTERN_2 = Pattern.compile("([\\u4E00-\\u9FFF\\u3005-\\u3007\\u30F6]+)《(.+?)》");
     private static final Pattern RUBY_PATTERN_3 = Pattern.compile("([-+.,:;_!?#%&@$a-zA-Z0-9]+)《(.+?)》");
 
+    private final Generator generator;
     private final MutableDataSet options;
     private final Parser parser;
     private final HtmlRenderer renderer;
 
-    public MarkdownDirective() {
+    public MarkdownDirective(Generator generator) {
+        this.generator = generator;
+
         MutableDataSet options = new MutableDataSet();
         options.set(HtmlRenderer.FENCED_CODE_NO_LANGUAGE_CLASS, "nohighlight");
         //TODO:
@@ -79,7 +83,7 @@ public class MarkdownDirective implements TemplateDirectiveModel {
                 TablesExtension.create(),
                 TypographicExtension.create(),
 
-                BasicNodeExtension.create(),
+                BasicNodeExtension.create(generator),
                 HighlightExtension.create(),
                 KbdExtension.create(),
                 SampButtonExtension.create()

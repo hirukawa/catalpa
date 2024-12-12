@@ -7,14 +7,18 @@ import com.vladsch.flexmark.html.renderer.NodeRendererFactory;
 import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.MutableDataHolder;
 import com.vladsch.flexmark.util.misc.Extension;
+import onl.oss.catalpa.Generator;
 
 public class BasicNodeExtension implements HtmlRenderer.HtmlRendererExtension {
 
-	public static Extension create() {
-		return new BasicNodeExtension();
+	public static Extension create(Generator generator) {
+		return new BasicNodeExtension(generator);
 	}
-	
-	private BasicNodeExtension() {
+
+	private final Generator generator;
+
+	private BasicNodeExtension(Generator generator) {
+		this.generator = generator;
 	}
 	
 	@Override
@@ -26,7 +30,7 @@ public class BasicNodeExtension implements HtmlRenderer.HtmlRendererExtension {
 		rendererBuilder.nodeRendererFactory(new NodeRendererFactory() {
 			@Override
 			public NodeRenderer apply(DataHolder options) {
-				return new BasicNodeRenderer(options);
+				return new BasicNodeRenderer(generator, options);
 			}
 		});
 	}
