@@ -462,15 +462,19 @@ public class Blog implements Cloneable {
 
             // YAML に thumbnail が定義されていない場合は、同じフォルダーに "thumbnail.webp" などの候補ファイルが存在しているか確認して、存在するファイルを採用します。
             if (file == null) {
-                String[] candidates = new String[] {
-                        "thumbnail.webp", "thumbnail.png", "thumbnail.jpg", "thumbnail.jpeg", "thumbnail.gif",
-                        "image.webp", "image.png", "image.jpg", "image.jpeg", "image.gif"};
+                String[] names = new String[] { "thumbnail", "image" };
+                String[] scales = new String[] { "@4x", "@3x", "@2x" };
+                String[] extensions = new String[] { ".webp", ".png", ".jpg", ".jpeg", ".gif" };
 
-                for (String candidate : candidates) {
-                    Path f = path.getParent().resolve(candidate);
-                    if (Files.exists(f)) {
-                        file = f;
-                        break;
+                for (String name : names) {
+                    for (String scale : scales) {
+                        for (String ext : extensions) {
+                            Path f = path.getParent().resolve(name + scale + ext);
+                            if (Files.exists(f)) {
+                                file = f;
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -498,15 +502,19 @@ public class Blog implements Cloneable {
 
             // YAML に image が定義されていない場合は、同じフォルダーに "image.webp" などの候補ファイルが存在しているか確認して、存在するファイルを採用します。
             if (file == null) {
-                String[] candidates = new String[] {
-                        "image.webp", "image.png", "image.jpg", "image.jpeg", "image.gif",
-                        "thumbnail.webp", "thumbnail.png", "thumbnail.jpg", "thumbnail.jpeg", "thumbnail.gif" };
+                String[] names = new String[] { "image", "thumbnail" };
+                String[] scales = new String[] { "@4x", "@3x", "@2x" };
+                String[] extensions = new String[] { ".webp", ".png", ".jpg", ".jpeg", ".gif" };
 
-                for (String candidate : candidates) {
-                    Path f = path.getParent().resolve(candidate);
-                    if (Files.exists(f)) {
-                        file = f;
-                        break;
+                for (String name : names) {
+                    for (String scale : scales) {
+                        for (String ext : extensions) {
+                            Path f = path.getParent().resolve(name + scale + ext);
+                            if (Files.exists(f)) {
+                                file = f;
+                                break;
+                            }
+                        }
                     }
                 }
             }

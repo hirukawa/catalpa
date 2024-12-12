@@ -188,26 +188,20 @@ public class BasicNodeRenderer implements NodeRenderer {
 	}
 
 	protected void render(Link node, NodeRendererContext context, HtmlWriter html) {
-		if (generator != null && generator.siteurl != null) {
-			String url = node.getUrl().toString().toLowerCase();
-			if (url.startsWith("http://") || url.startsWith("https://")) {
-				String s = generator.siteurl.toLowerCase();
-				if (!url.startsWith(s)) {
-					html.attr("target", "_blank");
-				}
+		String url = node.getUrl().toString().toLowerCase();
+		if (url.startsWith("http://") || url.startsWith("https://")) {
+			if (generator == null || generator.siteurl == null || !url.startsWith(generator.siteurl.toLowerCase())) {
+				html.attr("target", "_blank");
 			}
 		}
 		context.delegateRender();
 	}
 
 	protected void render(AutoLink node, NodeRendererContext context, HtmlWriter html) {
-		if (generator != null && generator.siteurl != null) {
-			String url = node.getUrl().toString().toLowerCase();
-			if (url.startsWith("http://") || url.startsWith("https://")) {
-				String s = generator.siteurl.toLowerCase();
-				if (!url.startsWith(s)) {
-					html.attr("target", "_blank");
-				}
+		String url = node.getUrl().toString().toLowerCase();
+		if (url.startsWith("http://") || url.startsWith("https://")) {
+			if (generator == null || generator.siteurl == null || !url.startsWith(generator.siteurl.toLowerCase())) {
+				html.attr("target", "_blank");
 			}
 		}
 		context.delegateRender();
