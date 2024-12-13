@@ -466,13 +466,14 @@ public class Blog implements Cloneable {
                 String[] scales = new String[] { "@4x", "@3x", "@2x", "" };
                 String[] extensions = new String[] { ".webp", ".png", ".jpg", ".jpeg", ".gif" };
 
+                FIND_THUMBNAIL:
                 for (String name : names) {
                     for (String scale : scales) {
                         for (String ext : extensions) {
                             Path f = path.getParent().resolve(name + scale + ext);
                             if (Files.exists(f)) {
                                 file = f;
-                                break;
+                                break FIND_THUMBNAIL;
                             }
                         }
                     }
@@ -506,13 +507,14 @@ public class Blog implements Cloneable {
                 String[] scales = new String[] { "@4x", "@3x", "@2x", "" };
                 String[] extensions = new String[] { ".webp", ".png", ".jpg", ".jpeg", ".gif" };
 
+                FIND_IMAGE:
                 for (String name : names) {
                     for (String scale : scales) {
                         for (String ext : extensions) {
                             Path f = path.getParent().resolve(name + scale + ext);
                             if (Files.exists(f)) {
                                 file = f;
-                                break;
+                                break FIND_IMAGE;
                             }
                         }
                     }
