@@ -151,31 +151,9 @@
 				</div>
 			</div>
 
-			<#-- 前の記事・次の記事 -->
+			<#-- 次の記事・前の記事 -->
 			<#if blog.post.previous?? || blog.post.next??>
 			<div class="blog-pager">
-			    <#-- 前の記事 -->
-				<#if blog.post.previous??>
-				<a class="post-previous" href="${baseurl}${blog.post.previous.url}">
-					<div class="part1">
-						<#if blog.post.previous.thumbnail?has_content>
-						<#if blog.post.previous.thumbnail?starts_with("data:")>
-						<img src="${blog.post.previous.thumbnail}">
-						<#else>
-						<img src="${baseurl}${blog.post.previous.thumbnail!}">
-						</#if>
-						<#else>
-						<img>
-						</#if>
-					</div>
-					<div class="part2">
-						<h2 class="title">${blog.post.previous.title!}</h2>
-						<div class="bottom">
-							<span class="date">${blog.post.previous.date}</span>
-						</div>
-					</div>
-				</a>
-				</#if>
 				<#-- 次の記事 -->
 				<#if blog.post.next??>
 				<a class="post-next" href="${baseurl}${blog.post.next.url}">
@@ -194,6 +172,28 @@
 						<h2 class="title">${blog.post.next.title!}</h2>
 						<div class="bottom">
 							<span class="date">${blog.post.next.date}</span>
+						</div>
+					</div>
+				</a>
+				</#if>
+			    <#-- 前の記事 -->
+				<#if blog.post.previous??>
+				<a class="post-previous" href="${baseurl}${blog.post.previous.url}">
+					<div class="part1">
+						<#if blog.post.previous.thumbnail?has_content>
+						<#if blog.post.previous.thumbnail?starts_with("data:")>
+						<img src="${blog.post.previous.thumbnail}">
+						<#else>
+						<img src="${baseurl}${blog.post.previous.thumbnail!}">
+						</#if>
+						<#else>
+						<img>
+						</#if>
+					</div>
+					<div class="part2">
+						<h2 class="title">${blog.post.previous.title!}</h2>
+						<div class="bottom">
+							<span class="date">${blog.post.previous.date}</span>
 						</div>
 					</div>
 				</a>
