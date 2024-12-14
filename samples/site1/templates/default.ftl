@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="canonical" href="${url?remove_ending('index.html')}">
-	<link rel="icon" href="${baseurl}favicon.ico">
+	<#if icon?has_content><link rel="icon" href="<#if !icon?starts_with("/")>${baseurl}</#if>${icon}"></#if>
 	<title>${title!}</title>
 	<meta name="description" content="${(description!)?replace('\n', '')}">
 	<#if theme_color?has_content><meta name="theme-color" content="${theme_color}"></#if>

@@ -1,9 +1,9 @@
 ---
+icon: favicon.ico
 title: サイトのサンプル
 siteurl: http://www.example.com
-icon: img/sample2.png
-copyright: © 2022
+copyright: © 2024
 author: My Name
 mailto: name@example.com
-options: [halt]
+options: [ halt ]
 ---
