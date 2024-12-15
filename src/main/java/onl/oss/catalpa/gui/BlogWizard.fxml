@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.skin.*?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import onl.oss.catalpa.gui.Calendar?>
+
+<StackPane
+    xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
+	stylesheets="@BlogWizard.css">
+
+	<BorderPane>
+		<padding>
+			<Insets top="10" right="10" bottom="10" left="10"/>
+		</padding>
+		<left>
+			<Calendar fx:id="calendar" />
+		</left>
+		<center>
+			<VBox spacing="10">
+				<padding>
+					<Insets left="10"/>
+				</padding>
+
+				<TextField fx:id="tfFilename"
+						   promptText="ここにファイル名を入力します" />
+
+				<ScrollPane fitToWidth="true" prefHeight="64" prefWidth="280" VBox.vgrow="ALWAYS">
+					<FlowPane fx:id="fpCategories">
+						<ProgressIndicator fx:id="progressIndicator"/>
+					</FlowPane>
+				</ScrollPane>
+
+				<HBox spacing="10">
+					<Region HBox.hgrow="ALWAYS"/>
+
+					<Button fx:id="btnCancel"
+							text=" キャンセル " />
+					<Button fx:id="btnCreate"
+							text="新しい記事を作成する">
+						<graphic><FontIcon iconLiteral="mdi2p-plus"/></graphic>
+					</Button>
+				</HBox>
+			</VBox>
+		</center>
+	</BorderPane>
+
+	<StackPane fx:id="error" visible="false" StackPane.alignment="BOTTOM_CENTER">
+		<HBox StackPane.alignment="BOTTOM_LEFT">
+			<Label fx:id="lblError"
+				   maxWidth="Infinity"
+				   HBox.hgrow="ALWAYS"/>
+			<Button fx:id="btnErrorClose"
+					text="&#x2716;"
+					focusTraversable="false"/>
+		</HBox>
+	</StackPane>
+</StackPane>

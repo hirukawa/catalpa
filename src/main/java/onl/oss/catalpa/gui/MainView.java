@@ -21,6 +21,7 @@ public class MainView extends StackPane {
     @FXML public MenuItem menuFileExit;
     @FXML public MenuItem menuHelpAbout;
     @FXML public Parent body;
+    @FXML public Label lblNewPost;
     @FXML public Label lblVSCode;
     @FXML public Label lblCheatSheet;
     @FXML public TextField tfInputPath;

@@ -22,6 +22,8 @@ import onl.oss.catalpa.Generator;
 import onl.oss.catalpa.GeneratorException;
 import onl.oss.catalpa.Util;
 import onl.oss.catalpa.Main;
+import onl.oss.catalpa.blog.Blog;
+import onl.oss.catalpa.model.Content;
 import onl.oss.catalpa.model.Progress;
 import onl.oss.catalpa.upload.UploadConfig;
 import onl.oss.catalpa.upload.UploadConfigFactory;
@@ -72,6 +74,7 @@ public class MainApp extends Application {
     private Path inputPath;
     private Path outputPath;
     private Path temporaryPath;
+    private Content blogConfig;
     private UploadConfig uploadConfig;
     private LocalHttpServer httpServer;
     private boolean isGenerating;
@@ -118,6 +121,7 @@ public class MainApp extends Application {
         mainView.btnOpenBrowser.setOnAction(this::btnOpenBrowser_onAction);
         mainView.btnSaveAs.setOnAction(this::btnSaveAs_onAction);
         mainView.btnUpload.setOnAction(this::btnUpload_onAction);
+        mainView.lblNewPost.setOnMouseClicked(this::lblNewPost_onMouseClicked);
         mainView.lblVSCode.setOnMouseClicked(this::lblVSCode_onMouseClicked);
         mainView.lblCheatSheet.setOnMouseClicked(this::lblCheatSheet_onMouseClicked);
         mainView.menuFileOpen.setOnAction(this::btnOpen_onAction);
@@ -129,13 +133,18 @@ public class MainApp extends Application {
         mainView.lblError.setOnMouseClicked(this::lblError_onMouseClicked);
         mainView.btnErrorClose.setOnAction(this::btnErrorClose_onAction);
 
+        // ツールチップ（新しいブログ記事の作成）
+        Tooltip ttNewPost = new Tooltip("新しいブログ記事を作成します");
+        ttNewPost.setShowDelay(Duration.millis(200));
+        mainView.lblNewPost.setTooltip(ttNewPost);
+
         // ツールチップ（VSCode）
-        Tooltip ttVSCode = new Tooltip("Visual Studio Codeでフォルダーを開きます");
+        Tooltip ttVSCode = new Tooltip("Visual Studio Code\u2005でフォルダーを開きます");
         ttVSCode.setShowDelay(Duration.millis(200));
         mainView.lblVSCode.setTooltip(ttVSCode);
 
         // ツールチップ（早見表）
-        Tooltip ttCheatSheet = new Tooltip("Markdown早見表をブラウザーで表示します");
+        Tooltip ttCheatSheet = new Tooltip("Markdown\u2005早見表をブラウザーで表示します");
         ttCheatSheet.setShowDelay(Duration.millis(200));
         mainView.lblCheatSheet.setTooltip(ttCheatSheet);
 
@@ -346,6 +355,33 @@ public class MainApp extends Application {
         }
         event.setDropCompleted(isTransferDone);
         event.consume();
+    }
+
+    private void lblNewPost_onMouseClicked(MouseEvent event) {
+        if (inputPath == null) {
+            return;
+        }
+
+        if (Files.notExists(inputPath)) {
+            return;
+        }
+
+        if (!Files.isDirectory(inputPath)) {
+            return;
+        }
+
+        try {
+            blogConfig = Blog.findConfig(this.inputPath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (blogConfig == null) {
+            return;
+        }
+
+        BlogWizard dialog = new BlogWizard(primaryStage, inputPath, blogConfig);
+        dialog.showAndWait();
     }
 
     private void lblVSCode_onMouseClicked(MouseEvent event) {
@@ -691,6 +727,9 @@ public class MainApp extends Application {
             INFO("fileWatchService.start(inputPath=\"" + this.inputPath + "\")");
             fileWatchService.start(this.inputPath);
         }
+
+        blogConfig = Blog.findConfig(this.inputPath);
+        mainView.lblNewPost.setDisable(blogConfig == null);
 
         if (vsCodePath != null) {
             mainView.lblVSCode.setDisable(false);

@@ -97,23 +97,14 @@ public class Blog implements Cloneable {
     }
 
 
-    /** 指定したパスからブログ・フォルダーを検索します。
-     * config.yml に type: blog が定義されているフォルダーがブログ・フォルダーです。
+    /** 指定したパスからブログのコンフィグ・ファイルを検索します。
+     * config.yml に　type: blog が定義されているのがブログのコンフィグ・ファイルです。
      *
      * @param input 検索するパス
-     * @return ブログ・フォルダーのパス、見つからない場合は null
+     * @return ブログ・コンフィグ、見つからない場合は null
      * @throws IOException 例外
      */
-    public static Path findPath(Path input) throws IOException {
-        return null;
-    }
-
-    public static Blog create(Path input) throws IOException {
-        //
-        // ブログ・フォルダーを検索します。
-        //
-        Content blogConfig = null;
-
+    public static Content findConfig(Path input) throws IOException {
         List<Path> config = new ArrayList<>();
         try (Stream<Path> stream = Files.walk(input)) {
             stream.forEach(path -> {
@@ -136,11 +127,16 @@ public class Blog implements Cloneable {
 
             if (content.getYaml().get("type") instanceof String type) {
                 if (type.equalsIgnoreCase("blog")) {
-                    blogConfig = content;
-                    break;
+                    return content;
                 }
             }
         }
+
+        return null;
+    }
+
+    public static Blog create(Path input) throws IOException {
+        Content blogConfig = findConfig(input);
 
         if (blogConfig == null) {
             return null;

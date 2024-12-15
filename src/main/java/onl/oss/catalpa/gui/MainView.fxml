@@ -47,6 +47,11 @@
                     </Menu>
                 </MenuBar>
                 <Region styleClass="menu-bar" HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblNewPost"
+                       disable="true"
+                       styleClass="menu-bar, menu-label">
+                    <graphic><FontIcon styleClass="new-post" iconLiteral="mdi2f-file-plus"/></graphic>
+                </Label>
                 <Label fx:id="lblVSCode"
                        disable="true"
                        styleClass="menu-bar, menu-label">
