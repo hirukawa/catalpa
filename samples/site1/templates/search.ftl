@@ -26,10 +26,12 @@
 		<div class="default">
 			<div class="content">
 				<#if (_PREVIEW!false) == true>
-				<a class="title" href="/">${title!}</a>
+				<a class="title" href="${title_url!?ensure_starts_with("/")}">
 				<#else>
-				<a class="title" href="${siteurl!}">${title!}</a>
+				<a class="title" href="${siteurl!}${title_url!?ensure_starts_with("/")}">
 				</#if>
+				${title!}
+				</a>
 				<form class="search" onsubmit="var e = document.getElementById('search-keyword'); search(e.value); e.select(); return false;">
 					<input id="search-keyword" type="search" name="keyword" placeholder="検索">
 				</form>

@@ -4,14 +4,11 @@ date:  2019-01-04
 catgories: ["カテゴリーA", "カテゴリーB"]
 ---
 
+![](thumbnail.png)
+
+
 CatalpaにはGUIフロントエンドが付属しています。
 Markdown記法で書かれたサイトデータをCatalpaにドラッグ・アンド・ドロップするだけでHTMLを出力することができます。
-
-<!--more-->
-
-![](img/catalpa-window.png)
-
->
 
 さらに、CatalpaにはローカルHTTPサーバー機能、ファイル監視・自動更新の機能が備わっており、Markdownファイルを編集して上書き保存するだけで、変更の検出、HTML再作成、ブラウザーのリロードまで自動的におこなわれます。
 

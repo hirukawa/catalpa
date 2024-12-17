@@ -7,10 +7,10 @@ categories: ["カテゴリーB(cat-b)"]
 [Apache FreeMarker]: https://freemarker.apache.org/
 [flexmark]: https://github.com/vsch/flexmark-java
 
+![](thumbnail.png)
+
 Catalpaは[Apache FreeMarker]テンプレート・エンジンと[flexmark][]マークダウン・プロセッサーを
 中心として、独自の日本語組版処理を加えた静的サイトジェネレーターです。
-
-<!--more-->
 
 配布パッケージにはサンプルとして、いくつかのテンプレート（HTMLページレイアウト）やCSSが含まれていますが、
 これらのサンプルにこだわる必要はありません。

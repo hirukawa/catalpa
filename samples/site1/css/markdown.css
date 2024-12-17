@@ -21,7 +21,12 @@
 	}
 	.markdown kbd,
 	.markdown samp.button {
-	    white-space: pre-wrap;
+		white-space: pre-wrap !important;
+	}
+	/* 箇条書きリスト・番号リスト・タスクリストの字下げを浅くします 3em -> 2em */
+	.markdown ul,
+	.markdown ol {
+		padding-inline-start: 2em !important;
 	}
 }
 
