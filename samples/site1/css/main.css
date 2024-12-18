@@ -92,6 +92,10 @@ header {
 	background-color: var(--header-background-color);
 	color: var(--header-text-color);
 }
+header div.nav {
+	background-color: var(--nav-link-background-color);
+	border-bottom: 1px solid var(--nav-background-color);
+}
 
 /*
  *  既定のヘッダー
@@ -121,7 +125,11 @@ header .default .content .title {
 footer {
 	background-color: var(--footer-background-color);
 	color: var(--footer-text-color);
-} 
+}
+footer div.nav {
+	background-color: var(--nav-link-background-color);
+	border-top: 1px solid var(--nav-background-color);
+}
 
 /*
  *  既定のフッター
