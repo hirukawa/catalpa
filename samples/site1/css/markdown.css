@@ -118,7 +118,7 @@
  */
 .markdown del {
 	text-decoration: none;
-	background: linear-gradient(var(--main-text-color), var(--main-text-color)) 0 45% / 100% 2px no-repeat;
+	background: linear-gradient(var(--main-text-color), var(--main-text-color)) 0 60% / 100% 2px no-repeat;
 }
 
 /*
@@ -358,7 +358,7 @@
 	font-weight: bold;
 }
 .markdown .footnotes p {
-	display: inline-block;
+	display: inline;
 }
 @media print {
 	.markdown .footnote-backref {
@@ -1033,8 +1033,7 @@
 .markdown p.card {
 	margin-block-start: -1em;
 	margin-block-end: 1em;
-	margin-inline-start: calc(0px - var(--content-padding-left) - var(--content-padding-left-adjust));
-	margin-inline-end: calc(0px - var(--content-padding-right) - var(--content-padding-right-adjust));
+	margin-inline: 0;
 	padding: 0;
 	display: flex;
 	flex-wrap: wrap;
@@ -1043,6 +1042,7 @@
 }
 .markdown p.card a {
 	margin-block-start: 1em;
+	margin-inline: 0.5em;
 	display: block;
 	border-radius: 4px;
 	color: var(--card-text-color);
@@ -1075,7 +1075,8 @@
 	width: 176px;
 }
 .markdown p.card a.padding {
-	margin: 0;
+	margin-block: 0;
+	margin-inline: 0.5em;
 	width: 288px;
 	height: 0;
 }
@@ -1087,8 +1088,7 @@
  .markdown p.card.landscape {
 	margin-block-start: -1em;
 	margin-block-end: 1em;
-	margin-inline-start: calc(0px - var(--content-padding-left) - var(--content-padding-left-adjust));
-	margin-inline-end: calc(0px - var(--content-padding-right) - var(--content-padding-right-adjust));
+	margin-inline: 0;
 	padding: 0;
 	display: flex;
 	flex-wrap: wrap;
@@ -1097,6 +1097,7 @@
 }
 .markdown p.card.landscape a {
 	margin-block-start: 1em;
+	margin-inline: 0.5em;
 	display: block;
 	border-radius: 4px;
 	color: var(--main-text-color);
@@ -1115,23 +1116,24 @@
 .markdown p.card.landscape a > img {
 	border-radius: 4px 4px 0 0;
 	object-fit: cover;
-	width: 176px;
-	height: 110px;
+	width: 168px;
+	height: 105px;
 }
 .markdown p.card.landscape a > img + em {
 	display: table-cell;
-	width: calc(176px - 0.5em * 2);
+	width: calc(168px - 0.25em * 2);
 	height: 72px;
 	text-align: center;
 	vertical-align: middle;
 	line-height: 1.25;
 	font-weight: normal;
 	font-style: normal;
-	padding: 0 0.5em;
+	padding: 0 0.25em;
 }
 .markdown p.card.landscape a.padding {
-	margin: 0;
-	width: 176px;
+	margin-block: 0;
+	margin-inline: 0.5em;
+	width: 168px;
 	height: 0;
 }
 @media screen and (max-width: 500px) {
