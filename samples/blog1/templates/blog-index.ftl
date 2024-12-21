@@ -153,17 +153,21 @@ ${head!}
 	</footer>
 
 	<script>
-		const content = document.getElementsByClassName("content")[0];
+		var ua = window.navigator.userAgent.toLowerCase();
+		if (ua.indexOf("windows") !== -1) {
+			document.documentElement.style.setProperty("--is-windows", 1)
+		} else if (ua.indexOf("mac os") !== -1) {
+			document.documentElement.style.setProperty("--is-mac", 1);
+		} else if (ua.indexOf("android") !== -1) {
+			document.documentElement.style.setProperty("--is-android", 1);
+		} else if (ua.indexOf("iphone") !== -1) {
+			document.documentElement.style.setProperty("--is-iphone", 1);
+		}
 		const sticky_header = document.getElementById("sticky-header");
-		if(content != null || sticky_header != null) {
+		if (sticky_header != null) {
 			const resizeObserver = new ResizeObserver((entries) => {
-				if(content != null) {
-					var font_size = getComputedStyle(document.documentElement).getPropertyValue("--content-font-size-px");
-					document.documentElement.style.setProperty("--content-padding-left-adjust", Math.floor(content.clientWidth % parseInt(font_size) / 2) + "px");
-					document.documentElement.style.setProperty("--content-padding-right-adjust", Math.ceil(content.clientWidth % parseInt(font_size) / 2) + "px");
-				}
-				if(sticky_header != null) {
-					document.documentElement.style.scrollPaddingTop = sticky_header.clientHeight + "px";
+				if (sticky_header != null) {
+					document.documentElement.style.scrollPaddingTop = (sticky_header.clientHeight - 4) + "px";
 				}
 			});
 			resizeObserver.observe(document.body);

@@ -669,6 +669,9 @@
 .markdown dl.secondary-variant.has-term > dd {
 	padding-block-start: 1.75em;
 }
+.markdown dl.round > dt {
+	border-radius: 4em;
+}
 .markdown dl.deg-0 > dt {
 	transform: rotate(0);
 }
@@ -1218,7 +1221,7 @@
 .markdown div.column-2 > div {
 	margin-inline-start: auto;
 	margin-inline-end: auto;
-	width: calc((var(--content-width) - (var(--content-padding-left) * 2) - var(--content-padding-left-adjust) - var(--content-padding-right) - var(--content-padding-right-adjust)) / 2);
+	width: calc((var(--content-width) - var(--content-padding-left) * 2 - var(--content-padding-right)) / 2);
 }
 
 .markdown .m-0 {
