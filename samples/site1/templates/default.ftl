@@ -57,25 +57,28 @@ ${head!}
 			</div>
 		</div>
 		</#if>
+
 		<#if header?has_content>
-		<div class="markdown"><@markdown  replace_backslash_to_yensign=true use_ruby=true use_catalpa_font=true>${header!}</@markdown></div>
+		<div class="markdown"><@markdown>${header!}</@markdown></div>
 		</#if>
 	</header>
 
 	<#-- main -->
 	<main>
-		<div class="content markdown"><!--start-search-target--><@markdown replace_backslash_to_yensign=true use_ruby=true use_catalpa_font=true>${content!}</@markdown><!--end-search-target--></div>
+		<div class="content markdown"><!--start-search-target--><@markdown>${content!}</@markdown><!--end-search-target--></div>
 	</main>
 
 	<#-- footer -->
 	<footer>
 		<#if footer?has_content>
-		<div class="markdown"><@markdown  replace_backslash_to_yensign=true use_ruby=true use_catalpa_font=true>${footer!}</@markdown></div>
+		<div class="markdown"><@markdown>${footer!}</@markdown></div>
 		</#if>
 
+		<#if !(hide!)?contains('footer')>
 		<div class="default">
 			<div class="content">
 				<#-- SNS はてなブックマーク -->
+				<#if !(hide!)?contains('sns_all') && !(hide!)?contains('sns_hatena')>
 				<a class="sns button hatena"
 					href="https://b.hatena.ne.jp/add?mode=confirm&url=${url?remove_ending('index.html')}&title=${title!}" target="_blank"
 					alt="はてなブックマーク"
@@ -94,7 +97,9 @@ ${head!}
 					</svg>
 					ブックマーク
 				</a>
+				</#if>
 				<#-- SNS Facebook -->
+				<#if !(hide!)?contains('sns_all') && !(hide!)?contains('sns_facebook')>
 				<a class="sns button facebook"
 					href="https://www.facebook.com/share.php?u=${url?remove_ending('index.html')}" target="_blank"
 					alt="Facebookシェア"
@@ -107,7 +112,9 @@ ${head!}
 					</svg>
 					シェア
 				</a>
+				</#if>
 				<#-- SNS X (Twitter) -->
+				<#if !(hide!)?contains('sns_all') && !(hide!)?contains('sns_x')>
 				<a class="sns button x"
 					href="https://x.com/intent/post?url=${url?remove_ending('index.html')}&text=${title!}" target="_blank"
 					alt="X (Twitter)"
@@ -118,6 +125,11 @@ ${head!}
 					</svg>
 					ポスト
 				</a>
+				</#if>
+
+				<#-- LEGAL -->
+				${legal!}
+
 				<#-- COPYRIGHT -->
 				<span class="copyright">
 					${copyright!}&ensp;
@@ -127,6 +139,7 @@ ${head!}
 				</span>
 			</div>
 		</div>
+		</#if>
 	</footer>
 
 	<script>
@@ -173,5 +186,7 @@ ${head!}
 		waitForUpdate();
 	</script>
 	</#if>
+
+${tail!}
 </body>
 </html>

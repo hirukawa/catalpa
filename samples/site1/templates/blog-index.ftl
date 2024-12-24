@@ -41,6 +41,7 @@ ${head!}
 <body>
 	<#-- header -->
 	<header>
+		<#if !(hide!)?contains('header')>
 		<div class="default">
 			<div class="content">
 				<#if (_PREVIEW!false) == true>
@@ -56,6 +57,12 @@ ${head!}
 				</form>
 			</div>
 		</div>
+		</#if>
+
+		<#if header?has_content>
+		<div class="markdown"><@markdown>${header!}</@markdown></div>
+		</#if>
+		
 		<#-- category -->
 		<div class="blog-categories-wrapper">
 			<div class="content blog-categories">
@@ -140,9 +147,18 @@ ${head!}
 
 	<#-- footer -->
 	<footer>
+		<#if footer?has_content>
+		<div class="markdown"><@markdown>${footer!}</@markdown></div>
+		</#if>
+
+		<#if !(hide!)?contains('footer')>
 		<div class="default">
 			<div class="content">
-				<span class="copyright" style="margin-inline-end:auto">
+
+				<#-- LEGAL -->
+				${legal!}
+
+				<span class="copyright">
 					${copyright!}&ensp;
 					<#if mailto?has_content><address><a href="mailto:${mailto}"></#if>
 					<#if author?has_content>${author}<#else>${mailto!}</#if>
@@ -150,6 +166,7 @@ ${head!}
 				</span>
 			</div>
 		</div>
+		</#if>
 	</footer>
 
 	<script>
@@ -196,5 +213,6 @@ ${head!}
 	</script>
 	</#if>
 
+${tail!}
 </body>
 </html>

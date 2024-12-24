@@ -64,6 +64,7 @@ ${head!}
 <body>
 	<#-- header -->
 	<header>
+		<#if !(hide!)?contains('header')>
 		<div class="default">
 			<div class="content">
 				<#if (_PREVIEW!false) == true>
@@ -83,6 +84,11 @@ ${head!}
 				</form>
 			</div>
 		</div>
+		</#if>
+
+		<#if header?has_content>
+		<div class="markdown"><@markdown>${header!}</@markdown></div>
+		</#if>
 	</header>
 
 	<#-- main -->
@@ -96,7 +102,7 @@ ${head!}
 					</#list>
 					<h1 class="title">${blog.post.title}</h1>
 				</div>
-				<div class="markdown"><!--start-search-target--><@markdown replace_backslash_to_yensign=true use_ruby=true use_catalpa_font=true>${content!}</@markdown><!--end-search-target--></div>
+				<div class="markdown"><!--start-search-target--><@markdown>${content!}</@markdown><!--end-search-target--></div>
 
 				<div style="margin:1rem;text-align:right;color:#666">
 					<#if contentLastModified??>
@@ -107,12 +113,14 @@ ${head!}
 			</article>
 		</div>
 
+		<#if !(hide!)?contains('sns_all')>
 		<div class="content" style="padding:0">
 			<#-- sns -->
 			<div style="margin:1rem 0;padding:1em;background-color:#f2f2f2">
 				<div style="margin-block-end:1em;line-height:1">この記事を共有しませんか？</div>
 				<div style="display:flex;flex-wrap:wrap;align-items:center;gap:0.5em">
 					<#-- SNS はてなブックマーク -->
+					<#if !(hide!)?contains('sns_hatena')>
 					<a class="sns button hatena"
 						href="https://b.hatena.ne.jp/add?mode=confirm&url=${url?remove_ending('index.html')}&title=${title!}" target="_blank"
 						alt="はてなブックマーク"
@@ -131,7 +139,9 @@ ${head!}
 						</svg>
 						ブックマーク
 					</a>
+					</#if>
 					<#-- SNS Facebook -->
+					<#if !(hide!)?contains('sns_facebook')>
 					<a class="sns button facebook"
 						href="https://www.facebook.com/share.php?u=${url?remove_ending('index.html')}" target="_blank"
 						alt="Facebookシェア"
@@ -144,7 +154,9 @@ ${head!}
 						</svg>
 						シェア
 					</a>
+					</#if>
 					<#-- SNS X (Twitter) -->
+					<#if !(hide!)?contains('sns_x')>
 					<a class="sns button x"
 						href="https://x.com/intent/post?url=${url?remove_ending('index.html')}&text=${title!}" target="_blank"
 						alt="X (Twitter)"
@@ -155,8 +167,10 @@ ${head!}
 						</svg>
 						ポスト
 					</a>
+					</#if>
 				</div>
 			</div>
+			</#if>
 
 			<#-- 次の記事・前の記事 -->
 			<#if blog.post.previous?? || blog.post.next??>
@@ -251,9 +265,18 @@ ${head!}
 
 	<#-- footer -->
 	<footer>
+		<#if footer?has_content>
+		<div class="markdown"><@markdown>${footer!}</@markdown></div>
+		</#if>
+
+		<#if !(hide!)?contains('footer')>
 		<div class="default">
 			<div class="content">
-				<span class="copyright" style="margin-inline-end:auto">
+				<#-- LEGAL -->
+				${legal!}
+
+				<#-- COPYRIGHT -->
+				<span class="copyright">
 					${copyright!}&ensp;
 					<#if mailto?has_content><address><a href="mailto:${mailto}"></#if>
 					<#if author?has_content>${author}<#else>${mailto!}</#if>
@@ -261,6 +284,7 @@ ${head!}
 				</span>
 			</div>
 		</div>
+		</#if>
 	</footer>
 
 	<script>
@@ -306,5 +330,7 @@ ${head!}
 		waitForUpdate();
 	</script>
 	</#if>
+
+${tail!}
 </body>
 </html>

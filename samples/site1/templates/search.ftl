@@ -24,6 +24,7 @@ ${head!}
 <body>
 	<#-- search -->
 	<header>
+		<#if !(hide!)?contains('header')>
 		<div class="default">
 			<div class="content">
 				<#if (_PREVIEW!false) == true>
@@ -38,6 +39,11 @@ ${head!}
 				</form>
 			</div>
 		</div>
+		</#if>
+
+		<#if header?has_content>
+		<div class="markdown"><@markdown>${header!}</@markdown></div>
+		</#if>
 	</header>
 
 	<#-- main -->
@@ -47,8 +53,16 @@ ${head!}
 
 	<#-- footer -->
 	<footer>
+		<#if footer?has_content>
+		<div class="markdown"><@markdown>${footer!}</@markdown></div>
+		</#if>
+
+		<#if !(hide!)?contains('footer')>
 		<div class="default">
 			<div class="content">
+				<#-- LEGAL -->
+				${legal!}
+
 				<#-- COPYRIGHT -->
 				<span class="copyright">
 					${copyright!}&ensp;
@@ -58,6 +72,7 @@ ${head!}
 				</span>
 			</div>
 		</div>
+		</#if>
 	</footer>
 
 	<#if (_PREVIEW!false) == true>
@@ -239,5 +254,7 @@ ${head!}
 		input.focus();
 		input.select();
 	</script>
+
+${tail!}
 </body>
 </html>
