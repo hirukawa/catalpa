@@ -506,6 +506,9 @@ public class Generator {
         //
         dataModel.put("_FILEPATH", rootFolder.getRootPath().resolve(path));
 
+        // コンテンツを FreeMarker で変数展開します。
+        dataModel.putAll(rootFolder.expandBlocks(freeMarker, dataModel));
+
         Template template = freeMarker.getTemplate("search.ftl");
 
         Path target = output.resolve(path);
@@ -554,6 +557,9 @@ public class Generator {
         // ファイルパス
         //
         dataModel.put("_FILEPATH", rootFolder.getRootPath().resolve(path));
+
+        // コンテンツを FreeMarker で変数展開します。
+        dataModel.putAll(rootFolder.expandBlocks(freeMarker, dataModel));
 
         Template template = freeMarker.getTemplate("sitemap.ftl");
 
