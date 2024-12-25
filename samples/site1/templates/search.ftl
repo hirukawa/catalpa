@@ -16,6 +16,7 @@ ${head!}
 		<#include "css/system.css">
 		<#include "css/color.css">
 		<#include "css/main.css">
+		<#include "css/markdown.css">
 		<#include "css/search.css">
 		<#include "css/custom.css" ignore_missing=true>
 		${css!}
@@ -60,6 +61,11 @@ ${head!}
 		<#if !config.hide!?contains('footer') && !hide!?contains('footer')>
 		<div class="default">
 			<div class="content">
+				<#-- LEGAL -->
+				<#if legal?has_content>
+				<div class="markdown legal"><@markdown>${legal!}</@markdown></div>
+				</#if>
+
 				<#-- COPYRIGHT -->
 				<span class="copyright">
 					${copyright!}&ensp;
