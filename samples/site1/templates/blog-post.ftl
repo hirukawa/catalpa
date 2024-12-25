@@ -64,7 +64,7 @@ ${head!}
 <body>
 	<#-- header -->
 	<header>
-		<#if !(hide!)?contains('header')>
+		<#if !config.hide!?contains('header') && !hide!?contains('header')>
 		<div class="default">
 			<div class="content">
 				<#if (_PREVIEW!false) == true>
@@ -113,14 +113,14 @@ ${head!}
 			</article>
 		</div>
 
-		<#if !(hide!)?contains('sns_all')>
+		<#-- SNS -->
+		<#if !config.hide!?contains('sns_all') && !hide!?contains('sns_all')>
 		<div class="content" style="padding:0">
-			<#-- sns -->
 			<div style="margin:1rem 0;padding:1em;background-color:#f2f2f2">
 				<div style="margin-block-end:1em;line-height:1">この記事を共有しませんか？</div>
 				<div style="display:flex;flex-wrap:wrap;align-items:center;gap:0.5em">
 					<#-- SNS はてなブックマーク -->
-					<#if !(hide!)?contains('sns_hatena')>
+					<#if !config.hide!?contains('sns_hatena') && !hide!?contains('sns_hatena')>
 					<a class="sns button hatena"
 						href="https://b.hatena.ne.jp/add?mode=confirm&url=${url?remove_ending('index.html')}&title=${title!}" target="_blank"
 						alt="はてなブックマーク"
@@ -141,7 +141,7 @@ ${head!}
 					</a>
 					</#if>
 					<#-- SNS Facebook -->
-					<#if !(hide!)?contains('sns_facebook')>
+					<#if !config.hide!?contains('sns_facebook') && !hide!?contains('sns_facebook')>
 					<a class="sns button facebook"
 						href="https://www.facebook.com/share.php?u=${url?remove_ending('index.html')}" target="_blank"
 						alt="Facebookシェア"
@@ -156,7 +156,7 @@ ${head!}
 					</a>
 					</#if>
 					<#-- SNS X (Twitter) -->
-					<#if !(hide!)?contains('sns_x')>
+					<#if !config.hide!?contains('sns_x') && !hide!?contains('sns_x')>
 					<a class="sns button x"
 						href="https://x.com/intent/post?url=${url?remove_ending('index.html')}&text=${title!}" target="_blank"
 						alt="X (Twitter)"
@@ -269,11 +269,13 @@ ${head!}
 		<div class="markdown"><@markdown>${footer!}</@markdown></div>
 		</#if>
 
-		<#if !(hide!)?contains('footer')>
+		<#if !config.hide!?contains('footer') && !hide!?contains('footer')>
 		<div class="default">
 			<div class="content">
 				<#-- LEGAL -->
-				${legal!}
+				<#if legal?has_content>
+				<div class="markdown legal"><@markdown>${legal!}</@markdown></div>
+				</#if>
 
 				<#-- COPYRIGHT -->
 				<span class="copyright">

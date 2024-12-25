@@ -152,6 +152,9 @@ footer .default .content address {
 	display: inline;
 	font-style: normal;
 }
+footer .default .legal {
+	flex-grow: 1;
+}
 
 /*
  *  検索ボックス

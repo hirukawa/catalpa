@@ -24,7 +24,7 @@ ${head!}
 <body>
 	<#-- search -->
 	<header>
-		<#if !(hide!)?contains('header')>
+		<#if !config.hide!?contains('header') && !hide!?contains('header')>
 		<div class="default">
 			<div class="content">
 				<#if (_PREVIEW!false) == true>
@@ -57,12 +57,9 @@ ${head!}
 		<div class="markdown"><@markdown>${footer!}</@markdown></div>
 		</#if>
 
-		<#if !(hide!)?contains('footer')>
+		<#if !config.hide!?contains('footer') && !hide!?contains('footer')>
 		<div class="default">
 			<div class="content">
-				<#-- LEGAL -->
-				${legal!}
-
 				<#-- COPYRIGHT -->
 				<span class="copyright">
 					${copyright!}&ensp;
