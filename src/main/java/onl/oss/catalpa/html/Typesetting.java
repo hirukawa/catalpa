@@ -70,10 +70,13 @@ public class Typesetting {
 							lastCloseTag = next;
 							continue;
 						}
-						// ルビ（読み）タグ <rt> ～ </rt> はスキップします。
+						// ルビの 代替タグ <rp> ～ </rp> と 読みタグ <rt> ～ </rt> はスキップします。
 						// これは <ruby><rb>漢字</rb><rt>かんじ</rt></ruby> となっているときにスペースを </ruby> の後ろに出すためです。
 						String text = next.toString();
-						if(text.startsWith("<rt>") && text.endsWith("/rt>")) {
+						if (text.startsWith("<rp>") && text.endsWith("</rp>")) {
+							continue;
+						}
+						if (text.startsWith("<rt>") && text.endsWith("</rt>")) {
 							continue;
 						}
 					}
