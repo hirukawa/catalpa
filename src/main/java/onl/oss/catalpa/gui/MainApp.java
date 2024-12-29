@@ -281,6 +281,10 @@ public class MainApp extends Application {
             }
         }
 
+        if (list.isEmpty()) {
+            return;
+        }
+
         Platform.runLater(() -> {
             INFO("ファイルの更新を検出しました: " + list);
 
@@ -300,9 +304,21 @@ public class MainApp extends Application {
             }
 
             boolean update = false;
+            PATH_LIST:
             for (Path path : list) {
+                // フォルダー名の先頭が _ で始まっている場合はファイル更新が検出されても無視します。
+                Path dir = inputPath.relativize(path);
+                while (dir != null) {
+                    if (dir.getFileName().toString().startsWith("_")) {
+                        INFO("除外フォルダー内のファイルです: " + path);
+                        continue PATH_LIST;
+                    }
+                    dir = dir.getParent();
+                }
+
                 if (outputPath != null && path.startsWith(outputPath)) {
                     // 出力中（出力パスが存在する）に、出力パスのファイル更新が検出されても無視します。
+                    INFO("出力フォルダー内のファイルです: " + path);
                     continue;
                 } else if (Util.isTemplateFile(path) || Util.isCssFile(path)) {
                     // ftl または css が更新された場合はキャッシュをクリアして、コンテンツが再作成されるようにします。
