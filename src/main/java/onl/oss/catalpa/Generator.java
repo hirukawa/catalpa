@@ -321,6 +321,7 @@ public class Generator {
         if (blog != null) {
             post = blog.getPostBy(content.getPath());
             if (post != null && post.isSkip()) {
+                INFO("スキップ: " + content.getPath());
                 return;
             }
         }
@@ -336,6 +337,15 @@ public class Generator {
 
         Path source = content.getPath();
         Path target = output.resolve(input.relativize(source)).resolveSibling(filename);
+
+        // Markdown ファイルの YAMLフロントマターに draft: skip が設定されている場合はスキップします。
+        Object draft = content.getYaml().get("draft");
+        if (draft != null && draft.toString().trim().equalsIgnoreCase("skip")) {
+            INFO("スキップ: " + content.getPath());
+            // 出力フォルダーのファイルは削除します。
+            Files.deleteIfExists(target);
+            return;
+        }
 
         Path relativeInputPath = input.relativize(content.getPath());
         Path relativeOutputPath = relativeInputPath.resolveSibling(filename);
