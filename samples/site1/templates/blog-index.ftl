@@ -3,8 +3,8 @@
 <head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
 ${head!}
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<meta name="robots" content="noindex">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="canonical" href="${url?remove_ending('index.html')}">
 	<#if icon?has_content><link rel="icon" href="<#if !icon?starts_with("/")>${baseurl}</#if>${icon}"></#if>
 	<title>${title!}</title>
