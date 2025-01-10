@@ -100,6 +100,11 @@ public class MarkdownDirective implements TemplateDirectiveModel {
         body.render(sw);
         String markdown = sw.toString();
 
+        // markdown の末尾にテーブル記述がある場合、空行がないとテーブル記述の整形がうまくいかないので空行を追加します。
+        if (!markdown.endsWith("\r\n\r\n")) {
+            markdown += "\r\n";
+        }
+
         markdown = fixVerticalSpace(markdown);
         markdown = fixTableBlock(markdown);
         markdown = fixRuby(markdown);
