@@ -200,10 +200,18 @@ ${head!}
 			xhr.onload = function (e) {
 				if (xhr.readyState === 4) {
 					if (xhr.status === 200) {
-						location.reload();
+						window.location.reload();
+						return;
+					} else if (xhr.status === 205) {
+						if (window.location.pathname === "/" || window.location.pathname === "/index.html") {
+							window.location.reload();
+						} else {
+							window.location.href = "/";
+						}
+						return;
 					}
-					waitForUpdate();
 				}
+				waitForUpdate();
 			};
 			xhr.onerror = function (e) {
 				waitForUpdate();

@@ -31,10 +31,18 @@ public class FileHandler implements HttpHandler {
             "		xhr.onload = function (e) {\r\n" +
             "			if (xhr.readyState === 4) {\r\n" +
             "				if (xhr.status === 200) {\r\n" +
-            "					location.reload();\r\n" +
+            "					window.location.reload();\r\n" +
+            "					return;\r\n" +
+            "				} else if (xhr.status === 205) {\r\n" +
+            "				    if (window.location.pathname === \"/\" || window.location.pathname === \"/index.html\") {\r\n" +
+            "					    window.location.reload();\r\n" +
+            "				    } else {\r\n" +
+            "			    		window.location.href = \"/\";\r\n" +
+            "		    		}\r\n" +
+            "					return;\r\n" +
             "				}\r\n" +
-            "				waitForUpdate();\r\n" +
             "			}\r\n" +
+            "			waitForUpdate();\r\n" +
             "		};\r\n" +
             "		xhr.onerror = function (e) {\r\n" +
             "			waitForUpdate();\r\n" +

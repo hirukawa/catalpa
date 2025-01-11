@@ -869,7 +869,7 @@ public class MainApp extends Application {
                     isGenerating = false;
 
                     if (httpServer != null) {
-                        httpServer.update();
+                        httpServer.update(this.inputPath);
                     }
 
                     if (isDirty) {
@@ -948,7 +948,7 @@ public class MainApp extends Application {
                     isGenerating = false;
 
                     if (httpServer != null) {
-                        httpServer.update();
+                        httpServer.update(this.inputPath);
                     }
 
                     if (isDirty) {
