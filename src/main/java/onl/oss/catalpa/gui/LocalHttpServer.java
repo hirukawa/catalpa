@@ -98,7 +98,7 @@ public class LocalHttpServer {
                 } catch (InterruptedException ignored) {}
 
                 // sequence が変化していない場合は更新による復帰ではなく、同時接続数超過による復帰として扱います。
-                if (sequence == this.sequence) {
+                if (sequence == this.sequence && waitCount.get() > 4) {
                     isTooManyRequests = true;
                 }
 
