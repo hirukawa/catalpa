@@ -173,17 +173,21 @@ ${head!}
 	<#if (_PREVIEW!false) == true>
 	<script>
 		function waitForUpdate() {
-			fetch("/wait-for-update?random=" + Math.random()).then(response => {
-				if (response.status === 205 && location.pathname !== "/" && location.pathname !== "/index.html") {
+			var xhr = new XMLHttpRequest();
+			xhr.onload = function (e) {
+				if (xhr.status === 205 && location.pathname !== "/" && location.pathname !== "/index.html") {
 					location.href = "/";
-				} else if (response.ok) {
+				} else if (xhr.status === 200 || xhr.status === 205) {
 					location.reload();
 				} else {
 					waitForUpdate();
 				}
-			}).catch(error => {
+			};
+			xhr.onerror = function (e) {
 				waitForUpdate();
-			});
+			};
+			xhr.open("GET", "/wait-for-update?random=" + Math.random(), true);
+			xhr.send(null);
 		}
 		waitForUpdate();
 	</script>

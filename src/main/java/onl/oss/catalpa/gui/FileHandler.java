@@ -33,17 +33,21 @@ public class FileHandler implements HttpHandler {
             "<p><a href=\"/\">トップページに戻る</a></p>\r\n" +
             "<script>\r\n" +
             "	function waitForUpdate() {\r\n" +
-            "		fetch(\"/wait-for-update?random=\" + Math.random()).then(response => {\r\n" +
-            "		    if (response.status === 205 && location.pathname !== \"/\" && location.pathname !== \"/index.html\") {\r\n" +
+            "		var xhr = new XMLHttpRequest();\r\n" +
+            "		xhr.onload = function (e) {\r\n" +
+            "		    if (xhr.status === 205 && location.pathname !== \"/\" && location.pathname !== \"/index.html\") {\r\n" +
             "			    location.href = \"/\";\r\n" +
-            "			} else if (response.ok) {\r\n" +
+            "			} else if (xhr.status === 200 || xhr.status === 205) {\r\n" +
             "				location.reload();\r\n" +
             "			} else {\r\n" +
             "				waitForUpdate();\r\n" +
             "			}\r\n" +
-            "		}).catch(error => {\r\n" +
-            "			waitForUpdate();\r\n" +
-            "		});\r\n" +
+            "		};\r\n" +
+            "		xhr.onerror = function (e) {\r\n" +
+            "		    waitForUpdate();\r\n" +
+            "		};\r\n" +
+            "		xhr.open(\"GET\", \"/wait-for-update?random=\" + Math.random(), true);\r\n" +
+            "		xhr.send(null);\r\n" +
             "	}\r\n" +
             "	waitForUpdate();\r\n" +
             "</script>\r\n" +
