@@ -23,32 +23,27 @@ public class FileHandler implements HttpHandler {
     private static final String NOT_FOUND_HTML =
             "<!DOCTYPE html>\r\n" +
             "<html lang=\"ja\">\r\n" +
+            "<head>\r\n" +
+            "   <style>\r\n" +
+            "       h1 { font-size: 1.5rem; }\r\n" +
+            "   </style>\r\n" +
+            "</head>\r\n" +
             "<body>\r\n" +
-            "Not Found\r\n" +
+            "<h1>Not Found</h1>\r\n" +
+            "<p><a href=\"/\">トップページに戻る</a></p>\r\n" +
             "<script>\r\n" +
             "	function waitForUpdate() {\r\n" +
-            "		var xhr = new XMLHttpRequest();\r\n" +
-            "		xhr.onload = function (e) {\r\n" +
-            "			if (xhr.readyState === 4) {\r\n" +
-            "				if (xhr.status === 200) {\r\n" +
-            "					window.location.reload();\r\n" +
-            "					return;\r\n" +
-            "				} else if (xhr.status === 205) {\r\n" +
-            "				    if (window.location.pathname === \"/\" || window.location.pathname === \"/index.html\") {\r\n" +
-            "					    window.location.reload();\r\n" +
-            "				    } else {\r\n" +
-            "			    		window.location.href = \"/\";\r\n" +
-            "		    		}\r\n" +
-            "					return;\r\n" +
-            "				}\r\n" +
+            "		fetch(\"/wait-for-update?random=\" + Math.random()).then(response => {\r\n" +
+            "		    if (response.status === 205 && location.pathname !== \"/\" && location.pathname !== \"/index.html\") {\r\n" +
+            "			    location.href = \"/\";\r\n" +
+            "			} else if (response.ok) {\r\n" +
+            "				location.reload();\r\n" +
+            "			} else {\r\n" +
+            "				waitForUpdate();\r\n" +
             "			}\r\n" +
+            "		}).catch(error => {\r\n" +
             "			waitForUpdate();\r\n" +
-            "		};\r\n" +
-            "		xhr.onerror = function (e) {\r\n" +
-            "			waitForUpdate();\r\n" +
-            "		};\r\n" +
-            "		xhr.open(\"GET\", \"/wait-for-update\", true);\r\n" +
-            "		xhr.send(null);\r\n" +
+            "		});\r\n" +
             "	}\r\n" +
             "	waitForUpdate();\r\n" +
             "</script>\r\n" +

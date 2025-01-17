@@ -173,28 +173,17 @@ ${head!}
 	<#if (_PREVIEW!false) == true>
 	<script>
 		function waitForUpdate() {
-			var xhr = new XMLHttpRequest();
-			xhr.onload = function (e) {
-				if (xhr.readyState === 4) {
-					if (xhr.status === 200) {
-						window.location.reload();
-						return;
-					} else if (xhr.status === 205) {
-						if (window.location.pathname === "/" || window.location.pathname === "/index.html") {
-							window.location.reload();
-						} else {
-							window.location.href = "/";
-						}
-						return;
-					}
+			fetch("/wait-for-update?random=" + Math.random()).then(response => {
+				if (response.status === 205 && location.pathname !== "/" && location.pathname !== "/index.html") {
+					location.href = "/";
+				} else if (response.ok) {
+					location.reload();
+				} else {
+					waitForUpdate();
 				}
+			}).catch(error => {
 				waitForUpdate();
-			};
-			xhr.onerror = function (e) {
-				waitForUpdate();
-			};
-			xhr.open("GET", "/wait-for-update", true);
-			xhr.send(null);
+			});
 		}
 		waitForUpdate();
 	</script>
