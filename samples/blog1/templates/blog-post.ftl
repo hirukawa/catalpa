@@ -314,23 +314,32 @@ ${head!}
 
 	<#if (_PREVIEW!false) == true>
 	<script>
+		var xhr = new XMLHttpRequest();
+
 		function waitForUpdate() {
-			var xhr = new XMLHttpRequest();
-			xhr.onload = function (e) {
-				if (xhr.status === 205 && location.pathname !== "/" && location.pathname !== "/index.html") {
-					location.href = "/";
-				} else if (xhr.status === 200 || xhr.status === 205) {
-					location.reload();
-				} else {
-					waitForUpdate();
-				}
-			};
-			xhr.onerror = function (e) {
-				waitForUpdate();
-			};
 			xhr.open("GET", "/wait-for-update?random=" + Math.random(), true);
 			xhr.send(null);
 		}
+
+		xhr.onload = function (e) {
+			if (xhr.status === 205 && location.pathname !== "/" && location.pathname !== "/index.html") {
+				location.href = "/";
+			} else if (xhr.status === 200 || xhr.status === 205) {
+				location.reload();
+			} else {
+				waitForUpdate();
+			}
+		};
+		xhr.ontimeout = function (e) {
+			waitForUpdate();
+		};
+		xhr.onerror = function (e) {
+			waitForUpdate();
+		};
+		window.onbeforeunload = function (e) {
+			xhr.abort();
+		};
+
 		waitForUpdate();
 	</script>
 	</#if>
