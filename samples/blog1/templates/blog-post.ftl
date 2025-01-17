@@ -326,6 +326,8 @@ ${head!}
 				location.href = "/";
 			} else if (xhr.status === 200 || xhr.status === 205) {
 				location.reload();
+			} else if (xhr.status === 429) {
+				// Too Many Requests
 			} else {
 				waitForUpdate();
 			}

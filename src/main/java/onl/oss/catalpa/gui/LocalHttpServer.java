@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class LocalHttpServer {
 
@@ -22,6 +23,8 @@ public class LocalHttpServer {
     private final HttpServer httpServer;
     private final Object update = new Object();
 
+    private final AtomicInteger waitCount = new AtomicInteger(0);
+    private volatile long sequence;
     private volatile Path inputPath;
 
     public LocalHttpServer(Path rootDirectory) throws IOException {
@@ -66,42 +69,67 @@ public class LocalHttpServer {
 
     public void update(Path inputPath) {
         synchronized (update) {
+            this.sequence++;
             this.inputPath = inputPath;
             update.notifyAll();
         }
     }
 
     private void waitForUpdate(HttpExchange exchange) throws IOException {
-        boolean isInputPathChanged = false;
-
-        synchronized (update) {
-            Path inputPath = this.inputPath;
-
-            try {
-                update.wait();
-            } catch (InterruptedException ignored) {}
-
-            if (!Objects.equals(inputPath, this.inputPath)) {
-                isInputPathChanged = true;
+        try {
+            // /waitForUpdate の同時接続数が 4 を超えた場合、notifyAll を呼び出して待機スレッドを復帰させます。
+            // sequence が変化していない状態で復帰したスレッドは
+            int i = waitCount.incrementAndGet();
+            while (--i >= 4) {
+                synchronized (update) {
+                    update.notifyAll();
+                }
             }
-        }
 
-        int rCode = 200;
-        byte[] response = "OK".getBytes();
+            boolean isTooManyRequests = false;
+            boolean isInputPathChanged = false;
 
+            synchronized (update) {
+                long sequence = this.sequence;
+                Path inputPath = this.inputPath;
 
-        // 待機している間に inputPath が変わっていたら（別のフォルダーを開いたということなので）
-        // ルートにリダイレクトするために レスポンスコード 205 を返します。
-        // ブラウザー側の JavaScript で 205 を処理するようにしています。
-        // 307 + Location を返すと、ブラウザーが勝手にリダイレクトを実行してしまうため、205 を使用しています。
-        if (isInputPathChanged) {
-            rCode = 205;
-            response = "Reset Content".getBytes();
-        }
+                try {
+                    update.wait();
+                } catch (InterruptedException ignored) {}
 
-        exchange.sendResponseHeaders(rCode, response.length);
-        try (OutputStream os = exchange.getResponseBody()) {
-            os.write(response);
+                // sequence が変化していない場合は更新による復帰ではなく、同時接続数超過による復帰として扱います。
+                if (sequence == this.sequence) {
+                    isTooManyRequests = true;
+                }
+
+                if (!Objects.equals(inputPath, this.inputPath)) {
+                    isInputPathChanged = true;
+                }
+            }
+
+            int rCode = 200;
+            byte[] response = "OK".getBytes();
+
+            if (isTooManyRequests) {
+                rCode = 429;
+                response = "Too Many Requests".getBytes();
+            }
+
+            // 待機している間に inputPath が変わっていたら（別のフォルダーを開いたということなので）
+            // ルートにリダイレクトするために レスポンスコード 205 を返します。
+            // ブラウザー側の JavaScript で 205 を処理するようにしています。
+            // 307 + Location を返すと、ブラウザーが勝手にリダイレクトを実行してしまうため、205 を使用しています。
+            if (isInputPathChanged) {
+                rCode = 205;
+                response = "Reset Content".getBytes();
+            }
+
+            exchange.sendResponseHeaders(rCode, response.length);
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(response);
+            }
+        } finally {
+            waitCount.decrementAndGet();
         }
     }
 }

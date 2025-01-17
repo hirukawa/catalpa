@@ -44,6 +44,8 @@ public class FileHandler implements HttpHandler {
             "		    location.href = \"/\";\r\n" +
             "		} else if (xhr.status === 200 || xhr.status === 205) {\r\n" +
             "			location.reload();\r\n" +
+            "		} else if (xhr.status === 429) {\r\n" +
+            "			// Too Many Requests\r\n" +
             "		} else {\r\n" +
             "			waitForUpdate();\r\n" +
             "		}\r\n" +
