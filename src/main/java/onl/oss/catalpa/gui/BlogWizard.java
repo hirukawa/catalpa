@@ -248,7 +248,7 @@ public class BlogWizard extends DialogEx<Void> {
             dataModel.put("date", date);
             dataModel.put("categories", categories);
 
-            Configuration freeMarker = new Configuration(Configuration.VERSION_2_3_33);
+            Configuration freeMarker = new Configuration(Configuration.VERSION_2_3_34);
             freeMarker.setDefaultEncoding("UTF-8");
             freeMarker.setURLEscapingCharset("UTF-8");
             freeMarker.setLogTemplateExceptions(false);

@@ -75,7 +75,7 @@ public class Generator {
         this.systemDataModel = systemDataModel != null ? systemDataModel : new HashMap<>();
         this.consumer = consumer;
 
-        freeMarker = new Configuration(Configuration.VERSION_2_3_33);
+        freeMarker = new Configuration(Configuration.VERSION_2_3_34);
         freeMarker.setDefaultEncoding("UTF-8");
         freeMarker.setURLEscapingCharset("UTF-8");
         freeMarker.setLogTemplateExceptions(false);

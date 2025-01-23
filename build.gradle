@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'onl.oss.catalpa'
-version = '2.0.6'
+version = '2.0.7'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -35,7 +35,7 @@ dependencies {
     implementation 'com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.64.8'
     implementation 'com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.64.8'
 
-    implementation 'org.freemarker:freemarker:2.3.33'
+    implementation 'org.freemarker:freemarker:2.3.34'
     implementation 'com.esotericsoftware.yamlbeans:yamlbeans:1.17'
 
     // アイコン
@@ -51,12 +51,12 @@ dependencies {
     implementation 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
 
     // Netlify と Firebase Hosting で必要です。
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.18.0'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.18.0'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.18.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.18.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
 
     // Firebase Hosting で必要です。
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.29.0'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.30.1'
 
     // ログ出力
     implementation 'org.apache.logging.log4j:log4j-core:2.24.0'
