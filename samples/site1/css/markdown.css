@@ -511,6 +511,9 @@
 .markdown table > tbody > tr:nth-of-type(odd) {
 	background-color: var(--table-background-color-odd);
 }
+.markdown table.no-stripe > tbody > tr:nth-of-type(odd) {
+	background-color: transparent;
+}
 .markdown table > tbody > tr > td {
 	vertical-align: baseline;
 	padding: 0.5em 0.5em;

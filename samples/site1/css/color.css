@@ -34,7 +34,7 @@
 
 	/* テーブル */
 	--table-text-color:           var(--text-black-color);
-	--table-background-color:     var(--main-background-color);
+	--table-background-color:     transparent;
 	--table-background-color-odd: rgba(0,0,0,0.02);
 	--table-border-color:         var(--border-color);
 

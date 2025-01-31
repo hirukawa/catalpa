@@ -155,7 +155,7 @@ tasks.register('exewrap', Exec) {
             "-o", "${layout.buildDirectory.dir('package').get().file(base.archivesName).get()}.exe",
             "-d", "Catalpa",
             "-p", "Catalpa",
-            "-c", "(C) 2019-2024 HIRUKAWA Ryo",
+            "-c", "(C) 2019-2025 HIRUKAWA Ryo",
             "-V", "${version}",
             "-v", "${version}"
 }
