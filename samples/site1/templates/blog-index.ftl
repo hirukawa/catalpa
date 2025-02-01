@@ -26,6 +26,7 @@ ${head!}
 		<#include "css/color.css">
 		<#include "css/main.css">
 		<#include "css/blog.css">
+		<#include "css/markdown.css">
 
 		body {
 			background-color: #f8f8f8;
@@ -182,6 +183,7 @@ ${head!}
 		} else if (ua.indexOf("iphone") !== -1) {
 			document.documentElement.style.setProperty("--is-iphone", 1);
 		}
+
 		const sticky_header = document.getElementById("sticky-header");
 		if (sticky_header != null) {
 			const resizeObserver = new ResizeObserver((entries) => {
@@ -191,6 +193,18 @@ ${head!}
 			});
 			resizeObserver.observe(document.body);
 		}
+
+		document.addEventListener("copy", (event) => {
+			const selection = document.getSelection();
+			if (selection.type == "Range") {
+				var s = selection.toString();
+				s = s.replaceAll(/ ([・：；]) /g, "$1");
+				s = s.replaceAll(/ ([“‘（〔［｛〈《「『【])/g, "$1");
+				s = s.replaceAll(/([”’）〕］｝〉》」』】、，]) /g, "$1");
+				event.clipboardData.setData("text/plain", s);
+				event.preventDefault();
+			}
+		});
 	</script>
 
 	<#if (_PREVIEW!false) == true>

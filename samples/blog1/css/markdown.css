@@ -1216,15 +1216,70 @@
 	justify-content: space-evenly !important;
 }
 
-.markdown div.column-2 {
+.markdown div.column-2,
+.markdown div.column-3,
+.markdown div.column-4 {
 	display: flex;
 	flex-wrap: wrap;
+	column-gap: calc(var(--content-padding-left) * 2);
+}
+.markdown div.column-2.gap-0,
+.markdown div.column-3.gap-0,
+.markdown div.column-4.gap-0 {
+	column-gap: 0;
+}
+.markdown div.column-2.gap-1,
+.markdown div.column-3.gap-1,
+.markdown div.column-4.gap-1 {
 	column-gap: var(--content-padding-left);
 }
-.markdown div.column-2 > div {
+.markdown div.column-2.gap-2,
+.markdown div.column-3.gap-2,
+.markdown div.column-4.gap-2 {
+	column-gap: calc(var(--content-padding-left) * 2);
+}
+.markdown div.column-2 > div,
+.markdown div.column-3 > div,
+.markdown div.column-4 > div {
 	margin-inline-start: auto;
 	margin-inline-end: auto;
+	flex-grow: 1;
+}
+.markdown div.column-2 > div {
+	width: calc((var(--content-width) - var(--content-padding-left) * 3 - var(--content-padding-right)) / 2);
+}
+.markdown div.column-2.gap-0 > div {
+	width: calc((var(--content-width) - var(--content-padding-left) - var(--content-padding-right)) / 2);
+}
+.markdown div.column-2.gap-1 > div {
 	width: calc((var(--content-width) - var(--content-padding-left) * 2 - var(--content-padding-right)) / 2);
+}
+.markdown div.column-2.gap-2 > div {
+	width: calc((var(--content-width) - var(--content-padding-left) * 3 - var(--content-padding-right)) / 2);
+}
+.markdown div.column-3 > div {
+	width: calc((var(--content-width) - var(--content-padding-left) * 5 - var(--content-padding-right)) / 3);
+}
+.markdown div.column-3.gap-0 > div {
+	width: calc((var(--content-width) - var(--content-padding-left) - var(--content-padding-right)) / 3);
+}
+.markdown div.column-3.gap-1 > div {
+	width: calc((var(--content-width) - var(--content-padding-left) * 3 - var(--content-padding-right)) / 3);
+}
+.markdown div.column-3.gap-2 > div {
+	width: calc((var(--content-width) - var(--content-padding-left) * 5 - var(--content-padding-right)) / 3);
+}
+.markdown div.column-4 > div {
+	width: calc((var(--content-width) - var(--content-padding-left) * 7 - var(--content-padding-right)) / 4);
+}
+.markdown div.column-4.gap-0 > div {
+	width: calc((var(--content-width) - var(--content-padding-left) - var(--content-padding-right)) / 4);
+}
+.markdown div.column-4.gap-1 > div {
+	width: calc((var(--content-width) - var(--content-padding-left) * 4 - var(--content-padding-right)) / 4);
+}
+.markdown div.column-4.gap-2 > div {
+	width: calc((var(--content-width) - var(--content-padding-left) * 7 - var(--content-padding-right)) / 4);
 }
 
 .markdown .m-0 {

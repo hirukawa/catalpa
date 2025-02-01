@@ -124,6 +124,18 @@ ${head!}
 			document.documentElement.style.setProperty("--is-iphone", 1);
 		}
 
+		document.addEventListener("copy", (event) => {
+			const selection = document.getSelection();
+			if (selection.type == "Range") {
+				var s = selection.toString();
+				s = s.replaceAll(/ ([・：；]) /g, "$1");
+				s = s.replaceAll(/ ([“‘（〔［｛〈《「『【])/g, "$1");
+				s = s.replaceAll(/([”’）〕］｝〉》」』】、，]) /g, "$1");
+				event.clipboardData.setData("text/plain", s);
+				event.preventDefault();
+			}
+		});
+
 		var urlPrefix = location.href.substring(0, location.href.lastIndexOf("/") + 1);
 
 		function htmlTagEscape(str) {
