@@ -16,6 +16,7 @@ import java.nio.file.attribute.FileTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 import java.util.function.UnaryOperator;
 
 public class FileHandler implements HttpHandler {
@@ -68,9 +69,11 @@ public class FileHandler implements HttpHandler {
     private static final UnaryOperator<String> MIME_TABLE = URLConnection.getFileNameMap()::getContentTypeFor;
     private static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
 
+    private final Lock readLock;
     private final Path root;
 
-    public FileHandler(Path root) {
+    public FileHandler(Lock readLock, Path root) {
+        this.readLock = readLock;
         this.root = root.normalize();
     }
 
@@ -78,6 +81,8 @@ public class FileHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         assert List.of("GET", "HEAD").contains(exchange.getRequestMethod());
         try (exchange) {
+            readLock.lock();
+
             discardRequestBody(exchange);
             Path path = mapToPath(exchange, root);
             if (path != null) {
@@ -108,6 +113,8 @@ public class FileHandler implements HttpHandler {
                 exchange.setAttribute("request-path", "could not resolve request URI path");
                 handleNotFound(exchange);
             }
+        } finally {
+            readLock.unlock();
         }
     }
 

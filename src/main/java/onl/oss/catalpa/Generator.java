@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.Lock;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -87,43 +88,49 @@ public class Generator {
         }));
     }
 
-    public void generate() throws IOException {
-        if (consumer != null) {
-            consumer.accept(new Progress(0.0));
-        }
+    public void generate(Lock writeLock) throws IOException {
+        try {
+            writeLock.lock();
 
-        progressMax = countFiles(input);
-        progressValue.set(0L);
-
-        sitemapItems.clear();
-        searchIndexes.clear();
-
-        blog = Blog.create(input);
-
-        Folder rootFolder = retrieve(null, input, false);
-
-        Path searchIndexTemplatePath = input.resolve("templates").resolve("search.ftl");
-        if (Files.exists(searchIndexTemplatePath)) {
-            try {
-                createSearchIndex(rootFolder, searchIndexes);
-            } catch (GeneratorException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new GeneratorException(searchIndexTemplatePath, e);
+            if (consumer != null) {
+                consumer.accept(new Progress(0.0));
             }
-        }
 
-        if (!sitemapItems.isEmpty()) {
-            Path sitemapTemplatePath = input.resolve("templates").resolve("sitemap.ftl");
-            if (Files.exists(sitemapTemplatePath)) {
+            progressMax = countFiles(input);
+            progressValue.set(0L);
+
+            sitemapItems.clear();
+            searchIndexes.clear();
+
+            blog = Blog.create(input);
+
+            Folder rootFolder = retrieve(null, input, false);
+
+            Path searchIndexTemplatePath = input.resolve("templates").resolve("search.ftl");
+            if (Files.exists(searchIndexTemplatePath)) {
                 try {
-                    createSitemap(rootFolder, sitemapItems);
+                    createSearchIndex(rootFolder, searchIndexes);
                 } catch (GeneratorException e) {
                     throw e;
                 } catch (Exception e) {
-                    throw new GeneratorException(sitemapTemplatePath, e);
+                    throw new GeneratorException(searchIndexTemplatePath, e);
                 }
             }
+
+            if (!sitemapItems.isEmpty()) {
+                Path sitemapTemplatePath = input.resolve("templates").resolve("sitemap.ftl");
+                if (Files.exists(sitemapTemplatePath)) {
+                    try {
+                        createSitemap(rootFolder, sitemapItems);
+                    } catch (GeneratorException e) {
+                        throw e;
+                    } catch (Exception e) {
+                        throw new GeneratorException(sitemapTemplatePath, e);
+                    }
+                }
+            }
+        } finally {
+            writeLock.unlock();
         }
     }
 

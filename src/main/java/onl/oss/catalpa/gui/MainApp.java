@@ -43,6 +43,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.prefs.Preferences;
 
 import static onl.oss.catalpa.Logger.ERROR;
@@ -77,6 +79,7 @@ public class MainApp extends Application {
     private Content blogConfig;
     private UploadConfig uploadConfig;
     private LocalHttpServer httpServer;
+    private final ReadWriteLock generateLock = new ReentrantReadWriteLock();
     private boolean isGenerating;
     private boolean isDirty;
     private Path errorPath;
@@ -180,7 +183,7 @@ public class MainApp extends Application {
                 } catch (Exception ignored) {}
 
                 Files.createDirectories(previewPath);
-                httpServer = new LocalHttpServer(previewPath);
+                httpServer = new LocalHttpServer(generateLock.readLock(), previewPath);
                 httpServer.start();
 
                 // VSCode 実行ファイルのパスを検索します。
@@ -808,7 +811,7 @@ public class MainApp extends Application {
                 Map<String, Object> systemDataModel = new HashMap<>();
                 systemDataModel.put("_PREVIEW", false);
                 Generator generator = new Generator(inputPath, outputPath, systemDataModel, this::updateProgress);
-                generator.generate();
+                generator.generate(generateLock.writeLock());
                 showMessage("保存しました: " + outputPath);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -854,7 +857,7 @@ public class MainApp extends Application {
                 Map<String, Object> systemDataModel = new HashMap<>();
                 systemDataModel.put("_PREVIEW", true);
                 Generator generator = new Generator(inputPath, outputPath, systemDataModel, this::updateProgress);
-                generator.generate();
+                generator.generate(generateLock.writeLock());
 
                 long end = System.nanoTime();
                 double time = (end - start) / 1000000000d;
@@ -927,7 +930,7 @@ public class MainApp extends Application {
                 Map<String, Object> systemDataModel = new HashMap<>();
                 systemDataModel.put("_PREVIEW", false);
                 Generator generator = new Generator(inputPath, outputPath, systemDataModel, this::uploadProgressPhase1);
-                generator.generate();
+                generator.generate(generateLock.writeLock());
 
                 int uploadCount = uploadConfig.upload(outputPath, MainApp.this::uploadProgressPhase2);
                 INFO("uploadCount=" + uploadCount);

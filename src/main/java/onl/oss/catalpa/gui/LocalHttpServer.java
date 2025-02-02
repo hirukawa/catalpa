@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
 
 public class LocalHttpServer {
 
@@ -27,7 +28,7 @@ public class LocalHttpServer {
     private volatile long sequence;
     private volatile Path inputPath;
 
-    public LocalHttpServer(Path rootDirectory) throws IOException {
+    public LocalHttpServer(Lock readLock, Path rootDirectory) throws IOException {
         HttpServer hs;
         int port = HTTP_SERVER_PORT;
         for (;;) {
@@ -42,7 +43,7 @@ public class LocalHttpServer {
         }
         httpServer = hs;
 
-        httpServer.createContext("/", new FileHandler(rootDirectory));
+        httpServer.createContext("/", new FileHandler(readLock, rootDirectory));
         httpServer.createContext("/wait-for-update", this::waitForUpdate);
 
         executor = Executors.newCachedThreadPool();
