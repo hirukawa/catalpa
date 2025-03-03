@@ -13,12 +13,12 @@ ${head!}
 	<#include "templates/webfont" ignore_missing=true>
 
 	<style><@compress single_line=true>
-		<#include "css/system.css">
-		<#include "css/color.css">
-		<#include "css/main.css">
-		<#include "css/markdown.css">
-		<#include "css/search.css">
-		<#include "css/custom.css" ignore_missing=true>
+		<#include "css/system.css" parse=false>
+		<#include "css/color.css" parse=false>
+		<#include "css/main.css" parse=false>
+		<#include "css/markdown.css" parse=false>
+		<#include "css/search.css" parse=false>
+		<#include "css/custom.css" parse=false ignore_missing=true>
 		${css!}
 	</@compress></style>
 </head>

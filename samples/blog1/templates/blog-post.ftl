@@ -29,12 +29,12 @@ ${head!}
 	<#include "templates/webfont" ignore_missing=true>
 
 	<style><@compress single_line=true>
-		<#include "css/system.css">
-		<#include "css/color.css">
-		<#include "css/main.css">
-		<#include "css/blog.css">
-		<#include "css/markdown.css">
-		<#include "css/highlight.css">
+		<#include "css/system.css" parse=false>
+		<#include "css/color.css" parse=false>
+		<#include "css/main.css" parse=false>
+		<#include "css/blog.css" parse=false>
+		<#include "css/markdown.css" parse=false>
+		<#include "css/highlight.css" parse=false>
 
 		.blog-pager .previous, 
 		.blog-pager .next {
@@ -58,7 +58,7 @@ ${head!}
 			color: var(--text-link-hover-color);
 		}
 
-		<#include "css/custom.css" ignore_missing=true>
+		<#include "css/custom.css" parse=false ignore_missing=true>
 		${css!}
 	</@compress></style>
 </head>

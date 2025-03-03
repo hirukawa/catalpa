@@ -22,11 +22,11 @@ ${head!}
 	<#include "templates/webfont" ignore_missing=true>
 
 	<style><@compress single_line=true>
-		<#include "css/system.css">
-		<#include "css/color.css">
-		<#include "css/main.css">
-		<#include "css/blog.css">
-		<#include "css/markdown.css">
+		<#include "css/system.css" parse=false>
+		<#include "css/color.css" parse=false>
+		<#include "css/main.css" parse=false>
+		<#include "css/blog.css" parse=false>
+		<#include "css/markdown.css" parse=false>
 
 		body {
 			background-color: #f8f8f8;
@@ -35,7 +35,7 @@ ${head!}
 			padding: 0;
 		}
 
-		<#include "css/custom.css" ignore_missing=true>
+		<#include "css/custom.css" parse=false ignore_missing=true>
 		${css!}
 	</@compress></style>
 </head>
