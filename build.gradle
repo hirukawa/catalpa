@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'onl.oss.catalpa'
-version = '2.0.9'
+version = '2.0.10'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -39,10 +39,10 @@ dependencies {
     implementation 'com.esotericsoftware.yamlbeans:yamlbeans:1.17'
 
     // アイコン
-    implementation 'org.kordamp.ikonli:ikonli-javafx:12.3.1'
-    implementation 'org.kordamp.ikonli:ikonli-materialdesign2-pack:12.3.1'
-    implementation 'org.kordamp.ikonli:ikonli-coreui-pack:12.3.1'
-    implementation 'org.kordamp.ikonli:ikonli-codicons-pack:12.3.1'
+    implementation 'org.kordamp.ikonli:ikonli-javafx:12.4.0'
+    implementation 'org.kordamp.ikonli:ikonli-materialdesign2-pack:12.4.0'
+    implementation 'org.kordamp.ikonli:ikonli-coreui-pack:12.4.0'
+    implementation 'org.kordamp.ikonli:ikonli-codicons-pack:12.4.0'
 
     // 画像ファイルのメタ情報を取得して IMGタグの width 属性・height 属性を自動設定するのに必要です。
     implementation 'com.drewnoakes:metadata-extractor:2.19.0'
@@ -51,15 +51,16 @@ dependencies {
     implementation 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
 
     // Netlify と Firebase Hosting で必要です。
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.18.2'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.18.2'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.19.0'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.19.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.19.0'
 
     // Firebase Hosting で必要です。
-    implementation 'com.google.auth:google-auth-library-oauth2-http:1.33.1'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.37.0'
 
     // ログ出力
     implementation 'org.apache.logging.log4j:log4j-core:2.24.3'
+    compileOnly 'com.github.spotbugs:spotbugs-annotations:4.9.3'
 
     // Win32
     // ・VSCodeのインストールパスを検索して起動するのに使用しています。
@@ -149,7 +150,7 @@ tasks.register('exewrap', Exec) {
             "-t", "21",
             "-a", "-Xmx1024m",
             "-L", "lib",
-            "-e", "SINGLE;NOLOG",
+            "-e", "NOLOG",
             "-j", "${jar.archiveFile.get()}",
             "-i", "etc/app.ico",
             "-o", "${layout.buildDirectory.dir('package').get().file(base.archivesName).get()}.exe",

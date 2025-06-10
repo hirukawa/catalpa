@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import javafx.geometry.Insets?>
+
 <fx:root type="StackPane"
          xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
@@ -18,7 +16,6 @@
         <top>
             <HBox>
                 <MenuBar fx:id="menuBar">
-                    <padding><Insets left="0"/></padding>
                     <Menu fx:id="menuFile" text="ファイル">
                         <MenuItem fx:id="menuFileOpen"
                                   text="フォルダーを開く"
@@ -67,7 +64,9 @@
         <center>
             <VBox fx:id="body">
                 <HBox>
-                    <padding><Insets top="10" right="10" bottom="0" left="10"/></padding>
+                    <padding>
+                        <Insets top="10" right="10" left="10"/>
+                    </padding>
                     <TextField fx:id="tfInputPath"
                                styleClass="flat-border-right"
                                promptText="入力フォルダーをここにドロップできます"
@@ -119,8 +118,18 @@
         </center>
     </BorderPane>
 
-    <StackPane fx:id="progress" visible="false">
-        <ProgressIndicator/>
+    <StackPane fx:id="progress"
+               StackPane.alignment="TOP_CENTER"
+               visible="false">
+        <StackPane.margin>
+            <Insets top="28"/>
+        </StackPane.margin>
+        <ProgressIndicator
+                StackPane.alignment="BOTTOM_CENTER">
+            <StackPane.margin>
+                <Insets bottom="56"/>
+            </StackPane.margin>
+        </ProgressIndicator>
         <ProgressBar fx:id="progressBar"
                      StackPane.alignment="BOTTOM_CENTER"
                      maxWidth="Infinity"/>

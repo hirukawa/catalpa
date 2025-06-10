@@ -10,8 +10,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class Logger {
 
@@ -46,6 +50,37 @@ public class Logger {
                 Path logdir = dir.resolve("log");
                 if (Files.notExists(logdir)) {
                     Files.createDirectories(logdir);
+                }
+                // ログ・ディレクトリが存在する場合は、（新しい14件のログを残して）古いログファイルを削除します。
+                // log4j2.xml の DirectWriteRolloverStrategy - Delete - IfAccumulatedFileCount 設定で古いログファイルが消えないことがあるようなので…。
+                else {
+                    try (Stream<Path> stream = Files.list(logdir)) {
+                        List<Path> files = new ArrayList<>();
+                        for (Path file : stream.toList()) {
+                            if (Files.isRegularFile(file) && file.getFileName().toString().toLowerCase().endsWith(".log")) {
+                                files.add(file);
+                            }
+                        }
+                        files.sort((o1, o2) -> {
+                            FileTime ft1;
+                            FileTime ft2;
+                            try {
+                                ft1 = Files.getLastModifiedTime(o1);
+                            } catch (IOException ignored) {
+                                ft1 = FileTime.fromMillis(0);
+                            }
+                            try {
+                                ft2 = Files.getLastModifiedTime(o2);
+                            } catch (IOException ignored) {
+                                ft2 = FileTime.fromMillis(0);
+                            }
+                            return ft1.compareTo(ft2);
+                        });
+                        while (files.size() > 14) {
+                            Path file = files.removeFirst();
+                            try { Files.deleteIfExists(file); } catch (Exception ignored) {}
+                        }
+                    }
                 }
                 System.setProperty("log.directory", logdir.toString());
             } catch (IOException ignored) {}
@@ -106,6 +141,7 @@ public class Logger {
         }
     }
 
+    @SuppressWarnings("unused")
     public static void TRACE(String message) {
         try {
             if (logger != null) {
@@ -115,6 +151,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void TRACE(Throwable throwable) {
         try {
             if (logger != null) {
@@ -124,6 +161,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void TRACE(String message, Throwable throwable) {
         try {
             if (logger != null) {
@@ -133,6 +171,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void DEBUG(String message) {
         try {
             if (logger != null) {
@@ -142,6 +181,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void DEBUG(Throwable throwable) {
         try {
             if (logger != null) {
@@ -151,6 +191,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void DEBUG(String message, Throwable throwable) {
         try {
             if (logger != null) {
@@ -160,6 +201,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void INFO(String message) {
         try {
             if (logger != null) {
@@ -169,6 +211,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void INFO(Throwable throwable) {
         try {
             if (logger != null) {
@@ -178,6 +221,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void INFO(String message, Throwable throwable) {
         try {
             if (logger != null) {
@@ -187,6 +231,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void WARN(String message) {
         try {
             if (logger != null) {
@@ -196,6 +241,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void WARN(Throwable throwable) {
         try {
             if (logger != null) {
@@ -203,9 +249,9 @@ public class Logger {
                 logger.warn(throwable.getMessage(), throwable);
             }
         } catch (Throwable ignored) {}
-
     }
 
+    @SuppressWarnings("unused")
     public static void WARN(String message, Throwable throwable) {
         try {
             if (logger != null) {
@@ -215,6 +261,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void ERROR(String message) {
         try {
             if (logger != null) {
@@ -224,6 +271,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void ERROR(Throwable throwable) {
         try {
             if (logger != null) {
@@ -233,6 +281,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void ERROR(String message, Throwable throwable) {
         try {
             if (logger != null) {
@@ -242,6 +291,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void FATAL(String message) {
         try {
             if (logger != null) {
@@ -251,6 +301,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void FATAL(Throwable throwable) {
         try {
             if (logger != null) {
@@ -260,6 +311,7 @@ public class Logger {
         } catch (Throwable ignored) {}
     }
 
+    @SuppressWarnings("unused")
     public static void FATAL(String message, Throwable throwable) {
         try {
             if (logger != null) {

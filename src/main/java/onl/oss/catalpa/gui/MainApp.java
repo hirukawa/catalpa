@@ -4,6 +4,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
@@ -49,7 +50,6 @@ import java.util.prefs.Preferences;
 
 import static onl.oss.catalpa.Logger.ERROR;
 import static onl.oss.catalpa.Logger.INFO;
-import static onl.oss.catalpa.Logger.WARN;
 
 public class MainApp extends Application {
 
@@ -84,7 +84,7 @@ public class MainApp extends Application {
     private boolean isDirty;
     private Path errorPath;
     private Throwable errorThrowable;
-    private TranslateTransition messageAnimation = new TranslateTransition();
+    private final TranslateTransition messageAnimation = new TranslateTransition();
 
     public MainApp() {
         instance = this;
@@ -118,6 +118,7 @@ public class MainApp extends Application {
         }
 
         mainView = new MainView();
+        mainView.body.disableProperty().addListener(this::body_onDisableChanged);
         mainView.cbAutoReload.setOnAction(this::cbAutoReload_onAction);
         mainView.btnOpen.setOnAction(this::btnOpen_onAction);
         mainView.btnReload.setOnAction(this::btnReload_onAction);
@@ -189,9 +190,7 @@ public class MainApp extends Application {
                 // VSCode 実行ファイルのパスを検索します。
                 String s = Win32.findPath("code.cmd");
                 if (s != null) {
-                    Platform.runLater(() -> {
-                        vsCodePath = s;
-                    });
+                    Platform.runLater(() -> vsCodePath = s);
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -322,7 +321,6 @@ public class MainApp extends Application {
                 if (outputPath != null && path.startsWith(outputPath)) {
                     // 出力中（出力パスが存在する）に、出力パスのファイル更新が検出されても無視します。
                     INFO("出力フォルダー内のファイルです: " + path);
-                    continue;
                 } else if (Util.isTemplateFile(path) || Util.isCssFile(path)) {
                     // ftl または css が更新された場合はキャッシュをクリアして、コンテンツが再作成されるようにします。
                     INFO(Util.getFileExtension(path) + " ファイルが更新されたためキャッシュとテンポラリをクリアします");
@@ -344,6 +342,13 @@ public class MainApp extends Application {
                 }
             }
         });
+    }
+
+    private void body_onDisableChanged(Observable observable, Boolean oldValue, Boolean newValue) {
+        mainView.menuBar.setDisable(newValue);
+        if (blogConfig != null) {
+            mainView.lblNewPost.setDisable(newValue);
+        }
     }
 
     private void scene_onDragOver(DragEvent event) {

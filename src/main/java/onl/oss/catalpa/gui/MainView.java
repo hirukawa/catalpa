@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
@@ -15,6 +16,7 @@ import onl.oss.javafx.fxml.Fxml;
 
 public class MainView extends StackPane {
 
+    @FXML public MenuBar menuBar;
     @FXML public Menu menuFile;
     @FXML public MenuItem menuFileOpen;
     @FXML public MenuItem menuFileSaveAs;
