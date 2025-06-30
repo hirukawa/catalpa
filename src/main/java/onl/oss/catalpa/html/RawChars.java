@@ -8,8 +8,8 @@ public class RawChars implements Token {
 		OTHER
 	}
 	
-	private String value;
-	private Type   type;
+	private final String value;
+	private final Type   type;
 	private double letterSpacing = -1.0;
 	private String letterSpacingType;
 	
@@ -51,14 +51,14 @@ public class RawChars implements Token {
 			sb.append(value);
 
 			if (letterSpacingType != null && letterSpacingType.contains("JAPANESE:LATIN_WORD_CHARACTER")) {
-				// 和字と欧字の間隔 <i class=e>
-				sb.append("<i class=e> </i>");
+				// 和字と欧字の間隔 <span class=e>
+				sb.append("<span class=e> </span>");
 			} else if (letterSpacingType != null && letterSpacingType.contains("LATIN_WORD_CHARACTER:JAPANESE")) {
-				// 欧字と和字の間隔 <i class=j>
-				sb.append("<i class=j> </i>");
+				// 欧字と和字の間隔 <span class=j>
+				sb.append("<span class=j> </span>");
 			} else {
-				// 二分アキは <i class=s2>、四分アキは <i class=s4>
-				sb.append("<i class=s").append((int)(1.0 / letterSpacing)).append("> </i>");
+				// 二分アキは <span class=s2>、四分アキは <span class=s4>
+				sb.append("<span class=s").append((int)(1.0 / letterSpacing)).append("> </span>");
 			}
 			return sb.toString();
 		}

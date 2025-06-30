@@ -12,7 +12,7 @@ public class Char implements Token {
 	private static final String INSEPARABLE_CHARACTERS = "―…‥";
 	
 	private char value;
-	private CharClass characterClass;
+	private final CharClass characterClass;
 	private boolean isLatin;
 	private boolean isWhitespace;
 	private boolean isEndOfSentence;
@@ -142,15 +142,18 @@ public class Char implements Token {
 				|| (characterClass == CharClass.CR)
 				|| (characterClass == CharClass.LF);
 	}
-	
+
+	@SuppressWarnings("unused")
 	public boolean isCRLF() {
 		return (characterClass == CharClass.CRLF);
 	}
-	
+
+	@SuppressWarnings("unused")
 	public boolean isCR() {
 		return (characterClass == CharClass.CR);
 	}
-	
+
+	@SuppressWarnings("unused")
 	public boolean isLF() {
 		return (characterClass == CharClass.LF);
 	}
@@ -166,7 +169,8 @@ public class Char implements Token {
 	public void setEndOfSentence(boolean b) {
 		this.isEndOfSentence = b;
 	}
-	
+
+	@SuppressWarnings("unused")
 	public boolean isEndOfSentence() {
 		return this.isEndOfSentence;
 	}
@@ -224,14 +228,14 @@ public class Char implements Token {
 				if (marginLeft == 0.0 && marginRight == 0.0) {
 					sb.append(value);
 				} else if (halt) {
-					// font-feature-settings: "halt" を使用して役物を半角幅にする <i class=h>
-					sb.append("<i class=h>");
+					// font-feature-settings: "halt" を使用して役物を半角幅にする <span class=h>
+					sb.append("<span class=h>");
 					sb.append(value);
-					sb.append("</i>");
+					sb.append("</span>");
 				} else {
 					// font-feature-settings: "halt" を使わずに役物を半角幅にする
-					// 左を詰める <i class=l>、右を詰める <i class=r>、左右を詰める <i class=lr>
-					sb.append("<i class=");
+					// 左を詰める <span class=l>、右を詰める <span class=r>、左右を詰める <span class=lr>
+					sb.append("<span class=");
 					if (marginLeft != 0.0) {
 						sb.append('l');
 					}
@@ -240,19 +244,19 @@ public class Char implements Token {
 					}
 					sb.append('>');
 					sb.append(value);
-					sb.append("</i>");
+					sb.append("</span>");
 				}
 			}
 			if (letterSpacing != 0.0) {
 				if (letterSpacingType != null && letterSpacingType.contains("JAPANESE:LATIN_WORD_CHARACTER")) {
-					// 和字と欧字の間隔 <i class=e>
-					sb.append("<i class=e> </i>");
+					// 和字と欧字の間隔 <span class=e>
+					sb.append("<span class=e> </span>");
 				} else if (letterSpacingType != null && letterSpacingType.contains("LATIN_WORD_CHARACTER:JAPANESE")) {
-					// 欧字と和字の間隔 <i class=j>
-					sb.append("<i class=j> </i>");
+					// 欧字と和字の間隔 <span class=j>
+					sb.append("<span class=j> </span>");
 				} else {
-					// 二分アキは <i class=s2>、四分アキは <i class=s4>
-					sb.append("<i class=s").append((int)(1.0 / letterSpacing)).append("> </i>");
+					// 二分アキは <span class=s2>、四分アキは <span class=s4>
+					sb.append("<span class=s").append((int)(1.0 / letterSpacing)).append("> </span>");
 				}
 			}
 			return sb.toString();
