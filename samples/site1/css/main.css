@@ -67,7 +67,6 @@ body {
 a {
 	text-decoration: none;
 	color: var(--text-link-color);
-	line-break: anywhere;
 }
 a:visited {
 	color: var(--text-link-visited-color);

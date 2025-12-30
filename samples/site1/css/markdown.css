@@ -38,13 +38,6 @@
 }
 
 /*
- * アンカー
- */
-.markdown a {
-	line-break: anywhere;
-} 
-
-/*
  * パラグラフ（段落）
  */
  .markdown p {
