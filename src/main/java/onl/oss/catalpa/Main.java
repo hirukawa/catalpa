@@ -62,7 +62,6 @@ public class Main {
             Path path = dir.resolve(".lock");
             fc = FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.DELETE_ON_CLOSE);
             lock = fc.tryLock();
-            INFO(".lockファイルをロックしました");
         } catch (IOException e) {
             ERROR(e);
         }
@@ -71,6 +70,9 @@ public class Main {
             INFO("プロセスはすでに起動されています（.lockファイルがロックされています）");
             return;
         }
+
+        INFO(".lockファイルをロックしました");
+
 
         // Preferences を catalpa.preferences ファイルに保存するようにします。（既定では Preferences はレジストリに保存されます）
         try {
