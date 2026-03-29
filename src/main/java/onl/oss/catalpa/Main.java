@@ -53,25 +53,28 @@ public class Main {
         INFO("プロセスが開始されました");
 
         // プロセスの二重起動チェック
-        FileChannel fc = null;
-        FileLock lock = null;
+        Path lockFilePath;
+        FileChannel fc;
+        FileLock lock;
+        long pid = ProcessHandle.current().pid();
 
         try {
             // データディレクトリのルートに ".lock" ファイルを作成してロックします。
-            INFO(".lockファイルをロックします");
-            Path path = dir.resolve(".lock");
-            fc = FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.DELETE_ON_CLOSE);
+            INFO("(pid=" + pid + ") .lockファイルをロックします");
+            lockFilePath = dir.resolve(".lock");
+            fc = FileChannel.open(lockFilePath, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
             lock = fc.tryLock();
-        } catch (IOException e) {
+        } catch (Exception e) {
             ERROR(e);
-        }
-
-        if (lock == null) {
-            INFO("プロセスはすでに起動されています（.lockファイルがロックされています）");
             return;
         }
 
-        INFO(".lockファイルをロックしました");
+        if (lock == null) {
+            WARN("(pid=" + pid + ") .lockファイルがロックされています（プロセスはすでに起動されています）");
+            return;
+        }
+
+        INFO("(pid=" + pid + ") .lockファイルをロックしました");
 
 
         // Preferences を catalpa.preferences ファイルに保存するようにします。（既定では Preferences はレジストリに保存されます）
@@ -111,6 +114,7 @@ public class Main {
         // ロック解除
         try {
             INFO(".lockファイルのロックを解除します");
+            Files.deleteIfExists(lockFilePath);
             lock.release();
             fc.close();
             INFO(".lockファイルのロックを解除しました");
