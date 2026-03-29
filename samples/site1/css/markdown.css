@@ -374,7 +374,7 @@
 .markdown ul.tree ul {
 	margin-inline-start: 0.5em;
 	margin-inline-end: 0;
-	padding: 0;
+	padding: 0 !important;
 	list-style-type: none;
 }
 .markdown ul.tree ul {
